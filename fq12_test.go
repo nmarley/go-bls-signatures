@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"testing"
 
-	"github.com/nmarley/go-bls-signatures"
+	"gitlab.com/nmarley/go-bls-signatures"
 )
 
 func TestFQ12MulBy014(t *testing.T) {

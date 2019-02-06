@@ -222,13 +222,11 @@ func CompressG1(affine *G1Affine) *big.Int {
 		copy(res[48-len(out0):], out0)
 
 		negY := affine.y.Neg()
-
 		if affine.y.Cmp(negY) > 0 {
-			res[0] |= 1 << 5
+			res[0] |= 1 << 7
 		}
 	}
 
-	res[0] |= 1 << 7
 	return new(big.Int).SetBytes(res[:])
 }
 

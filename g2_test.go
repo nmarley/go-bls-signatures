@@ -3,7 +3,7 @@ package bls_test
 import (
 	"testing"
 
-	"github.com/nmarley/go-bls-signatures"
+	"gitlab.com/nmarley/go-bls-signatures"
 )
 
 func BenchmarkG2MulAssign(b *testing.B) {

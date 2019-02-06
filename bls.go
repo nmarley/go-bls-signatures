@@ -16,18 +16,18 @@ const (
 
 // Signature is a message signature.
 type Signature struct {
-	s *G1Projective
+	s *G2Projective
 }
 
 // Serialize serializes a signature.
 func (s *Signature) Serialize(compressed bool) []byte {
 	if compressed {
-		return CompressG1(s.s.ToAffine()).Bytes()
+		return CompressG2(s.s.ToAffine()).Bytes()
 	}
 
 	// else serialize uncompressed
 	affine := s.s.ToAffine()
-	out := [G1ElementSize * 2]byte{}
+	out := [G2ElementSize * 2]byte{}
 	if affine.infinity {
 		out[0] = (1 << 6)
 		return out[:]
@@ -39,16 +39,16 @@ func (s *Signature) Serialize(compressed bool) []byte {
 // DeserializeSignature deserializes a signature from bytes.
 func DeserializeSignature(b []byte) (*Signature, error) {
 	switch len(b) {
-	case G1ElementSize:
-		a, err := DecompressG1(new(big.Int).SetBytes(b))
+	case G2ElementSize:
+		a, err := DecompressG2(new(big.Int).SetBytes(b))
 		if err != nil {
 			return nil, err
 		}
 
 		return &Signature{s: a.ToProjective()}, nil
 
-	case G1ElementSize * 2:
-		a := G1Affine{}
+	case G2ElementSize * 2:
+		a := G2Affine{}
 		if b[0] == (1 << 6) {
 			a.infinity = true
 			return &Signature{s: a.ToProjective()}, nil
@@ -70,7 +70,7 @@ func (s *Signature) Copy() *Signature {
 
 // PublicKey is a public key.
 type PublicKey struct {
-	p *G2Projective
+	p *G1Projective
 }
 
 func (p PublicKey) String() string {
@@ -80,18 +80,24 @@ func (p PublicKey) String() string {
 // Serialize serializes a public key to bytes.
 func (p PublicKey) Serialize(compressed bool) []byte {
 	if compressed {
-		return CompressG2(p.p.ToAffine()).Bytes()
+		return CompressG1(p.p.ToAffine()).Bytes()
 	}
 
 	// else serialize uncompressed
 	affine := p.p.ToAffine()
-	out := [G2ElementSize * 2]byte{}
+	out := [G1ElementSize * 2]byte{}
 	if affine.infinity {
 		out[0] = (1 << 6)
 		return out[:]
 	}
 
 	return affine.SerializeBytes()
+}
+
+// Fingerprint returns the the first 4 bytes of hash256(serialize(pubkey))
+func (p *PublicKey) Fingerprint() []byte {
+	buf := Hash256(p.Serialize(true))
+	return buf[:4]
 }
 
 // Equals checks if two public keys are equal
@@ -102,16 +108,16 @@ func (p PublicKey) Equals(other PublicKey) bool {
 // DeserializePublicKey deserializes a public key from bytes.
 func DeserializePublicKey(b []byte) (*PublicKey, error) {
 	switch len(b) {
-	case G2ElementSize:
-		a, err := DecompressG2(new(big.Int).SetBytes(b))
+	case G1ElementSize:
+		a, err := DecompressG1(new(big.Int).SetBytes(b))
 		if err != nil {
 			return nil, err
 		}
 
 		return &PublicKey{p: a.ToProjective()}, nil
 
-	case G2ElementSize * 2:
-		g := G2Affine{}
+	case G1ElementSize * 2:
+		g := G1Affine{}
 		if b[0] == (1 << 6) {
 			g.infinity = true
 			return &PublicKey{p: g.ToProjective()}, nil
@@ -131,6 +137,23 @@ type SecretKey struct {
 	f *FR
 }
 
+// SecretKeyFromSeed generates a private key from a seed, similar to HD key
+// generation (hashes the seed), and reduces it mod the group order.
+func SecretKeyFromSeed(seed []byte) *SecretKey {
+	hmacKey := []byte("BLS private key seed")
+
+	hashed := Hmac256(seed, hmacKey)
+	return &SecretKey{
+		NewFR(new(big.Int).Mod(new(big.Int).SetBytes(hashed), RFieldModulus)),
+	}
+}
+
+// PublicKey returns the public key.
+func (s *SecretKey) PublicKey() *PublicKey {
+	return PrivToPub(s)
+}
+
+// String implements the Stringer interface.
 func (s SecretKey) String() string {
 	return s.f.String()
 }
@@ -148,13 +171,13 @@ func DeserializeSecretKey(b []byte) *SecretKey {
 
 // Sign signs a message with a secret key.
 func Sign(message []byte, key *SecretKey, domain uint64) *Signature {
-	h := HashG1(message, domain).Mul(key.f.n)
+	h := HashG2(message, domain).Mul(key.f.n)
 	return &Signature{s: h}
 }
 
 // PrivToPub converts the private key into a public key.
 func PrivToPub(k *SecretKey) *PublicKey {
-	return &PublicKey{p: G2AffineOne.Mul(k.f.n)}
+	return &PublicKey{p: G1AffineOne.Mul(k.f.n)}
 }
 
 // RandKey generates a random secret key.
@@ -175,15 +198,15 @@ func KeyFromBig(i *big.Int) *SecretKey {
 
 // Verify verifies a signature against a message and a public key.
 func Verify(m []byte, pub *PublicKey, sig *Signature, domain uint64) bool {
-	h := HashG1(m, domain)
-	lhs := Pairing(sig.s, G2ProjectiveOne)
-	rhs := Pairing(h, pub.p)
+	h := HashG2(m, domain)
+	lhs := Pairing(G1ProjectiveOne, sig.s)
+	rhs := Pairing(pub.p, h)
 	return lhs.Equals(rhs)
 }
 
 // AggregateSignatures adds up all of the signatures.
 func AggregateSignatures(s []*Signature) *Signature {
-	newSig := &Signature{s: G1ProjectiveZero.Copy()}
+	newSig := &Signature{s: G2ProjectiveZero.Copy()}
 	for _, sig := range s {
 		newSig.Aggregate(sig)
 	}
@@ -198,7 +221,7 @@ func (s *Signature) Aggregate(other *Signature) {
 
 // AggregatePublicKeys adds public keys together.
 func AggregatePublicKeys(p []*PublicKey) *PublicKey {
-	newPub := &PublicKey{p: G2ProjectiveZero.Copy()}
+	newPub := &PublicKey{p: G1ProjectiveZero.Copy()}
 	for _, pub := range p {
 		newPub.Aggregate(pub)
 	}
@@ -218,12 +241,12 @@ func (p *PublicKey) Copy() *PublicKey {
 
 // NewAggregateSignature creates a blank aggregate signature.
 func NewAggregateSignature() *Signature {
-	return &Signature{s: G1ProjectiveZero.Copy()}
+	return &Signature{s: G2ProjectiveZero.Copy()}
 }
 
 // NewAggregatePubkey creates a blank public key.
 func NewAggregatePubkey() *PublicKey {
-	return &PublicKey{p: G2ProjectiveZero.Copy()}
+	return &PublicKey{p: G1ProjectiveZero.Copy()}
 }
 
 // implement `Interface` in sort package.
@@ -274,11 +297,11 @@ func (s *Signature) VerifyAggregate(pubKeys []*PublicKey, msgs [][]byte, domain 
 		lastMsg = m
 	}
 
-	lhs := Pairing(s.s, G2ProjectiveOne)
+	lhs := Pairing(G1ProjectiveOne, s.s)
 	rhs := FQ12One.Copy()
 	for i := range pubKeys {
-		h := HashG1(msgs[i], domain)
-		rhs.MulAssign(Pairing(h, pubKeys[i].p))
+		h := HashG2(msgs[i], domain)
+		rhs.MulAssign(Pairing(pubKeys[i].p, h))
 	}
 	return lhs.Equals(rhs)
 }
@@ -287,11 +310,11 @@ func (s *Signature) VerifyAggregate(pubKeys []*PublicKey, msgs [][]byte, domain 
 // This is vulnerable to rogue public-key attack. Each user must
 // provide a proof-of-knowledge of the public key.
 func (s *Signature) VerifyAggregateCommon(pubKeys []*PublicKey, msg []byte, domain uint64) bool {
-	h := HashG1(msg, domain)
-	lhs := Pairing(s.s, G2ProjectiveOne)
+	h := HashG2(msg, domain)
+	lhs := Pairing(G1ProjectiveOne, s.s)
 	rhs := FQ12One.Copy()
 	for _, p := range pubKeys {
-		rhs.MulAssign(Pairing(h, p.p))
+		rhs.MulAssign(Pairing(p.p, h))
 	}
 	return lhs.Equals(rhs)
 }

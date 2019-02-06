@@ -5,7 +5,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/nmarley/go-bls-signatures"
+	"gitlab.com/nmarley/go-bls-signatures"
 )
 
 var (
