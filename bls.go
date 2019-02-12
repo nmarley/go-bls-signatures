@@ -22,7 +22,7 @@ type Signature struct {
 // Serialize serializes a signature.
 func (s *Signature) Serialize(compressed bool) []byte {
 	if compressed {
-		return CompressG2(s.s.ToAffine()).Bytes()
+		return CompressG2(s.s.ToAffine())
 	}
 
 	// else serialize uncompressed
@@ -80,7 +80,7 @@ func (p PublicKey) String() string {
 // Serialize serializes a public key to bytes.
 func (p PublicKey) Serialize(compressed bool) []byte {
 	if compressed {
-		return CompressG1(p.p.ToAffine()).Bytes()
+		return CompressG1(p.p.ToAffine())
 	}
 
 	// else serialize uncompressed

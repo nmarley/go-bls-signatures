@@ -216,26 +216,23 @@ func DecompressG2Unchecked(b *big.Int) (*G2Affine, error) {
 	return GetG2PointFromX(x, greatest), nil
 }
 
-// CompressG2 compresses a G2 point into an int.
-func CompressG2(affine *G2Affine) *big.Int {
+// CompressG2 compresses a G2 point into a byte slice.
+func CompressG2(affine *G2Affine) []byte {
 	res := [96]byte{}
-	if affine.IsZero() {
-		res[0] |= 1 << 6
-	} else {
-		out0 := new(big.Int).Set(affine.x.c0.n).Bytes()
-		out1 := new(big.Int).Set(affine.x.c1.n).Bytes()
-		copy(res[48-len(out0):48], out0)
-		copy(res[96-len(out1):], out1)
+	out0 := new(big.Int).Set(affine.x.c0.n).Bytes()
+	out1 := new(big.Int).Set(affine.x.c1.n).Bytes()
+	copy(res[48-len(out0):48], out0)
+	copy(res[96-len(out1):], out1)
 
-		negY := affine.y.Neg()
+	negY := affine.y.Neg()
 
-		if affine.y.Cmp(negY) > 0 {
-			res[0] |= 1 << 5
-		}
+	// Per the Chia spec, set the leftmost bit iff negative y. The other two
+	// are left as zeros.
+	if affine.y.Cmp(negY) > 0 {
+		res[0] |= 1 << 7
 	}
 
-	res[0] |= 1 << 7
-	return new(big.Int).SetBytes(res[:])
+	return res[:]
 }
 
 // IsInCorrectSubgroupAssumingOnCurve checks if the point multiplied by the

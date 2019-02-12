@@ -211,23 +211,21 @@ func DecompressG1Unchecked(b *big.Int) (*G1Affine, error) {
 	return GetG1PointFromX(x, greatest), nil
 }
 
-// CompressG1 compresses a G1 point into an int.
-func CompressG1(affine *G1Affine) *big.Int {
+// CompressG1 compresses a G1 point into a byte slice.
+func CompressG1(affine *G1Affine) []byte {
 	res := [48]byte{}
-	if affine.IsZero() {
-		res[0] |= 1 << 6
-	} else {
-		out0 := affine.x.n.Bytes()
+	out0 := affine.x.n.Bytes()
 
-		copy(res[48-len(out0):], out0)
+	copy(res[48-len(out0):], out0)
 
-		negY := affine.y.Neg()
-		if affine.y.Cmp(negY) > 0 {
-			res[0] |= 1 << 7
-		}
+	// Per the Chia spec, set the leftmost bit iff negative y. The other two
+	// are left as zeros.
+	negY := affine.y.Neg()
+	if affine.y.Cmp(negY) > 0 {
+		res[0] |= 1 << 7
 	}
 
-	return new(big.Int).SetBytes(res[:])
+	return res[:]
 }
 
 // G1Projective is a projective point on the G1 curve.
