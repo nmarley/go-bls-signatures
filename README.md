@@ -1,6 +1,6 @@
-# go-bls12-381
+# go-bls-signatures
 
-> Pure Go implemenation of <https://github.com/Chia-Network/bls-signatures>.
+> Pure Go implemenation of <https://github.com/Chia-Network/bls-signatures>
 
 Implements the [BLS12-381 curve](https://z.cash/blog/new-snark-curve/).
 
