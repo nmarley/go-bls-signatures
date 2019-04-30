@@ -1,0 +1,53 @@
+# Test vector coverage
+
+- [ ] Signatures
+  - [ ] keygen([1,2,3,4,5])
+  - [ ] keygen([1,2,3,4,5,6])
+  - [ ] sign([7,8,9], sk1)
+  - [ ] sign([7,8,9], sk2)
+  - [ ] verify(sig1, AggregationInfo(pk1, [7,8,9]))
+  - [ ] verify(sig2, AggregationInfo(pk2, [7,8,9]))
+
+- [ ] Aggregation
+  - [ ] aggregate([sig1, sig2])
+  - [ ] verify(aggSig2, mergeInfos(sig1.aggInfo, sig2.aggInfo))
+  - [ ] verify(sig1, AggregationInfo(pk2, [7,8,9]))
+  - [ ] sig3 = sign([1,2,3], sk1)
+  - [ ] sig4 = sign([1,2,3,4], sk1)
+  - [ ] sig5 = sign([1,2], sk2)
+  - [ ] aggregate([sig3, sig4, sig5])
+  - [ ] verify(aggSig2, mergeInfos(sig3.aggInfo, sig4.aggInfo, sig5.aggInfo))
+  - [ ] sig1 = sk1.sign([1,2,3,40])
+  - [ ] sig2 = sk2.sign([5,6,70,201])
+  - [ ] sig3 = sk2.sign([1,2,3,40])
+  - [ ] sig4 = sk1.sign([9,10,11,12,13])
+  - [ ] sig5 = sk1.sign([1,2,3,40])
+  - [ ] sig6 = sk1.sign([15,63,244,92,0,1])
+  - [ ] sigL = aggregate([sig1, sig2])
+  - [ ] sigR = aggregate([sig3, sig4, sig5])
+  - [ ] verify(sigL)
+  - [ ] verify(sigR)
+  - [ ] aggregate([sigL, sigR, sig6])
+  - [ ] verify(sigFinal)
+
+- [ ] Signature division
+  - [ ] divide(sigFinal, [sig2, sig5, sig6])
+  - [ ] verify(quotient)
+  - [ ] divide(quotient, [sig6])
+  - [ ] divide(sigFinal, [sig1])
+  - [ ] divide(sig\_final, [sigL])
+  - [ ] sig7 = sign([9,10,11,12,13], sk2)
+  - [ ] sig8 = sign([15,63,244,92,0,1], sk2)
+  - [ ] sigFinal2 = aggregate([sigFinal, aggregate([sig7, sig8])])
+  - [ ] divide(sigFinal2, aggregate([sig7, sig8]))
+  - [ ] verify(quotient2)
+
+- [ ] HD keys
+  - [ ] esk = ExtendedPrivateKey([1, 50, 6, 244, 24, 199, 1, 25])
+  - [ ] esk.publicKeyFigerprint
+  - [ ] esk.chainCode
+  - [ ] esk77 = esk.privateChild(77 + 2^31)
+  - [ ] esk77.publicKeyFingerprint
+  - [ ] esk77.chainCode
+  - [ ] esk.privateChild(3).privateChild(17).publicKeyFingerprint
+  - [ ] esk.extendedPublicKey.publicChild(3).publicChild(17).publicKeyFingerprint
