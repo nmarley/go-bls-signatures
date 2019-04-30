@@ -1,8 +1,8 @@
 # Test vector coverage
 
 - [ ] Signatures
-  - [ ] keygen([1,2,3,4,5])
-  - [ ] keygen([1,2,3,4,5,6])
+  - [x] keygen([1,2,3,4,5])
+  - [x] keygen([1,2,3,4,5,6])
   - [ ] sign([7,8,9], sk1)
   - [ ] sign([7,8,9], sk2)
   - [ ] verify(sig1, AggregationInfo(pk1, [7,8,9]))
