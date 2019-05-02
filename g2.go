@@ -789,8 +789,13 @@ func XHashG2(msg []byte) *G2Projective {
 	fmt.Println("t11 = ", t11)
 
 	//t0 <- Fq2(t00, t01)
+	t0 := NewFQ2(NewFQ(t00), NewFQ(t01))
+	fmt.Println("t0 = ", t0)
+
 	//t1 <- Fq2(t10, t11)
-	//
+	t1 := NewFQ2(NewFQ(t10), NewFQ(t11))
+	fmt.Println("t1 = ", t1)
+
 	//p <- swEncode(t0) * swEncode(t1)
 	//
 	//// Map to the r-torsion by raising to cofactor power
