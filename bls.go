@@ -175,6 +175,12 @@ func Sign(message []byte, key *SecretKey, domain uint64) *Signature {
 	return &Signature{s: h}
 }
 
+// XSign signs a message with a secret key.
+func XSign(message []byte, key *SecretKey) *Signature {
+	h := XHashG2(message).Mul(key.f.n)
+	return &Signature{s: h}
+}
+
 // PrivToPub converts the private key into a public key.
 func PrivToPub(k *SecretKey) *PublicKey {
 	return &PublicKey{p: G1AffineOne.Mul(k.f.n)}
