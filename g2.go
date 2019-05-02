@@ -754,3 +754,50 @@ func HashG2(msg []byte, domain uint64) *G2Projective {
 		xCoordinate.AddAssign(FQ2One)
 	}
 }
+
+// XHashG2 maps any string to a deterministic random point in G2.
+func XHashG2(msg []byte) *G2Projective {
+	// h <- hash256(m)
+	h := Hash256(msg)
+
+	//t00 <- hash512(h + b"G2_0_c0") % q
+	t00 := new(big.Int).Mod(
+		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_0_c0")...))),
+		QFieldModulus,
+	)
+	fmt.Println("t00 = ", t00)
+
+	//t01 <- hash512(h + b"G2_0_c1") % q
+	t01 := new(big.Int).Mod(
+		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_0_c1")...))),
+		QFieldModulus,
+	)
+	fmt.Println("t01 = ", t01)
+
+	//t10 <- hash512(h + b"G2_1_c0") % q
+	t10 := new(big.Int).Mod(
+		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_1_c0")...))),
+		QFieldModulus,
+	)
+	fmt.Println("t10 = ", t10)
+
+	//t11 <- hash512(h + b"G2_1_c1") % q
+	t11 := new(big.Int).Mod(
+		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_1_c1")...))),
+		QFieldModulus,
+	)
+	fmt.Println("t11 = ", t11)
+
+	//t0 <- Fq2(t00, t01)
+	//t1 <- Fq2(t10, t11)
+	//
+	//p <- swEncode(t0) * swEncode(t1)
+	//
+	//// Map to the r-torsion by raising to cofactor power
+	//// Described in page 11 of "Efficient hash maps to G2 on BLS curves" by Budroni and Pintore.
+	//x <- abs(x)
+	//return p ^ (x^2 + x - 1) - psi(p ^ (x + 1)) + psi(psi(p ^ 2))
+
+	// TODO: Remove this placeholder return
+	return G2ProjectiveZero
+}
