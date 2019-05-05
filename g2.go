@@ -797,12 +797,66 @@ func XHashG2(msg []byte) *G2Projective {
 	fmt.Println("t1 = ", t1)
 
 	//p <- swEncode(t0) * swEncode(t1)
-	//
-	//// Map to the r-torsion by raising to cofactor power
-	//// Described in page 11 of "Efficient hash maps to G2 on BLS curves" by Budroni and Pintore.
+	p1 := SWEncodeG2(t0)
+	p2 := SWEncodeG2(t1)
+	p := p1.ToProjective().Add(p2.ToProjective()) // .ToAffine()
+	fmt.Println("p = ", p)
+
+	// Map to the r-torsion by raising to cofactor power
+	// Described in page 11 of "Efficient hash maps to G2 on BLS curves" by Budroni and Pintore.
 	//x <- abs(x)
+	//x := blsX
+	//x.Exp(x, 2, nil).Add(x).Sub(1)
 	//return p ^ (x^2 + x - 1) - psi(p ^ (x + 1)) + psi(psi(p ^ 2))
 
 	// TODO: Remove this placeholder return
 	return G2ProjectiveZero
 }
+
+// Twist ...
+//
+// Given an untwisted point, this converts it's
+// coordinates to a point on the twisted curve. See Craig Costello
+// book, look up twists.
+func Twist(g *G2Affine) *G2Affine {
+	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
+
+	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
+	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
+
+	// g.x and g.y are FQ2 type ...
+
+	//newX := (g.x * wsq)
+	//newY := (g.y * wcu)
+
+	//return NewG2Affine(newX, newY)
+
+	// TODO: Remove dummy return
+	return G2AffineZero
+}
+
+// Untwist ...
+//
+// Given a point on G2 on the twisted curve, this converts it's
+// coordinates back from Fq2 to Fq12. See Craig Costello book, look
+// up twists.
+// func Untwist(g *G2Affine) *G2Affine {
+// 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
+//
+//     wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
+//     wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
+//
+//     // newX := g.x / wsq
+//     // newY := g.y / wcu
+// 	// return NewG2Affine(newX, newY)
+//
+// 	// TODO: Remove dummy return
+// 	return G2AffineZero
+// }
+
+//func Psi(g *G2Affine) *G2Affine {
+//    ut = untwist(P, ec)
+//    t = AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
+//    t2 = twist(t, ec)
+//    return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
+//}
