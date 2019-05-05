@@ -594,3 +594,31 @@ func HashG1(msg []byte, domain uint64) *G1Projective {
 	res = res.AddAffine(t1Affine)
 	return res.ToAffine().ScaleByCofactor()
 }
+
+// XHashG1 converts a message to a point on the G1 curve.
+func XHashG1(msg []byte) *G1Projective {
+	// h <- hash256(m)
+	h := Hash256(msg)
+
+	// t0 <- hash512(h + b"G1_0") % q
+	t0 := new(big.Int).Mod(
+		new(big.Int).SetBytes(Hash512(append(h, []byte("G1_0")...))),
+		QFieldModulus,
+	)
+	t0Affine := SWEncodeG1(t0)
+
+	// t1 <- hash512(h + b"G1_1") % q
+	t1 := new(big.Int).Mod(
+		new(big.Int).SetBytes(Hash512(append(h, []byte("G1_1")...))),
+		QFieldModulus,
+	)
+	t1Affine := SWEncodeG1(t1)
+
+	// p <- swEncode(t0) * swEncode(t1)
+	res := t0Affine.ToProjective()
+	res = res.AddAffine(t1Affine)
+
+	// Map to the r-torsion by raising to cofactor power
+	// return p ^ h
+	return res.ToAffine().ScaleByCofactor()
+}
