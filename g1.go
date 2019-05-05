@@ -601,16 +601,20 @@ func XHashG1(msg []byte) *G1Projective {
 	h := Hash256(msg)
 
 	// t0 <- hash512(h + b"G1_0") % q
-	t0 := new(big.Int).Mod(
-		new(big.Int).SetBytes(Hash512(append(h, []byte("G1_0")...))),
-		QFieldModulus,
+	t0 := NewFQ(
+		new(big.Int).Mod(
+			new(big.Int).SetBytes(Hash512(append(h, []byte("G1_0")...))),
+			QFieldModulus,
+		),
 	)
 	t0Affine := SWEncodeG1(t0)
 
 	// t1 <- hash512(h + b"G1_1") % q
-	t1 := new(big.Int).Mod(
-		new(big.Int).SetBytes(Hash512(append(h, []byte("G1_1")...))),
-		QFieldModulus,
+	t1 := NewFQ(
+		new(big.Int).Mod(
+			new(big.Int).SetBytes(Hash512(append(h, []byte("G1_1")...))),
+			QFieldModulus,
+		),
 	)
 	t1Affine := SWEncodeG1(t1)
 
