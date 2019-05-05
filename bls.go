@@ -9,6 +9,8 @@ import (
 	"sort"
 )
 
+// Sizes of g1/g2 elements
+// TODO: Probably move these somewhere else...
 const (
 	G1ElementSize = 48
 	G2ElementSize = 96
