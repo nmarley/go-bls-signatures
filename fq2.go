@@ -218,14 +218,17 @@ func (f FQ2) Inverse() *FQ2 {
 
 // InverseAssign finds the inverse of the field element.
 func (f *FQ2) InverseAssign() bool {
-	inv := f.c0.Square()
-	inv.AddAssign(f.c1.Square())
-	inv.Inverse()
-	if inv == nil {
+	t1 := f.c1.Copy()
+	t1.SquareAssign()
+	t0 := f.c0.Copy()
+	t0.SquareAssign()
+	t0.AddAssign(t1)
+	t := t0.Inverse()
+	if t == nil {
 		return false
 	}
-	f.c0.MulAssign(inv)
-	f.c1.MulAssign(inv)
+	f.c0.MulAssign(t)
+	f.c1.MulAssign(t)
 	f.c1.NegAssign()
 	return true
 }
