@@ -680,44 +680,66 @@ var swencSqrtNegThreeMinusOneDivTwoFQ2 = NewFQ2(NewFQ(swencSqrtNegThreeMinusOneD
 
 // SWEncodeG2 implements the Shallue-van de Woestijne encoding.
 func SWEncodeG2(t *FQ2) *G2Affine {
+	fmt.Println("NGM in SWEncodeG2")
 	if t.IsZero() {
+		fmt.Println("NGM t.IsZero(), see-ya")
 		return G2AffineZero.Copy()
 	}
 
 	parity := t.Parity()
+	fmt.Println("NGM parity:", parity)
 
+	// w = t^2 + b + 1
 	w := t.Square()
 	w.AddAssign(BCoeffFQ2)
 	w.AddAssign(FQ2One)
 
+	fmt.Println("NGM w:", w)
+
+	// TODO: Look into this case... (differs from Python impl)
 	if w.IsZero() {
+		fmt.Println("NGM w.IsZero()")
 		ret := G2AffineOne.Copy()
 		if parity {
+			// NGM here
+			fmt.Println("here1")
 			ret.NegAssign()
+			fmt.Println("here2")
 		}
 		return ret
 	}
 
+	fmt.Println("NGM AFTER w.IsZero()")
+	// w = ~w * sqrt(-3) * t
 	w.InverseAssign()
+	fmt.Println("NGM ~w:", w)
+
 	w.MulAssign(swencSqrtNegThreeFQ2)
 	w.MulAssign(t)
+	fmt.Println("NGM w post sqrt(-3):", w)
 
 	x1 := w.Mul(t)
 	x1.NegAssign()
 	x1.AddAssign(swencSqrtNegThreeMinusOneDivTwoFQ2)
+	fmt.Println("NGM x1:", x1)
 	if p := GetG2PointFromX(x1, parity); p != nil {
+		fmt.Println("NGM returning point from x1")
 		return p
 	}
 
 	x2 := x1.Neg()
 	x2.SubAssign(FQ2One)
+	fmt.Println("NGM x2:", x2)
 	if p := GetG2PointFromX(x2, parity); p != nil {
+		fmt.Println("NGM returning point from x2")
 		return p
 	}
 
 	x3 := w.Square()
 	x3.InverseAssign()
 	x3.AddAssign(FQ2One)
+	fmt.Println("NGM x3:", x3)
+	fmt.Println("NGM returning point from x3")
 	return GetG2PointFromX(x3, parity)
 }
 
@@ -765,52 +787,71 @@ func XHashG2(msg []byte) *G2Projective {
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_0_c0")...))),
 		QFieldModulus,
 	)
-	fmt.Println("t00 = ", t00)
+	//fmt.Printf("NGM t00 = %096x\n", t00)
 
 	//t01 <- hash512(h + b"G2_0_c1") % q
 	t01 := new(big.Int).Mod(
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_0_c1")...))),
 		QFieldModulus,
 	)
-	fmt.Println("t01 = ", t01)
+	//fmt.Printf("NGM t01 = %096x\n", t01)
 
 	//t10 <- hash512(h + b"G2_1_c0") % q
 	t10 := new(big.Int).Mod(
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_1_c0")...))),
 		QFieldModulus,
 	)
-	fmt.Println("t10 = ", t10)
+	//fmt.Printf("NGM t10 = %096x\n", t10)
 
 	//t11 <- hash512(h + b"G2_1_c1") % q
 	t11 := new(big.Int).Mod(
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_1_c1")...))),
 		QFieldModulus,
 	)
-	fmt.Println("t11 = ", t11)
+	//fmt.Printf("NGM t11 = %096x\n", t11)
 
 	//t0 <- Fq2(t00, t01)
 	t0 := NewFQ2(NewFQ(t00), NewFQ(t01))
-	fmt.Println("t0 = ", t0)
+	//fmt.Println("NGM t0 = ", t0.Serialize())
 
 	//t1 <- Fq2(t10, t11)
 	t1 := NewFQ2(NewFQ(t10), NewFQ(t11))
-	fmt.Println("t1 = ", t1)
+	//fmt.Println("NGM t1 = ", t1.Serialize())
 
 	//p <- swEncode(t0) * swEncode(t1)
-	p1 := SWEncodeG2(t0)
-	p2 := SWEncodeG2(t1)
-	p := p1.ToProjective().Add(p2.ToProjective()) // .ToAffine()
-	fmt.Println("p = ", p)
+	t0Affine := SWEncodeG2(t0)
+	//fmt.Println("NGM t0Affine:", t0Affine)
+	//fmt.Printf("NGM t0Affine: %0192x\n", t0Affine.SerializeBytes())
+
+	t1Affine := SWEncodeG2(t1)
+	//fmt.Printf("NGM t1Affine: %0192x\n", t1Affine.SerializeBytes())
+
+	res := t0Affine.ToProjective()
+	// fmt.Println("NGM res", res)
+	res = res.AddAffine(t1Affine)
+	// fmt.Println("NGM res2", res)
+
+	// fmt.Println("NGM res:", res.String())
+	// fmt.Printf("NGM res: %0192x\n", res.ToAffine().SerializeBytes())
 
 	// Map to the r-torsion by raising to cofactor power
 	// Described in page 11 of "Efficient hash maps to G2 on BLS curves" by Budroni and Pintore.
 	//x <- abs(x)
-	//x := blsX
-	//x.Exp(x, 2, nil).Add(x).Sub(1)
+	x := blsX
+	fmt.Println("NGM(XHashG2) x:", x)
+
+	p2 := res.Double()
+	fmt.Println("NGM(XHashG2) p2:", p2)
+
+	inner_psi := p2.ToAffine().Psi()
+	fmt.Println("NGM(XHashG2) inner_psi:", inner_psi)
+
+	// x.Exp(x, 2, nil).Add(x).Sub(1)
 	//return p ^ (x^2 + x - 1) - psi(p ^ (x + 1)) + psi(psi(p ^ 2))
 
-	// TODO: Remove this placeholder return
-	return G2ProjectiveZero
+	// Map to the r-torsion by raising to cofactor power
+	// return p ^ h
+	return res.ToAffine().ScaleByCofactor()
 }
 
 // Twist ...
@@ -818,11 +859,14 @@ func XHashG2(msg []byte) *G2Projective {
 // Given an untwisted point, this converts it's
 // coordinates to a point on the twisted curve. See Craig Costello
 // book, look up twists.
-func Twist(g *G2Affine) *G2Affine {
+func (g *G2Affine) Twist() *G2Affine {
 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
 
 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
+
+	fmt.Println(wsq)
+	fmt.Println(wcu)
 
 	// g.x and g.y are FQ2 type ...
 
@@ -840,23 +884,37 @@ func Twist(g *G2Affine) *G2Affine {
 // Given a point on G2 on the twisted curve, this converts it's
 // coordinates back from Fq2 to Fq12. See Craig Costello book, look
 // up twists.
-// func Untwist(g *G2Affine) *G2Affine {
-// 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
-//
-//     wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
-//     wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
-//
-//     // newX := g.x / wsq
-//     // newY := g.y / wcu
-// 	// return NewG2Affine(newX, newY)
-//
-// 	// TODO: Remove dummy return
-// 	return G2AffineZero
-// }
+func (g *G2Affine) Untwist() *G2Affine {
+	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
 
-//func Psi(g *G2Affine) *G2Affine {
-//    ut = untwist(P, ec)
-//    t = AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
-//    t2 = twist(t, ec)
-//    return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
-//}
+	fmt.Println("NGM(Untwist) g:", g)
+
+	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
+	fmt.Println("NGM(Untwist) wsq:", wsq)
+
+	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
+	fmt.Println("NGM(Untwist) wcu:", wcu)
+
+	//fmt.Println(wsq)
+	//fmt.Println(wcu)
+
+	newX := g.x / wsq
+	fmt.Println("NGM(Untwist) newX:", newX)
+
+	// newY := g.y / wcu
+	// return NewG2Affine(newX, newY)
+
+	// TODO: Remove dummy return
+	return G2AffineZero
+}
+
+// Psi ...
+func (g *G2Affine) Psi() *G2Affine {
+	ut := g.Untwist()
+	// t = AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
+	t := NewG2Affine(ut.x, ut.y)
+	t2 := t.Twist()
+	// return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
+	return NewG2Affine(t2.x, t2.y)
+	//return G2AffineZero
+}

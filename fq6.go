@@ -6,6 +6,9 @@ import (
 	"math/big"
 )
 
+// FQ6Root ...
+var FQ6Root = NewFQ2(FQOne, FQOne)
+
 // FQ6 is an element of FQ6 represented by c0 + c1*v + v2*v**2
 type FQ6 struct {
 	c0 *FQ2

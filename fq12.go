@@ -240,3 +240,5 @@ func (f FQ12) Inverse() *FQ12 {
 
 	return NewFQ12(i.Mul(f.c0), i.Mul(f.c1).Neg())
 }
+
+// Inverse

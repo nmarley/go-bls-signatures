@@ -27,6 +27,11 @@ func (f FQ2) String() string {
 	return fmt.Sprintf("Fq2(%s + %s * u)", f.c0, f.c1)
 }
 
+// NGM Remove later
+func (f FQ2) Serialize() string {
+	return fmt.Sprintf("%s%s", f.c0.Serialize(), f.c1.Serialize())
+}
+
 // Cmp compares two FQ2 elements.
 func (f FQ2) Cmp(other *FQ2) int {
 	cOut := f.c1.Cmp(other.c1)

@@ -151,6 +151,11 @@ func (f FQ) String() string {
 	return fmt.Sprintf("Fq(0x%096x)", f.n)
 }
 
+// NGM Remove later
+func (f FQ) Serialize() string {
+	return fmt.Sprintf("%096x", f.n)
+}
+
 // Cmp compares this field element to another.
 func (f FQ) Cmp(other *FQ) int {
 	return f.n.Cmp(other.n)
