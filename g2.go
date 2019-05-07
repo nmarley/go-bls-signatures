@@ -898,8 +898,8 @@ func (g *G2Affine) Untwist() *G2Affine {
 	//fmt.Println(wsq)
 	//fmt.Println(wcu)
 
-	newX := g.x / wsq
-	fmt.Println("NGM(Untwist) newX:", newX)
+	// newX := g.x / wsq
+	// fmt.Println("NGM(Untwist) newX:", newX)
 
 	// newY := g.y / wcu
 	// return NewG2Affine(newX, newY)
