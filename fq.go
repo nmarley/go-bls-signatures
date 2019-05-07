@@ -148,7 +148,18 @@ func (f *FQ) NegAssign() {
 }
 
 func (f FQ) String() string {
-	return fmt.Sprintf("Fq(0x%096x)", f.n)
+	hexStr := fmt.Sprintf("%096x", f.n)
+
+	// If the hex representation of f.n is greater than 8 hex digits...
+	if 1 == f.n.Cmp(big.NewInt(0xffffffff)) {
+		// ... shorten it
+		hexStr = hexStr[0:5] + ".." + hexStr[91:]
+	} else {
+		// otherwise, print the short value
+		hexStr = fmt.Sprintf("%x", f.n)
+	}
+
+	return fmt.Sprintf("Fq(0x%s)", hexStr)
 }
 
 // NGM Remove later
