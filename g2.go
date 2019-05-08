@@ -852,6 +852,11 @@ func XHashG2(msg []byte) *G2Projective {
 
 	// x.Exp(x, 2, nil).Add(x).Sub(1)
 	//return p ^ (x^2 + x - 1) - psi(p ^ (x + 1)) + psi(psi(p ^ 2))
+	t1_ := t0_.Mul(x)
+	fmt.Println("NGM(XHashG2) t1_:", t1_)
+
+	t2_ := t0_.Add(t1_).AddAffine(p.ToAffine().Neg())
+	fmt.Println("NGM(XHashG2) t2_:", t2_)
 
 	// Map to the r-torsion by raising to cofactor power
 	// return p ^ h
