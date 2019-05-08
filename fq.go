@@ -147,16 +147,14 @@ func (f *FQ) NegAssign() {
 	f.n.Mod(f.n, QFieldModulus)
 }
 
+// String implements the Stringer interface
 func (f FQ) String() string {
-	hexStr := fmt.Sprintf("%096x", f.n)
+	hexStr := fmt.Sprintf("%x", f.n)
 
-	// If the hex representation of f.n is greater than 8 hex digits...
+	// If the hex representation of f.n is greater than 8 hex digits, shorten
+	// it
 	if 1 == f.n.Cmp(big.NewInt(0xffffffff)) {
-		// ... shorten it
-		hexStr = hexStr[0:5] + ".." + hexStr[91:]
-	} else {
-		// otherwise, print the short value
-		hexStr = fmt.Sprintf("%x", f.n)
+		hexStr = hexStr[0:5] + ".." + hexStr[(len(hexStr)-5):]
 	}
 
 	return fmt.Sprintf("Fq(0x%s)", hexStr)
