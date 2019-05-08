@@ -43,11 +43,24 @@ func (f FQ6) MulByNonresidue() *FQ6 {
 
 // MulBy1 multiplies the FQ6 by an FQ2.
 func (f FQ6) MulBy1(c1 *FQ2) *FQ6 {
-	b := f.c1.Mul(c1)
-	tmp := f.c1.Add(f.c2)
-	t1 := c1.Mul(tmp).Sub(b).MultiplyByNonresidue()
-	tmp = f.c0.Add(f.c1)
-	t2 := c1.Mul(tmp).Sub(b)
+	b := f.c1.Copy()
+	b.MulAssign(c1)
+
+	tmp := f.c1.Copy()
+	tmp.AddAssign(f.c2)
+
+	t1 := c1.Copy()
+	t1.MulAssign(tmp)
+	t1.SubAssign(b)
+	t1.MultiplyByNonresidueAssign()
+
+	tmp = f.c0.Copy()
+	tmp.AddAssign(f.c1)
+
+	t2 := c1.Copy()
+	t2.MulAssign(tmp)
+	t2.SubAssign(b)
+
 	return NewFQ6(t1, t2, b)
 }
 
