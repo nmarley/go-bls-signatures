@@ -261,7 +261,7 @@ func TestSecretkeySerializeDeserialize(t *testing.T) {
 		t.Fatal("message did not verify before serialization/deserialization of secret")
 	}
 
-	pubSer := pub.Serialize()
+	pubSer := pub.Serialize(true)
 	pubDeser, err := bls.DeserializePublicKey(pubSer)
 	if err != nil {
 		t.Fatal(err)

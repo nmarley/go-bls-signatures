@@ -826,32 +826,36 @@ func XHashG2(msg []byte) *G2Projective {
 	t1Affine := SWEncodeG2(t1)
 	//fmt.Printf("NGM t1Affine: %0192x\n", t1Affine.SerializeBytes())
 
-	res := t0Affine.ToProjective()
+	p := t0Affine.ToProjective()
 	// fmt.Println("NGM res", res)
-	res = res.AddAffine(t1Affine)
+	p = p.AddAffine(t1Affine)
 	// fmt.Println("NGM res2", res)
 
-	//// fmt.Println("NGM res:", res.String())
-	//// fmt.Printf("NGM res: %0192x\n", res.ToAffine().SerializeBytes())
-	//
-	//// Map to the r-torsion by raising to cofactor power
-	//// Described in page 11 of "Efficient hash maps to G2 on BLS curves" by Budroni and Pintore.
-	////x <- abs(x)
-	//x := blsX
-	//fmt.Println("NGM(XHashG2) x:", x)
-	//
-	//p2 := res.Double()
-	//fmt.Println("NGM(XHashG2) p2:", p2)
-	//
-	//inner_psi := p2.ToAffine().Psi()
-	//fmt.Println("NGM(XHashG2) inner_psi:", inner_psi)
+	// Map to the r-torsion by raising to cofactor power
+	// Described in page 11 of "Efficient hash maps to G2 on BLS curves" by Budroni and Pintore.
+	//x <- abs(x)
+
+	x := blsX
+	fmt.Println("NGM(XHashG2) x:", x)
+
+	p2 := p.Double()
+	fmt.Println("NGM(XHashG2) p2:", p2)
+
+	inner_psi := p2.ToAffine().Psi()
+	fmt.Println("NGM(XHashG2) inner_psi:", inner_psi)
+
+	// Mul performs a EC multiply operation on the point.
+	// func (g G2Affine) Mul(b *big.Int) *G2Projective
+	// t0_ := x * p
+	t0_ := p.Mul(x)
+	fmt.Println("NGM(XHashG2) t0_:", t0_)
 
 	// x.Exp(x, 2, nil).Add(x).Sub(1)
 	//return p ^ (x^2 + x - 1) - psi(p ^ (x + 1)) + psi(psi(p ^ 2))
 
 	// Map to the r-torsion by raising to cofactor power
 	// return p ^ h
-	return res.ToAffine().ScaleByCofactor()
+	return p.ToAffine().ScaleByCofactor()
 }
 
 //// Fancy hash:
@@ -952,8 +956,8 @@ func (g *G2Affine) Untwist() *G2Affine {
 	//fmt.Println(wcu)
 
 	// newX := g.x / wsq
-	newX := nwsq.MulFQ2(g.x)
-	fmt.Println("NGM(Untwist) newX:", newX)
+	// newX := nwsq.MulFQ2(g.x)
+	// fmt.Println("NGM(Untwist) newX:", newX)
 
 	// newY := g.y / wcu
 	// return NewG2Affine(newX, newY)

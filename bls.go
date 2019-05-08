@@ -180,10 +180,10 @@ func Sign(message []byte, key *SecretKey, domain uint64) *Signature {
 // XSign signs a message with a secret key.
 func XSign(message []byte, key *SecretKey) *Signature {
 	h := XHashG2(message)
-
 	fmt.Println("NGM (XSign) h =", h)
-
 	h2 := h.Mul(key.f.n)
+	fmt.Println("NGM (XSign) h2 =", h2)
+
 	return &Signature{s: h2}
 }
 
