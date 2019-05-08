@@ -241,28 +241,14 @@ func (f FQ12) Inverse() *FQ12 {
 	return NewFQ12(i.Mul(f.c0), i.Mul(f.c1).Neg())
 }
 
-// MulFQ2 multiplies the FQ12 by an FQ2 and returns the result
-func (f *FQ12) MulFQ2(other *FQ2) *FQ12 {
-	buf := [2]*FQ6{FQ6Zero, FQ6Zero}
-
-	fmt.Println("NGM(MulFQ2) f(self):", f)
-	fmt.Println("NGM(MulFQ2) other:", other)
-
-	//// MulBy1 multiplies the FQ6 by an FQ2.
-	//func (f FQ6) MulBy1(c1 *FQ2) *FQ6 {
-
-	fmt.Println("NGM(MulFQ2) f.c0.c2:", f.c0.c2)
-
-	//fc0 := f.c0.Copy()
-	//o0 := fc0.MulBy1(other)
-	//fmt.Println("NGM(MulFQ2) o0:", o0)
-
-	//if f.c0 != FQ6Zero {
-	//	buf[0] = f.c0.MulBy1(other)
-	//}
-	//if f.c1 != FQ6Zero {
-	//	buf[1] = f.c1.MulBy1(other)
-	//}
-
-	return NewFQ12(buf[0], buf[1])
-}
+//// MulFQ2 multiplies the FQ12 by an FQ2 and returns the result
+//func (f *FQ12) MulFQ2(other *FQ2) *FQ12 {
+//	buf := [2]*FQ6{FQ6Zero, FQ6Zero}
+//
+//	fmt.Println("NGM(MulFQ2) f(self):", f)
+//	fmt.Println("NGM(MulFQ2) other:", other)
+//
+//
+//	fmt.Println("NGM(MulFQ2) f.c0.c2:", f.c0.c2)
+//	return NewFQ12(buf[0], buf[1])
+//}
