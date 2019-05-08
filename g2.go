@@ -680,66 +680,66 @@ var swencSqrtNegThreeMinusOneDivTwoFQ2 = NewFQ2(NewFQ(swencSqrtNegThreeMinusOneD
 
 // SWEncodeG2 implements the Shallue-van de Woestijne encoding.
 func SWEncodeG2(t *FQ2) *G2Affine {
-	fmt.Println("NGM in SWEncodeG2")
+	// fmt.Println("NGM in SWEncodeG2")
 	if t.IsZero() {
-		fmt.Println("NGM t.IsZero(), see-ya")
+		// fmt.Println("NGM t.IsZero(), see-ya")
 		return G2AffineZero.Copy()
 	}
 
 	parity := t.Parity()
-	fmt.Println("NGM parity:", parity)
+	// fmt.Println("NGM parity:", parity)
 
 	// w = t^2 + b + 1
 	w := t.Square()
 	w.AddAssign(BCoeffFQ2)
 	w.AddAssign(FQ2One)
 
-	fmt.Println("NGM w:", w)
+	// fmt.Println("NGM w:", w)
 
 	// TODO: Look into this case... (differs from Python impl)
 	if w.IsZero() {
-		fmt.Println("NGM w.IsZero()")
+		// fmt.Println("NGM w.IsZero()")
 		ret := G2AffineOne.Copy()
 		if parity {
 			// NGM here
-			fmt.Println("here1")
+			// fmt.Println("here1")
 			ret.NegAssign()
-			fmt.Println("here2")
+			// fmt.Println("here2")
 		}
 		return ret
 	}
 
-	fmt.Println("NGM AFTER w.IsZero()")
+	// fmt.Println("NGM AFTER w.IsZero()")
 	// w = ~w * sqrt(-3) * t
 	w.InverseAssign()
-	fmt.Println("NGM ~w:", w)
+	// fmt.Println("NGM ~w:", w)
 
 	w.MulAssign(swencSqrtNegThreeFQ2)
 	w.MulAssign(t)
-	fmt.Println("NGM w post sqrt(-3):", w)
+	// fmt.Println("NGM w post sqrt(-3):", w)
 
 	x1 := w.Mul(t)
 	x1.NegAssign()
 	x1.AddAssign(swencSqrtNegThreeMinusOneDivTwoFQ2)
-	fmt.Println("NGM x1:", x1)
+	// fmt.Println("NGM x1:", x1)
 	if p := GetG2PointFromX(x1, parity); p != nil {
-		fmt.Println("NGM returning point from x1")
+		// fmt.Println("NGM returning point from x1")
 		return p
 	}
 
 	x2 := x1.Neg()
 	x2.SubAssign(FQ2One)
-	fmt.Println("NGM x2:", x2)
+	// fmt.Println("NGM x2:", x2)
 	if p := GetG2PointFromX(x2, parity); p != nil {
-		fmt.Println("NGM returning point from x2")
+		// fmt.Println("NGM returning point from x2")
 		return p
 	}
 
 	x3 := w.Square()
 	x3.InverseAssign()
 	x3.AddAssign(FQ2One)
-	fmt.Println("NGM x3:", x3)
-	fmt.Println("NGM returning point from x3")
+	// fmt.Println("NGM x3:", x3)
+	// fmt.Println("NGM returning point from x3")
 	return GetG2PointFromX(x3, parity)
 }
 
