@@ -859,25 +859,22 @@ func XHashG2(msg []byte) *G2Projective {
 // Given an untwisted point, this converts it's
 // coordinates to a point on the twisted curve. See Craig Costello
 // book, look up twists.
-func (g *G2Affine) Twist() *G2Affine {
-	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
-
-	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
-	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
-
-	fmt.Println(wsq)
-	fmt.Println(wcu)
-
-	// g.x and g.y are FQ2 type ...
-
-	//newX := (g.x * wsq)
-	//newY := (g.y * wcu)
-
-	//return NewG2Affine(newX, newY)
-
-	// TODO: Remove dummy return
-	return G2AffineZero
-}
+// func (g *G2Affine) Twist() *G2Affine {
+// 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
+//
+// 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
+// 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
+//
+// 	// g.x and g.y are FQ2 type ...
+//
+// 	//newX := (g.x * wsq)
+// 	//newY := (g.y * wcu)
+//
+// 	//return NewG2Affine(newX, newY)
+//
+// 	// TODO: Remove dummy return
+// 	return G2AffineZero
+// }
 
 // Untwist ...
 //
@@ -892,8 +889,18 @@ func (g *G2Affine) Untwist() *G2Affine {
 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
 	fmt.Println("NGM(Untwist) wsq:", wsq)
 
+	fmt.Println("NGM(Untwist) g.x:", g.x)
+
+	nwsq := wsq.Inverse()
+	fmt.Println("NGM(Untwist) ~wsq:", nwsq)
+
 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
 	fmt.Println("NGM(Untwist) wcu:", wcu)
+
+	fmt.Println("NGM(Untwist) g.y:", g.y)
+
+	nwcu := wcu.Inverse()
+	fmt.Println("NGM(Untwist) ~wcu:", nwcu)
 
 	//fmt.Println(wsq)
 	//fmt.Println(wcu)
@@ -910,11 +917,12 @@ func (g *G2Affine) Untwist() *G2Affine {
 
 // Psi ...
 func (g *G2Affine) Psi() *G2Affine {
-	ut := g.Untwist()
+	_ = g.Untwist()
+	// ut := g.Untwist()
 	// t = AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
-	t := NewG2Affine(ut.x, ut.y)
-	t2 := t.Twist()
-	// return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
-	return NewG2Affine(t2.x, t2.y)
-	//return G2AffineZero
+	// t := NewG2Affine(ut.x, ut.y)
+	// t2 := t.Twist()
+	// PYTHON return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
+	// return NewG2Affine(t2.x, t2.y)
+	return G2AffineZero
 }
