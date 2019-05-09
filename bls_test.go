@@ -416,19 +416,24 @@ var sig2 = []byte{
 // Custom testing for debugging shit
 func TestCustomNGM(t *testing.T) {
 	FQ12OneRoot := bls.NewFQ6(bls.FQ2Zero, bls.FQ2One, bls.FQ2Zero)
+
 	nwsq := bls.NewFQ12(FQ12OneRoot, bls.FQ6Zero).Inverse()
+	nwcu := bls.NewFQ12(bls.FQ6Zero, FQ12OneRoot).Inverse()
 
-	c0, _ := new(big.Int).SetString("06427044c2270e673490af1756c840361b4090bca24ae94a2f6ad442a5470e94dc6dd392834cf28f3274e85dc2d036e4", 16)
-	c1, _ := new(big.Int).SetString("0efe0745224dd9cc23e7d7d63ba7b86ea8deee05b113e02c607afc75f740cb4d0c01d2d361e3fd028b9c24d816afb45a", 16)
+	x_c0, _ := new(big.Int).SetString("06427044c2270e673490af1756c840361b4090bca24ae94a2f6ad442a5470e94dc6dd392834cf28f3274e85dc2d036e4", 16)
+	x_c1, _ := new(big.Int).SetString("0efe0745224dd9cc23e7d7d63ba7b86ea8deee05b113e02c607afc75f740cb4d0c01d2d361e3fd028b9c24d816afb45a", 16)
 
-	xVal := bls.NewFQ2(bls.NewFQ(c0), bls.NewFQ(c1))
+	xVal := bls.NewFQ2(bls.NewFQ(x_c0), bls.NewFQ(x_c1))
 	fmt.Println("NGM(Untwist) xVal:", xVal)
 
 	// NGM(untwist) point.x: Fq2(Fq(06427044c2270e673490af1756c840361b4090bca24ae94a2f6ad442a5470e94dc6dd392834cf28f3274e85dc2d036e4), Fq(0efe0745224dd9cc23e7d7d63ba7b86ea8deee05b113e02c607afc75f740cb4d0c01d2d361e3fd028b9c24d816afb45a))
 
 	fmt.Println("NGM(Untwist) ~wsq:", nwsq)
-	// fmt.Println("NGM(Untwist) ~wsq full:", nwsq.Serialize())
+	fmt.Println("NGM(Untwist) ~wcu:", nwcu)
 
-	// is := is.New(t)
-	// is.Equal(sig.Serialize(true), tt.expectedSig)
+	y_c0, _ := new(big.Int).SetString("0b7d5c8331ab2a86a94a97acdd248d828d2f7fefa3429a0637076418882154099f40023d81b1f43f6ae860901ebcbd04", 16)
+	y_c1, _ := new(big.Int).SetString("0a21795e4ad60a5630d919d16421cdcf494ef30f91ebd2c07755ab5493444366e831c16c26bd010d6b87ea6fa59fc428", 16)
+
+	yVal := bls.NewFQ2(bls.NewFQ(y_c0), bls.NewFQ(y_c1))
+	fmt.Println("NGM(Untwist) yVal:", yVal)
 }

@@ -961,11 +961,10 @@ func (g *G2Affine) Untwist() *G2Affine {
 	//fmt.Println(wsq)
 	//fmt.Println(wcu)
 
-	//newX := nwsq.
-	// .MulFQ2(g.x)
+	newX := nwsq.c0.c2.Mul(g.x)
 
 	// newX := g.x / wsq
-	// fmt.Println("NGM(Untwist) newX:", newX)
+	fmt.Println("NGM(Untwist) newX:", newX)
 
 	// newY := g.y / wcu
 	// fmt.Println("NGM(Untwist) newY:", newY)
