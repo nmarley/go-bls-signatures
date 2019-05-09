@@ -265,33 +265,22 @@ func Twist(x, y *FQ12) []*FQ2 {
 	// TODO: hard-code these values, they are constant
 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
-	fmt.Println("NGM(Twist) wsq:", wsq)
-	fmt.Println("NGM(Twist) wcu:", wcu)
 
-	fmt.Println("NGM(Twist) x:", x)
-	fmt.Println("NGM(Twist) y:", y)
-
-	//newX := wsq.c0.c1.Mul(x)
-	//fmt.Println("NGM(Twist) newX:", newX)
+	//fmt.Println("NGM(Twist) wsq:", wsq)
+	//fmt.Println("NGM(Twist) wcu:", wcu)
+	//
+	//fmt.Println("NGM(Twist) x:", x)
+	//fmt.Println("NGM(Twist) y:", y)
 
 	newX := x.Copy()
 	newX.MulAssign(wsq)
-	fmt.Println("NGM(Twist) newX:", newX)
+	//fmt.Println("NGM(Twist) newX:", newX)
 
 	newY := y.Copy()
 	newY.MulAssign(wcu)
-	fmt.Println("NGM(Twist) newY:", newY)
-
-	// fmt.Println("NGM(Twist) tmp:", tmp)
-
-	//fq2s := []*FQ2{tmp.c0.c2, tmp.c1.c1}
-	//return fq2s
-	// return []*FQ2{tmp.c0.c1, tmp.c1.c1}
-	// fmt.Println("NGM(MulFQ2) f.c0.c2:", f.c0.c2)
-	// return NewFQ12(buf[0], buf[1])
+	//fmt.Println("NGM(Twist) newY:", newY)
 
 	return []*FQ2{newX.c0.c0, newY.c0.c0}
-	//return []*FQ2{}
 }
 
 // 	return NewG2Affine(newX, newY)
