@@ -532,10 +532,18 @@ func (g *G2Projective) FuckyouMul(b *big.Int) *G2Projective {
 	//	return G2AffineZero.ToProjective()
 	//}
 
+	fmt.Println("NGM(FUCKYOUMUL) b: ", b)
+
 	// TODO: just replace this w/"g"
 	addend := g.Copy()
 
-	result := G2ProjectiveZero.Copy()
+	//result := G2ProjectiveZero.Copy()
+	result := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+	fmt.Println("NGM(FUCKYOUMUL) result(initial): ", result)
+
+	fmt.Println("NGM(FUCKYOUMUL) addend:", addend)
+
+	fmt.Println("NGM(FUCKYOUMUL) c:", b)
 
 	//	while c > 0:
 	for b.Cmp(bigZero) > 0 {

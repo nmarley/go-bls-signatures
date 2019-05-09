@@ -435,42 +435,42 @@ func TestCustomNGM(t *testing.T) {
 	//
 	//yVal := bls.NewFQ2(bls.NewFQ(y_c0), bls.NewFQ(y_c1))
 	//fmt.Println("NGM(Untwist) yVal:", yVal)
-
-	x_c0, _ := new(big.Int).SetString("0aa03bc4f23a7419ac3c4376c937fc52620fbf6129af64bb47f2e85c4e43ecf0f437d332f29877c8df08869aecbff59f", 16)
-	x_c1, _ := new(big.Int).SetString("045dcb80301365b277ab945f726fbc1c46cf2ea487647b7118881419a8fcde5c17c9ffa06f4b8539ac939e3d29efbebb", 16)
-	xVal := bls.NewFQ2(bls.NewFQ(x_c0), bls.NewFQ(x_c1))
-	fmt.Println("xVal:", xVal)
-
-	y_c0, _ := new(big.Int).SetString("0acf6af0be409a6e6d11d8bf20a32da8eb3f397f9a973663572e87b68db2cbb843b8e1d4d4377aa66b38257fe22e4096", 16)
-	y_c1, _ := new(big.Int).SetString("19532057c61556820ee2e8c886ca4cfdc2870514ead9af1c8757f63efc426dd2c324df9603d98666ba4ec4efc3712e3d", 16)
-	yVal := bls.NewFQ2(bls.NewFQ(y_c0), bls.NewFQ(y_c1))
-	fmt.Println("yVal:", yVal)
-
-	ecks := bls.NewFQ12(
-		bls.NewFQ6(
-			bls.FQ2Zero,
-			bls.FQ2Zero,
-			xVal,
-		),
-		bls.FQ6Zero,
-	)
-	wai := bls.NewFQ12(
-		bls.FQ6Zero,
-		bls.NewFQ6(
-			bls.FQ2Zero,
-			yVal,
-			bls.FQ2Zero,
-		),
-	)
+	//
+	//x_c0, _ := new(big.Int).SetString("0aa03bc4f23a7419ac3c4376c937fc52620fbf6129af64bb47f2e85c4e43ecf0f437d332f29877c8df08869aecbff59f", 16)
+	//x_c1, _ := new(big.Int).SetString("045dcb80301365b277ab945f726fbc1c46cf2ea487647b7118881419a8fcde5c17c9ffa06f4b8539ac939e3d29efbebb", 16)
+	//xVal := bls.NewFQ2(bls.NewFQ(x_c0), bls.NewFQ(x_c1))
+	//fmt.Println("xVal:", xVal)
+	//
+	//y_c0, _ := new(big.Int).SetString("0acf6af0be409a6e6d11d8bf20a32da8eb3f397f9a973663572e87b68db2cbb843b8e1d4d4377aa66b38257fe22e4096", 16)
+	//y_c1, _ := new(big.Int).SetString("19532057c61556820ee2e8c886ca4cfdc2870514ead9af1c8757f63efc426dd2c324df9603d98666ba4ec4efc3712e3d", 16)
+	//yVal := bls.NewFQ2(bls.NewFQ(y_c0), bls.NewFQ(y_c1))
+	//fmt.Println("yVal:", yVal)
+	//
+	//ecks := bls.NewFQ12(
+	//	bls.NewFQ6(
+	//		bls.FQ2Zero,
+	//		bls.FQ2Zero,
+	//		xVal,
+	//	),
+	//	bls.FQ6Zero,
+	//)
+	//wai := bls.NewFQ12(
+	//	bls.FQ6Zero,
+	//	bls.NewFQ6(
+	//		bls.FQ2Zero,
+	//		yVal,
+	//		bls.FQ2Zero,
+	//	),
+	//)
 	//fmt.Println("ecks:", ecks)
 	//fmt.Println("wai:", wai)
 
-	tw_x := ecks.FrobeniusMap(1)
-	tw_y := wai.FrobeniusMap(1)
+	// tw_x := ecks.FrobeniusMap(1)
+	// tw_y := wai.FrobeniusMap(1)
 	//fmt.Println("tw_x:", tw_x)
 	//fmt.Println("tw_y:", tw_y)
 
-	newPair := bls.NewFq12Pair(tw_x, tw_y)
+	// newPair := bls.NewFq12Pair(tw_x, tw_y)
 
 	//pts := bls.Twist(tw_x, tw_y)
 	// fmt.Println("pts: ", pts)
@@ -478,8 +478,8 @@ func TestCustomNGM(t *testing.T) {
 	// g2pt := bls.NewG2Affine(pts[0], pts[1])
 	// fmt.Println("g2pt: ", g2pt)
 
-	g2pt := bls.Twist(newPair)
-	fmt.Println("g2pt: ", g2pt)
+	// g2pt := bls.Twist(newPair)
+	// fmt.Println("g2pt: ", g2pt)
 
 	// return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
 
@@ -487,12 +487,24 @@ func TestCustomNGM(t *testing.T) {
 	// fmt.Println("t2:", t2)
 
 	//newY := nwcu.c1.c1.Mul(g.y)
-}
 
-//newx
-////0aa03bc4f23a7419ac3c4376c937fc52620fbf6129af64bb47f2e85c4e43ecf0f437d332f29877c8df08869aecbff59f
-////045dcb80301365b277ab945f726fbc1c46cf2ea487647b7118881419a8fcde5c17c9ffa06f4b8539ac939e3d29efbebb
-//
-//newy
-////0acf6af0be409a6e6d11d8bf20a32da8eb3f397f9a973663572e87b68db2cbb843b8e1d4d4377aa66b38257fe22e4096
-////19532057c61556820ee2e8c886ca4cfdc2870514ead9af1c8757f63efc426dd2c324df9603d98666ba4ec4efc3712e3d
+	// == old above this line  ==================================================
+	x_c0, _ := new(big.Int).SetString("09e35c2bcad146e49aa19e4df6699d08f9ccc12d1c7625788f2ada0bad3e5741dc736e2935fe3ebcb0fef6db1166786f", 16)
+	x_c1, _ := new(big.Int).SetString("1245709e2a671d31cbdd537bb3cdcbde39e66511dd390a4a28a0ee0beea98782695d119e2d7ed66ef3f15e6c2a223bf9", 16)
+	xVal := bls.NewFQ2(bls.NewFQ(x_c0), bls.NewFQ(x_c1))
+	// fmt.Println("xVal:", xVal)
+
+	y_c0, _ := new(big.Int).SetString("1167ad422b392c865d7cbae6adc4f4827a090a6de6c3a9e28f93786e3fc7f516d7dcf8abdbe8df476dda27ba7adb2aad", 16)
+	y_c1, _ := new(big.Int).SetString("0029180da059941e8194ce794161f2b77266d955d61f591dbb177591b6e6d6792454935b388fb769ac91d739491f7110", 16)
+	yVal := bls.NewFQ2(bls.NewFQ(y_c0), bls.NewFQ(y_c1))
+	// fmt.Println("yVal:", yVal)
+
+	sk, _ := new(big.Int).SetString("22fb42c08c12de3a6af053880199806532e79515f94e83461612101f9412f9e", 16)
+	fmt.Println("sk:", sk)
+
+	g2 := bls.NewG2Affine(xVal, yVal)
+	fmt.Println("g2:", g2)
+
+	res := g2.ToProjective().FuckyouMul(sk)
+	fmt.Println("res:", res)
+}
