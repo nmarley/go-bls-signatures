@@ -966,7 +966,24 @@ func (g *G2Affine) Untwist() *G2Affine {
 	newY := nwcu.c1.c1.Mul(g.y)
 	fmt.Println("NGM(Untwist) newY:", newY)
 
+//x=Fq12(
+//		Fq6(
+//			Fq2(Fq(0x0), Fq(0x0)),
+//			Fq2(Fq(0x0), Fq(0x0)),
+//			Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))
+//		),
+//		Fq6(
+//			Fq2(Fq(0x0), Fq(0x0)),
+//			Fq2(Fq(0x0), Fq(0x0)),
+//			Fq2(Fq(0x0), Fq(0x0))
+//		)
+//	)
+
+
+//y=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0))), Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)), Fq2(Fq(0x0), Fq(0x0))))
+
 	//// 	NGM(psi) ut: AffinePoint(x=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))), Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)))), y=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0))), Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)), Fq2(Fq(0x0), Fq(0x0)))), i=False)
+
 	//// 	NGM(psi) ut: AffinePoint(x=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0),
 	//// 	Fq(0x0)), Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))),
 	//// 	Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0),
