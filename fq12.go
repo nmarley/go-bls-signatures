@@ -20,10 +20,12 @@ func NewFQ12(c0 *FQ6, c1 *FQ6) *FQ12 {
 	}
 }
 
+// String implements the stringer interface
 func (f FQ12) String() string {
 	return fmt.Sprintf("Fq12(%s + %s * w)", f.c0, f.c1)
 }
 
+// Serialize the element as a hex string
 func (f FQ12) Serialize() string {
 	return fmt.Sprintf("Fq12(%s + %s * w)", f.c0.Serialize(), f.c1.Serialize())
 }
@@ -244,47 +246,3 @@ func (f FQ12) Inverse() *FQ12 {
 
 	return NewFQ12(i.Mul(f.c0), i.Mul(f.c1).Neg())
 }
-
-type EPAffine struct {
-	x *FQ12
-	y *FQ12
-}
-
-func NewEPAffine(x, y *FQ12) *EPAffine {
-	return &EPAffine{x, y}
-}
-
-// Twist ...
-//
-// Given an untwisted point, this converts it's
-// coordinates to a point on the twisted curve. See Craig Costello
-// book, look up twists.
-func Twist(x, y *FQ12) []*FQ2 {
-	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
-
-	// TODO: hard-code these values, they are constant
-	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
-	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
-
-	//fmt.Println("NGM(Twist) wsq:", wsq)
-	//fmt.Println("NGM(Twist) wcu:", wcu)
-	//
-	//fmt.Println("NGM(Twist) x:", x)
-	//fmt.Println("NGM(Twist) y:", y)
-
-	newX := x.Copy()
-	newX.MulAssign(wsq)
-	//fmt.Println("NGM(Twist) newX:", newX)
-
-	newY := y.Copy()
-	newY.MulAssign(wcu)
-	//fmt.Println("NGM(Twist) newY:", newY)
-
-	return []*FQ2{newX.c0.c0, newY.c0.c0}
-}
-
-// 	return NewG2Affine(newX, newY)
-//
-// 	// TODO: Remove dummy return
-// 	return G2AffineZero
-// }

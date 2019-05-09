@@ -868,95 +868,85 @@ func XHashG2(msg []byte) *G2Projective {
 // Given a point on G2 on the twisted curve, this converts it's
 // coordinates back from Fq2 to Fq12. See Craig Costello book, look
 // up twists.
-func (g *G2Affine) Untwist() *FQ12 {
+func (g *G2Affine) Untwist() *Fq12Pair {
 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
 
-	//fmt.Println("NGM(Untwist) g:", g)
-
 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
-	//fmt.Println("NGM(Untwist) wsq:", wsq)
-	//fmt.Println("NGM(Untwist) g.x:", g.x)
-
 	nwsq := wsq.Inverse()
-	//fmt.Println("NGM(Untwist) ~wsq:", nwsq)
-	//fmt.Println("NGM(Untwist) ~wsq full:", nwsq.Serialize())
 
 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
-	//fmt.Println("NGM(Untwist) wcu:", wcu)
-	//fmt.Println("NGM(Untwist) g.y:", g.y)
-
 	nwcu := wcu.Inverse()
-	//fmt.Println("NGM(Untwist) ~wcu:", nwcu)
 
-	// newX := g.x / wsq
-	newX := nwsq.c0.c2.Mul(g.x)
-	//fmt.Println("NGM(Untwist) newX:", newX)
-
-	// newY := g.y / wcu
-	newY := nwcu.c1.c1.Mul(g.y)
-	//fmt.Println("NGM(Untwist) newY:", newY)
-
-	res := NewFQ12(
-		NewFQ6(FQ2Zero, FQ2Zero, newX),
-		NewFQ6(FQ2Zero, newY, FQ2Zero),
+	newX := NewFQ12(
+		NewFQ6(
+			FQ2Zero,
+			FQ2Zero,
+			nwsq.c0.c2.Mul(g.x),
+		),
+		FQ6Zero,
 	)
-
-	//ut: AffinePoint(
-	//	x=Fq12(
-	//		Fq6(
-	//			Fq2(Fq(0x0), Fq(0x0)),
-	//			Fq2(Fq(0x0), Fq(0x0)),
-	//			Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))
-	//		),
-	//		Fq6(
-	//			Fq2(Fq(0x0), Fq(0x0)),
-	//			Fq2(Fq(0x0), Fq(0x0)),
-	//			Fq2(Fq(0x0), Fq(0x0))
-	//		)
-	//	)
-	//	y=Fq12(
-	//		Fq6(
-	//			Fq2(Fq(0x0), Fq(0x0)),
-	//			Fq2(Fq(0x0), Fq(0x0)),
-	//			Fq2(Fq(0x0), Fq(0x0))
-	//		),
-	//		Fq6(
-	//			Fq2(Fq(0x0), Fq(0x0)),
-	//			Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)),
-	//			Fq2(Fq(0x0), Fq(0x0))
-	//		)
-	//	),
-	//	i=False
-	//)
-
-	return res
+	newY := NewFQ12(
+		FQ6Zero,
+		NewFQ6(
+			FQ2Zero,
+			nwcu.c1.c1.Mul(g.y),
+			FQ2Zero,
+		),
+	)
+	return NewFq12Pair(newX, newY)
 }
 
 // Psi ...
 func (g *G2Affine) Psi() *G2Affine {
 	ut := g.Untwist()
-	fmt.Println("NGM(Psi) ut:", ut)
+	t := NewFq12Pair(ut.x.FrobeniusMap(1), ut.y.FrobeniusMap(1))
+	t2 := Twist(t)
 
-	//NGM(psi) t: AffinePoint
-	// x=Fq12(
-	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x12050..29fdb), Fq(0x6ddf5..88769))),
-	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)))),
-	// y=Fq12(
-	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)))
-	// , Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xf4fb6..6760a), Fq(0x1965c..9c467)), Fq2(Fq(0x0), Fq(0x0)))
-	// )
+	return NewG2Affine(t2.x, t2.y)
+}
 
-	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x12050..29fdb), Fq(0x6ddf5..88769))),
-	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xf4fb6..6760a), Fq(0x1965c..9c467)), Fq2(Fq(0x0), Fq(0x0)))
+// Fq12Pair
+// Not sure what to call this, it's a x/y pairing of FQ12 fields
+type Fq12Pair struct {
+	x *FQ12
+	y *FQ12
+}
 
-	//[0][2]
-	//[1][1]
-	t := ut.FrobeniusMap(1)
-	fmt.Println("NGM(Psi) t:", t)
+func NewFq12Pair(x, y *FQ12) *Fq12Pair {
+	return &Fq12Pair{x, y}
+}
 
-	// t = AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
-	// t2 := t.Twist()
-	// PYTHON return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
-	// return NewG2Affine(t2.x, t2.y)
-	return G2AffineZero
+//// Fq2Pair
+//// Not sure what to call this, it's a x/y pairing of FQ2 fields
+//// This is so that we avoid mixing g1/g2 with bls12-381 field implementation...
+//type Fq2Pair struct {
+//	x *FQ2
+//	y *FQ2
+//}
+//func NewFq2Pair(x, y *FQ2) *Fq2Pair {
+//	return &Fq2Pair{x, y}
+//}
+
+// Twist ...
+//
+// Given an untwisted point, this converts it's
+// coordinates to a point on the twisted curve. See Craig Costello
+// book, look up twists.
+// func Twist(pair *Fq12Pair) []*FQ2 {
+func Twist(pair *Fq12Pair) *G2Affine {
+	// TODO: Could move this to FQ12 also
+	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
+
+	// TODO: hard-code these values, they are constant
+	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
+	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
+
+	newX := pair.x.Copy()
+	newX.MulAssign(wsq)
+
+	newY := pair.y.Copy()
+	newY.MulAssign(wcu)
+
+	// return []*FQ2{newX.c0.c0, newY.c0.c0}
+	return NewG2Affine(newX.c0.c0, newY.c0.c0)
 }

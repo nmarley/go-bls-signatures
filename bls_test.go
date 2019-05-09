@@ -470,10 +470,15 @@ func TestCustomNGM(t *testing.T) {
 	//fmt.Println("tw_x:", tw_x)
 	//fmt.Println("tw_y:", tw_y)
 
-	pts := bls.Twist(tw_x, tw_y)
+	newPair := bls.NewFq12Pair(tw_x, tw_y)
+
+	//pts := bls.Twist(tw_x, tw_y)
 	// fmt.Println("pts: ", pts)
 
-	g2pt := bls.NewG2Affine(pts[0], pts[1])
+	// g2pt := bls.NewG2Affine(pts[0], pts[1])
+	// fmt.Println("g2pt: ", g2pt)
+
+	g2pt := bls.Twist(newPair)
 	fmt.Println("g2pt: ", g2pt)
 
 	// return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
