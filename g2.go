@@ -960,11 +960,15 @@ func (g *G2Affine) Untwist() *G2Affine {
 	//fmt.Println(wsq)
 	//fmt.Println(wcu)
 
+	//newX := nwsq.
+	// .MulFQ2(g.x)
+
 	// newX := g.x / wsq
-	// newX := nwsq.MulFQ2(g.x)
 	// fmt.Println("NGM(Untwist) newX:", newX)
 
 	// newY := g.y / wcu
+	// fmt.Println("NGM(Untwist) newY:", newY)
+
 	// return NewG2Affine(newX, newY)
 
 	// TODO: Remove dummy return
