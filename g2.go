@@ -948,6 +948,7 @@ func (g *G2Affine) Untwist() *G2Affine {
 
 	nwsq := wsq.Inverse()
 	fmt.Println("NGM(Untwist) ~wsq:", nwsq)
+	fmt.Println("NGM(Untwist) ~wsq full:", nwsq.Serialize())
 
 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
 	fmt.Println("NGM(Untwist) wcu:", wcu)

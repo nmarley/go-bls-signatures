@@ -29,6 +29,15 @@ func (f FQ6) String() string {
 	return fmt.Sprintf("Fq6(%s + %s*v + %s*v^2)", f.c0, f.c1, f.c2)
 }
 
+func (f FQ6) Serialize() string {
+	return fmt.Sprintf(
+		"Fq6(%s + %s*v + %s*v^2)",
+		f.c0.Serialize(),
+		f.c1.Serialize(),
+		f.c2.Serialize(),
+	)
+}
+
 // Copy creates a copy of the field element.
 func (f FQ6) Copy() *FQ6 {
 	return NewFQ6(f.c0.Copy(), f.c1.Copy(), f.c2.Copy())

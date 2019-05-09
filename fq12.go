@@ -20,8 +20,12 @@ func NewFQ12(c0 *FQ6, c1 *FQ6) *FQ12 {
 	}
 }
 
-func (f *FQ12) String() string {
+func (f FQ12) String() string {
 	return fmt.Sprintf("Fq12(%s + %s * w)", f.c0, f.c1)
+}
+
+func (f FQ12) Serialize() string {
+	return fmt.Sprintf("Fq12(%s + %s * w)", f.c0.Serialize(), f.c1.Serialize())
 }
 
 // Conjugate returns the conjugate of the FQ12 element.

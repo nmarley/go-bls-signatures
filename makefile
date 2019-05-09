@@ -4,7 +4,9 @@ SHELL = bash
 COVERAGE_FILE ?= coverage.txt
 
 something:
-	go test -run TestVectorSignaturesSign | grep NGM
+	# go test -run TestVectorSignaturesSign | grep NGM
+	go test -run TestCustomNGM
+
 
 #.PHONY: default
 default:  goimports lint vet build #test ## Run default target : all lints + test

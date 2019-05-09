@@ -160,7 +160,7 @@ func (f FQ) String() string {
 	return fmt.Sprintf("Fq(0x%s)", hexStr)
 }
 
-// NGM Remove later
+// Serialize prints the full serialized value as a hex string.
 func (f FQ) Serialize() string {
 	return fmt.Sprintf("%096x", f.n)
 }

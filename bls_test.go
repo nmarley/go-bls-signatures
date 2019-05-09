@@ -411,3 +411,14 @@ var sig2 = []byte{
 	0x2c, 0x56, 0x99, 0xff, 0x7a, 0x10, 0xbe, 0xba,
 	0x24, 0xd3, 0xce, 0xd4, 0xe8, 0x9c, 0x82, 0x1e,
 }
+
+// Custom testing for debugging shit
+func TestCustomNGM(t *testing.T) {
+    FQ12OneRoot := bls.NewFQ6(bls.FQ2Zero, bls.FQ2One, bls.FQ2Zero)
+    nwsq := bls.NewFQ12(FQ12OneRoot, bls.FQ6Zero).Inverse()
+	fmt.Println("NGM(Untwist) ~wsq:", nwsq)
+	fmt.Println("NGM(Untwist) ~wsq full:", nwsq.Serialize())
+
+    // is := is.New(t)
+    // is.Equal(sig.Serialize(true), tt.expectedSig)
+}
