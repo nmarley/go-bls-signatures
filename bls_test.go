@@ -446,25 +446,40 @@ func TestCustomNGM(t *testing.T) {
 	yVal := bls.NewFQ2(bls.NewFQ(y_c0), bls.NewFQ(y_c1))
 	fmt.Println("yVal:", yVal)
 
-	ut := bls.NewFQ12(
+	ecks := bls.NewFQ12(
 		bls.NewFQ6(
 			bls.FQ2Zero,
 			bls.FQ2Zero,
 			xVal,
 		),
+		bls.FQ6Zero,
+	)
+	wai := bls.NewFQ12(
+		bls.FQ6Zero,
 		bls.NewFQ6(
 			bls.FQ2Zero,
 			yVal,
 			bls.FQ2Zero,
 		),
 	)
-	fmt.Println("ut:", ut)
+	//fmt.Println("ecks:", ecks)
+	//fmt.Println("wai:", wai)
 
-	tw := ut.FrobeniusMap(1)
-	fmt.Println("tw:", tw)
+	tw_x := ecks.FrobeniusMap(1)
+	tw_y := wai.FrobeniusMap(1)
+	//fmt.Println("tw_x:", tw_x)
+	//fmt.Println("tw_y:", tw_y)
 
-	t2 := tw.Twist()
-	fmt.Println("t2:", t2)
+	pts := bls.Twist(tw_x, tw_y)
+	// fmt.Println("pts: ", pts)
+
+	g2pt := bls.NewG2Affine(pts[0], pts[1])
+	fmt.Println("g2pt: ", g2pt)
+
+	// return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
+
+	// t2 := tw.Twist()
+	// fmt.Println("t2:", t2)
 
 	//newY := nwcu.c1.c1.Mul(g.y)
 }

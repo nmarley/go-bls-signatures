@@ -901,35 +901,33 @@ func (g *G2Affine) Untwist() *FQ12 {
 		NewFQ6(FQ2Zero, newY, FQ2Zero),
 	)
 
-
-//ut: AffinePoint(
-//	x=Fq12(
-//		Fq6(
-//			Fq2(Fq(0x0), Fq(0x0)),
-//			Fq2(Fq(0x0), Fq(0x0)),
-//			Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))
-//		),
-//		Fq6(
-//			Fq2(Fq(0x0), Fq(0x0)),
-//			Fq2(Fq(0x0), Fq(0x0)),
-//			Fq2(Fq(0x0), Fq(0x0))
-//		)
-//	)
-//	y=Fq12(
-//		Fq6(
-//			Fq2(Fq(0x0), Fq(0x0)),
-//			Fq2(Fq(0x0), Fq(0x0)),
-//			Fq2(Fq(0x0), Fq(0x0))
-//		),
-//		Fq6(
-//			Fq2(Fq(0x0), Fq(0x0)),
-//			Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)),
-//			Fq2(Fq(0x0), Fq(0x0))
-//		)
-//	),
-//	i=False
-//)
-
+	//ut: AffinePoint(
+	//	x=Fq12(
+	//		Fq6(
+	//			Fq2(Fq(0x0), Fq(0x0)),
+	//			Fq2(Fq(0x0), Fq(0x0)),
+	//			Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))
+	//		),
+	//		Fq6(
+	//			Fq2(Fq(0x0), Fq(0x0)),
+	//			Fq2(Fq(0x0), Fq(0x0)),
+	//			Fq2(Fq(0x0), Fq(0x0))
+	//		)
+	//	)
+	//	y=Fq12(
+	//		Fq6(
+	//			Fq2(Fq(0x0), Fq(0x0)),
+	//			Fq2(Fq(0x0), Fq(0x0)),
+	//			Fq2(Fq(0x0), Fq(0x0))
+	//		),
+	//		Fq6(
+	//			Fq2(Fq(0x0), Fq(0x0)),
+	//			Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)),
+	//			Fq2(Fq(0x0), Fq(0x0))
+	//		)
+	//	),
+	//	i=False
+	//)
 
 	return res
 }

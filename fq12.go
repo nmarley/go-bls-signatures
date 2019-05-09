@@ -245,12 +245,21 @@ func (f FQ12) Inverse() *FQ12 {
 	return NewFQ12(i.Mul(f.c0), i.Mul(f.c1).Neg())
 }
 
+type EPAffine struct {
+	x *FQ12
+	y *FQ12
+}
+
+func NewEPAffine(x, y *FQ12) *EPAffine {
+	return &EPAffine{x, y}
+}
+
 // Twist ...
 //
 // Given an untwisted point, this converts it's
 // coordinates to a point on the twisted curve. See Craig Costello
 // book, look up twists.
-func (f *FQ12) Twist() []*FQ2 {
+func Twist(x, y *FQ12) []*FQ2 {
 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
 
 	// TODO: hard-code these values, they are constant
@@ -259,17 +268,19 @@ func (f *FQ12) Twist() []*FQ2 {
 	fmt.Println("NGM(Twist) wsq:", wsq)
 	fmt.Println("NGM(Twist) wcu:", wcu)
 
-	x := f.c0.c2.Copy()
-	y := f.c1.c1.Copy()
-
 	fmt.Println("NGM(Twist) x:", x)
 	fmt.Println("NGM(Twist) y:", y)
 
-	newX := wsq.c0.c1.Mul(x)
-	// fmt.Println("NGM(Twist) newX:", newX)
+	//newX := wsq.c0.c1.Mul(x)
+	//fmt.Println("NGM(Twist) newX:", newX)
 
-	// newY := g.y / wcu
-	// newY := nwcu.c1.c1.Mul(g.y)
+	newX := x.Copy()
+	newX.MulAssign(wsq)
+	fmt.Println("NGM(Twist) newX:", newX)
+
+	newY := y.Copy()
+	newY.MulAssign(wcu)
+	fmt.Println("NGM(Twist) newY:", newY)
 
 	// fmt.Println("NGM(Twist) tmp:", tmp)
 
@@ -279,7 +290,8 @@ func (f *FQ12) Twist() []*FQ2 {
 	// fmt.Println("NGM(MulFQ2) f.c0.c2:", f.c0.c2)
 	// return NewFQ12(buf[0], buf[1])
 
-	return []*FQ2{}
+	return []*FQ2{newX.c0.c0, newY.c0.c0}
+	//return []*FQ2{}
 }
 
 // 	return NewG2Affine(newX, newY)
