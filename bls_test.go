@@ -3,6 +3,7 @@ package bls_test
 import (
 	"errors"
 	"fmt"
+	"math/big"
 	"testing"
 
 	"github.com/matryer/is"
@@ -414,11 +415,20 @@ var sig2 = []byte{
 
 // Custom testing for debugging shit
 func TestCustomNGM(t *testing.T) {
-    FQ12OneRoot := bls.NewFQ6(bls.FQ2Zero, bls.FQ2One, bls.FQ2Zero)
-    nwsq := bls.NewFQ12(FQ12OneRoot, bls.FQ6Zero).Inverse()
-	fmt.Println("NGM(Untwist) ~wsq:", nwsq)
-	fmt.Println("NGM(Untwist) ~wsq full:", nwsq.Serialize())
+	FQ12OneRoot := bls.NewFQ6(bls.FQ2Zero, bls.FQ2One, bls.FQ2Zero)
+	nwsq := bls.NewFQ12(FQ12OneRoot, bls.FQ6Zero).Inverse()
 
-    // is := is.New(t)
-    // is.Equal(sig.Serialize(true), tt.expectedSig)
+	c0, _ := new(big.Int).SetString("06427044c2270e673490af1756c840361b4090bca24ae94a2f6ad442a5470e94dc6dd392834cf28f3274e85dc2d036e4", 16)
+	c1, _ := new(big.Int).SetString("0efe0745224dd9cc23e7d7d63ba7b86ea8deee05b113e02c607afc75f740cb4d0c01d2d361e3fd028b9c24d816afb45a", 16)
+
+	xVal := bls.NewFQ2(bls.NewFQ(c0), bls.NewFQ(c1))
+	fmt.Println("NGM(Untwist) xVal:", xVal)
+
+	// NGM(untwist) point.x: Fq2(Fq(06427044c2270e673490af1756c840361b4090bca24ae94a2f6ad442a5470e94dc6dd392834cf28f3274e85dc2d036e4), Fq(0efe0745224dd9cc23e7d7d63ba7b86ea8deee05b113e02c607afc75f740cb4d0c01d2d361e3fd028b9c24d816afb45a))
+
+	fmt.Println("NGM(Untwist) ~wsq:", nwsq)
+	// fmt.Println("NGM(Untwist) ~wsq full:", nwsq.Serialize())
+
+	// is := is.New(t)
+	// is.Equal(sig.Serialize(true), tt.expectedSig)
 }
