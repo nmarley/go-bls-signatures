@@ -958,27 +958,41 @@ func (g *G2Affine) Untwist() *G2Affine {
 	nwcu := wcu.Inverse()
 	fmt.Println("NGM(Untwist) ~wcu:", nwcu)
 
-	//fmt.Println(wsq)
-	//fmt.Println(wcu)
-
-	newX := nwsq.c0.c2.Mul(g.x)
-
 	// newX := g.x / wsq
+	newX := nwsq.c0.c2.Mul(g.x)
 	fmt.Println("NGM(Untwist) newX:", newX)
 
 	// newY := g.y / wcu
-	// fmt.Println("NGM(Untwist) newY:", newY)
+	newY := nwcu.c1.c1.Mul(g.y)
+	fmt.Println("NGM(Untwist) newY:", newY)
 
-	// return NewG2Affine(newX, newY)
+	//// 	NGM(psi) ut: AffinePoint(x=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))), Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)))), y=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0))), Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)), Fq2(Fq(0x0), Fq(0x0)))), i=False)
+	//// 	NGM(psi) ut: AffinePoint(x=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0),
+	//// 	Fq(0x0)), Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))),
+	//// 	Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0),
+	//// 	Fq(0x0)))), y=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)),
+	//// 	Fq2(Fq(0x0), Fq(0x0))), Fq6(Fq2(Fq(0x0), Fq(0x0)),
+	//// 	Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)), Fq2(Fq(0x0), Fq(0x0)))),
+	//// 	i=False)
+	////res := NewFQ12(
+	////	NewFQ6(
+	////
+	////	),
+	////	NewFQ6(
+	////	),
+	////)
 
-	// TODO: Remove dummy return
-	return G2AffineZero
+	//return res
+	return NewG2Affine(newX, newY)
 }
 
 // Psi ...
 func (g *G2Affine) Psi() *G2Affine {
-	_ = g.Untwist()
-	// ut := g.Untwist()
+	ut := g.Untwist()
+	fmt.Println("NGM(Psi) ut:", ut)
+	t := NewG2Affine(ut.x.FrobeniusMap(1), ut.y.FrobeniusMap(1))
+	fmt.Println("NGM(Psi) t:", t)
+	// 	AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
 	// t = AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
 	// t := NewG2Affine(ut.x, ut.y)
 	// t2 := t.Twist()
