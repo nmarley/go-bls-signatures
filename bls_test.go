@@ -436,29 +436,37 @@ func TestCustomNGM(t *testing.T) {
 	//yVal := bls.NewFQ2(bls.NewFQ(y_c0), bls.NewFQ(y_c1))
 	//fmt.Println("NGM(Untwist) yVal:", yVal)
 
-
 	x_c0, _ := new(big.Int).SetString("0aa03bc4f23a7419ac3c4376c937fc52620fbf6129af64bb47f2e85c4e43ecf0f437d332f29877c8df08869aecbff59f", 16)
 	x_c1, _ := new(big.Int).SetString("045dcb80301365b277ab945f726fbc1c46cf2ea487647b7118881419a8fcde5c17c9ffa06f4b8539ac939e3d29efbebb", 16)
 	xVal := bls.NewFQ2(bls.NewFQ(x_c0), bls.NewFQ(x_c1))
 	fmt.Println("xVal:", xVal)
 
+	y_c0, _ := new(big.Int).SetString("0acf6af0be409a6e6d11d8bf20a32da8eb3f397f9a973663572e87b68db2cbb843b8e1d4d4377aa66b38257fe22e4096", 16)
+	y_c1, _ := new(big.Int).SetString("19532057c61556820ee2e8c886ca4cfdc2870514ead9af1c8757f63efc426dd2c324df9603d98666ba4ec4efc3712e3d", 16)
+	yVal := bls.NewFQ2(bls.NewFQ(y_c0), bls.NewFQ(y_c1))
+	fmt.Println("yVal:", yVal)
 
-	//newX := nwsq.c0.c2.Mul(g.x)
-	one := bls.NewFQ12(
+	ut := bls.NewFQ12(
 		bls.NewFQ6(
 			bls.FQ2Zero,
 			bls.FQ2Zero,
 			xVal,
 		),
-		bls.FQ6Zero,
+		bls.NewFQ6(
+			bls.FQ2Zero,
+			yVal,
+			bls.FQ2Zero,
+		),
 	)
-	fmt.Println("one:", one)
+	fmt.Println("ut:", ut)
 
-	onet1 := one.FrobeniusMap(1)
-	fmt.Println("onet1:", onet1)
+	tw := ut.FrobeniusMap(1)
+	fmt.Println("tw:", tw)
+
+	t2 := tw.Twist()
+	fmt.Println("t2:", t2)
 
 	//newY := nwcu.c1.c1.Mul(g.y)
-
 }
 
 //newx

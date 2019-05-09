@@ -863,110 +863,47 @@ func XHashG2(msg []byte) *G2Projective {
 	return p.ToAffine().ScaleByCofactor()
 }
 
-//// Fancy hash:
-//// https://www.di.ens.fr/~fouque/pub/latincrypt12.pdf
-//// https://github.com/herumi/mcl/blob/9fbc54305d01b984e39d83e96bfa94bb17648a86/include/mcl/bn.hpp#L76
-////
-//// This computes only the raw mapping in a random subgroup. Scaling by cofactor
-//// and setting parity of y according to t is responsibility of the caller.
-//// input: t, output: x,y
-//func FouqueMapXtoY(t, x, y Field) {
-//	w, y2, c := t.Copy(), t.New(), t.New()
-//	// w = (t^2 + 4u + 1)^(-1) * sqrt(-3) * t
-//	//if t.IsZero() { panic("degenerate t=0") }
-//	w.Square(w)
-//	w.Add(w, c.GetB()) // 4u
-//	w.Add(w, c.Cast(&One))
-//	//if w.IsZero() { panic("degenerate t^2=-5") }
-//	w.Inverse(w)
-//	w.Mul(w, c.Cast(&QSqrtMinus3))
-//	w.Mul(w, t)
-//
-//	for i := 0; i < 3; i++ {
-//		switch i {
-//		// x = (sqrt(-3) - 1) / 2 - (w * t)
-//		case 0:
-//			x.Mul(w, t)
-//			x.Sub(c.Cast(&QSqrtMinus3Minus1Half), x)
-//		// x = -1 - x
-//		case 1:
-//			x.Sub(c.Cast(&QMinus1), x)
-//		// x = 1/w^2 + 1
-//		case 2:
-//			x.Square(w)
-//			x.Inverse(x)
-//			x.Add(x, c.Cast(&One))
-//		}
-//		// y2 = y^2 = x^3 + 4u
-//		y2.Square(x)
-//		y2.Mul(y2, x)
-//		y2.Add(y2, c.GetB())
-//		// y = sqrt(y2)
-//		if y.Sqrt(y2) {
-//			return
-//		}
-//	}
-//	panic("Uh oh.")
-//}
-
-// Twist ...
-//
-// Given an untwisted point, this converts it's
-// coordinates to a point on the twisted curve. See Craig Costello
-// book, look up twists.
-// func (g *G2Affine) Twist() *G2Affine {
-// 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
-//
-// 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
-// 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
-//
-// 	// g.x and g.y are FQ2 type ...
-//
-// 	//newX := (g.x * wsq)
-// 	//newY := (g.y * wcu)
-//
-// 	//return NewG2Affine(newX, newY)
-//
-// 	// TODO: Remove dummy return
-// 	return G2AffineZero
-// }
-
 // Untwist ...
 //
 // Given a point on G2 on the twisted curve, this converts it's
 // coordinates back from Fq2 to Fq12. See Craig Costello book, look
 // up twists.
-func (g *G2Affine) Untwist() *G2Affine {
+func (g *G2Affine) Untwist() *FQ12 {
 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
 
-	fmt.Println("NGM(Untwist) g:", g)
+	//fmt.Println("NGM(Untwist) g:", g)
 
 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
-	fmt.Println("NGM(Untwist) wsq:", wsq)
-
-	fmt.Println("NGM(Untwist) g.x:", g.x)
+	//fmt.Println("NGM(Untwist) wsq:", wsq)
+	//fmt.Println("NGM(Untwist) g.x:", g.x)
 
 	nwsq := wsq.Inverse()
-	fmt.Println("NGM(Untwist) ~wsq:", nwsq)
-	fmt.Println("NGM(Untwist) ~wsq full:", nwsq.Serialize())
+	//fmt.Println("NGM(Untwist) ~wsq:", nwsq)
+	//fmt.Println("NGM(Untwist) ~wsq full:", nwsq.Serialize())
 
 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
-	fmt.Println("NGM(Untwist) wcu:", wcu)
-
-	fmt.Println("NGM(Untwist) g.y:", g.y)
+	//fmt.Println("NGM(Untwist) wcu:", wcu)
+	//fmt.Println("NGM(Untwist) g.y:", g.y)
 
 	nwcu := wcu.Inverse()
-	fmt.Println("NGM(Untwist) ~wcu:", nwcu)
+	//fmt.Println("NGM(Untwist) ~wcu:", nwcu)
 
 	// newX := g.x / wsq
 	newX := nwsq.c0.c2.Mul(g.x)
-	fmt.Println("NGM(Untwist) newX:", newX)
+	//fmt.Println("NGM(Untwist) newX:", newX)
 
 	// newY := g.y / wcu
 	newY := nwcu.c1.c1.Mul(g.y)
-	fmt.Println("NGM(Untwist) newY:", newY)
+	//fmt.Println("NGM(Untwist) newY:", newY)
 
-//x=Fq12(
+	res := NewFQ12(
+		NewFQ6(FQ2Zero, FQ2Zero, newX),
+		NewFQ6(FQ2Zero, newY, FQ2Zero),
+	)
+
+
+//ut: AffinePoint(
+//	x=Fq12(
 //		Fq6(
 //			Fq2(Fq(0x0), Fq(0x0)),
 //			Fq2(Fq(0x0), Fq(0x0)),
@@ -978,40 +915,48 @@ func (g *G2Affine) Untwist() *G2Affine {
 //			Fq2(Fq(0x0), Fq(0x0))
 //		)
 //	)
+//	y=Fq12(
+//		Fq6(
+//			Fq2(Fq(0x0), Fq(0x0)),
+//			Fq2(Fq(0x0), Fq(0x0)),
+//			Fq2(Fq(0x0), Fq(0x0))
+//		),
+//		Fq6(
+//			Fq2(Fq(0x0), Fq(0x0)),
+//			Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)),
+//			Fq2(Fq(0x0), Fq(0x0))
+//		)
+//	),
+//	i=False
+//)
 
 
-//y=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0))), Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)), Fq2(Fq(0x0), Fq(0x0))))
-
-	//// 	NGM(psi) ut: AffinePoint(x=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))), Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)))), y=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0))), Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)), Fq2(Fq(0x0), Fq(0x0)))), i=False)
-
-	//// 	NGM(psi) ut: AffinePoint(x=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0),
-	//// 	Fq(0x0)), Fq2(Fq(0xaa03b..ff59f), Fq(0x45dcb..fbebb))),
-	//// 	Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0),
-	//// 	Fq(0x0)))), y=Fq12(Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)),
-	//// 	Fq2(Fq(0x0), Fq(0x0))), Fq6(Fq2(Fq(0x0), Fq(0x0)),
-	//// 	Fq2(Fq(0xacf6a..e4096), Fq(0x19532..12e3d)), Fq2(Fq(0x0), Fq(0x0)))),
-	//// 	i=False)
-	////res := NewFQ12(
-	////	NewFQ6(
-	////
-	////	),
-	////	NewFQ6(
-	////	),
-	////)
-
-	//return res
-	return NewG2Affine(newX, newY)
+	return res
 }
 
 // Psi ...
 func (g *G2Affine) Psi() *G2Affine {
 	ut := g.Untwist()
 	fmt.Println("NGM(Psi) ut:", ut)
-	t := NewG2Affine(ut.x.FrobeniusMap(1), ut.y.FrobeniusMap(1))
+
+	//NGM(psi) t: AffinePoint
+	// x=Fq12(
+	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x12050..29fdb), Fq(0x6ddf5..88769))),
+	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)))),
+	// y=Fq12(
+	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)))
+	// , Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xf4fb6..6760a), Fq(0x1965c..9c467)), Fq2(Fq(0x0), Fq(0x0)))
+	// )
+
+	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0x12050..29fdb), Fq(0x6ddf5..88769))),
+	// Fq6(Fq2(Fq(0x0), Fq(0x0)), Fq2(Fq(0xf4fb6..6760a), Fq(0x1965c..9c467)), Fq2(Fq(0x0), Fq(0x0)))
+
+	//[0][2]
+	//[1][1]
+	t := ut.FrobeniusMap(1)
 	fmt.Println("NGM(Psi) t:", t)
-	// 	AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
+
 	// t = AffinePoint(ut.x.qi_power(1), ut.y.qi_power(1), False, ec)
-	// t := NewG2Affine(ut.x, ut.y)
 	// t2 := t.Twist()
 	// PYTHON return AffinePoint(t2.x[0][0], t2.y[0][0], False, ec)
 	// return NewG2Affine(t2.x, t2.y)

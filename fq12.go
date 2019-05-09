@@ -245,14 +245,45 @@ func (f FQ12) Inverse() *FQ12 {
 	return NewFQ12(i.Mul(f.c0), i.Mul(f.c1).Neg())
 }
 
-//// MulFQ2 multiplies the FQ12 by an FQ2 and returns the result
-//func (f *FQ12) MulFQ2(other *FQ2) *FQ12 {
-//	buf := [2]*FQ6{FQ6Zero, FQ6Zero}
+// Twist ...
 //
-//	fmt.Println("NGM(MulFQ2) f(self):", f)
-//	fmt.Println("NGM(MulFQ2) other:", other)
+// Given an untwisted point, this converts it's
+// coordinates to a point on the twisted curve. See Craig Costello
+// book, look up twists.
+func (f *FQ12) Twist() []*FQ2 {
+	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
+
+	// TODO: hard-code these values, they are constant
+	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
+	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
+	fmt.Println("NGM(Twist) wsq:", wsq)
+	fmt.Println("NGM(Twist) wcu:", wcu)
+
+	x := f.c0.c2.Copy()
+	y := f.c1.c1.Copy()
+
+	fmt.Println("NGM(Twist) x:", x)
+	fmt.Println("NGM(Twist) y:", y)
+
+	newX := wsq.c0.c1.Mul(x)
+	// fmt.Println("NGM(Twist) newX:", newX)
+
+	// newY := g.y / wcu
+	// newY := nwcu.c1.c1.Mul(g.y)
+
+	// fmt.Println("NGM(Twist) tmp:", tmp)
+
+	//fq2s := []*FQ2{tmp.c0.c2, tmp.c1.c1}
+	//return fq2s
+	// return []*FQ2{tmp.c0.c1, tmp.c1.c1}
+	// fmt.Println("NGM(MulFQ2) f.c0.c2:", f.c0.c2)
+	// return NewFQ12(buf[0], buf[1])
+
+	return []*FQ2{}
+}
+
+// 	return NewG2Affine(newX, newY)
 //
-//
-//	fmt.Println("NGM(MulFQ2) f.c0.c2:", f.c0.c2)
-//	return NewFQ12(buf[0], buf[1])
-//}
+// 	// TODO: Remove dummy return
+// 	return G2AffineZero
+// }
