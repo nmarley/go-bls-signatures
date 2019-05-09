@@ -844,6 +844,9 @@ func XHashG2(msg []byte) *G2Projective {
 	inner_psi := p2.ToAffine().Psi()
 	fmt.Println("NGM(XHashG2) inner_psi:", inner_psi)
 
+	psi2P := inner_psi.Psi()
+	fmt.Println("NGM(hash) outer_psi:", psi2P)
+
 	// Mul performs a EC multiply operation on the point.
 	// func (g G2Affine) Mul(b *big.Int) *G2Projective
 	// t0_ := x * p
@@ -857,6 +860,12 @@ func XHashG2(msg []byte) *G2Projective {
 
 	t2_ := t0_.Add(t1_).AddAffine(p.ToAffine().Neg())
 	fmt.Println("NGM(XHashG2) t2_:", t2_)
+
+	t3_ := ""
+	fmt.Println("NGM(XHashG2) t3_:", t3_)
+
+	rv := ""
+	fmt.Println("NGM(XHashG2) rv:", rv)
 
 	// Map to the r-torsion by raising to cofactor power
 	// return p ^ h
