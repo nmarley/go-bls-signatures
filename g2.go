@@ -85,7 +85,7 @@ func (g G2Affine) ToProjective() *G2Projective {
 }
 
 // Mul performs a EC multiply operation on the point.
-func (g G2Affine) Mul(b *big.Int) *G2Projective {
+func (g *G2Affine) Mul(b *big.Int) *G2Projective {
 	bs := b.Bytes()
 	res := G2ProjectiveZero.Copy()
 	for i := uint(0); i < uint((b.BitLen()+7)/8)*8; i++ {
@@ -94,7 +94,7 @@ func (g G2Affine) Mul(b *big.Int) *G2Projective {
 		o := bs[part]&(1<<(bit)) > 0
 		res = res.Double()
 		if o {
-			res = res.AddAffine(&g)
+			res = res.AddAffine(g)
 		}
 	}
 	return res
@@ -503,6 +503,7 @@ func (g G2Projective) AddAffine(other *G2Affine) *G2Projective {
 func (g G2Projective) Mul(b *big.Int) *G2Projective {
 	bs := b.Bytes()
 	res := G2ProjectiveZero.Copy()
+	// b.BitLen()
 	for i := uint(0); i < uint((b.BitLen()+7)/8)*8; i++ {
 		part := i / 8
 		bit := 7 - i%8
@@ -514,6 +515,68 @@ func (g G2Projective) Mul(b *big.Int) *G2Projective {
 	}
 	return res
 }
+
+// NGM
+
+// FuckyouMul performs a Go fuck yourself asshole
+func (g *G2Projective) FuckyouMul(b *big.Int) *G2Projective {
+	//Double and add:
+	// https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
+
+	//	if p1.infinity or c % ec.q == 0:
+	//	return JacobianPoint(FE.one(ec.q), FE.one(ec.q),
+	//		FE.zero(ec.q), True, ec)
+
+	//isInfinity := new(big.Int).Mod(b, QFieldModulus).Cmp(bigZero) == 0
+	//if g.infinity || isInfinity {
+	//	return G2AffineZero.ToProjective()
+	//}
+
+	// TODO: just replace this w/"g"
+	addend := g.Copy()
+
+	result := G2ProjectiveZero.Copy()
+
+	//	while c > 0:
+	for b.Cmp(bigZero) > 0 {
+		//	if c & 1:
+		//	    result += addend
+		if new(big.Int).And(b, bigOne).Cmp(bigZero) > 0 {
+			result = result.Add(addend)
+		}
+		// double point
+		// addend += addend
+		addend = addend.Add(addend)
+
+		// c = c >> 1
+		b = new(big.Int).Rsh(b, 1)
+	}
+
+	return result
+}
+
+//def scalar_mult_jacobian(c, p1, ec=default_ec, FE=Fq):
+//"""
+//	Double and add:
+//https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
+//	"""
+//	# p1 is the Projective point and c is the int / scalar to multiply by
+//
+//	if p1.infinity or c % ec.q == 0:
+//	return JacobianPoint(FE.one(ec.q), FE.one(ec.q),
+//		FE.zero(ec.q), True, ec)
+//	if isinstance(c, FE):
+//	c = int(c)
+//	result = JacobianPoint(FE.one(ec.q), FE.one(ec.q),
+//		FE.zero(ec.q), True, ec)
+//	addend = p1
+//	while c > 0:
+//	if c & 1:
+//	result += addend
+//	# double point
+//	addend += addend
+//	c = c >> 1
+//	return result
 
 var blsX, _ = new(big.Int).SetString("d201000000010000", 16)
 
@@ -835,41 +898,43 @@ func XHashG2(msg []byte) *G2Projective {
 	// Described in page 11 of "Efficient hash maps to G2 on BLS curves" by Budroni and Pintore.
 	//x <- abs(x)
 
-	x := blsX
-	fmt.Println("NGM(XHashG2) x:", x)
+	//x := blsX
+	//fmt.Println("NGM(XHashG2) x:", x)
 
 	p2 := p.Double()
-	fmt.Println("NGM(XHashG2) p2:", p2)
+	//fmt.Println("NGM(XHashG2) p2:", p2)
 
-	inner_psi := p2.ToAffine().Psi()
-	fmt.Println("NGM(XHashG2) inner_psi:", inner_psi)
+	innerPsi := p2.ToAffine().Psi()
+	//fmt.Println("NGM(XHashG2) inner_psi:", inner_psi)
 
-	psi2P := inner_psi.Psi()
-	fmt.Println("NGM(hash) outer_psi:", psi2P)
+	psi2P := innerPsi.Psi()
+	//fmt.Println("NGM(hash) outer_psi:", psi2P)
 
 	// Mul performs a EC multiply operation on the point.
 	// func (g G2Affine) Mul(b *big.Int) *G2Projective
 	// t0_ := x * p
-	t0_ := p.Mul(x)
-	fmt.Println("NGM(XHashG2) t0_:", t0_)
+	t0_ := p.Mul(blsX)
+	//fmt.Println("NGM(XHashG2) t0_:", t0_)
 
 	// x.Exp(x, 2, nil).Add(x).Sub(1)
 	//return p ^ (x^2 + x - 1) - psi(p ^ (x + 1)) + psi(psi(p ^ 2))
-	t1_ := t0_.Mul(x)
-	fmt.Println("NGM(XHashG2) t1_:", t1_)
+	t1_ := t0_.Mul(blsX)
+	//fmt.Println("NGM(XHashG2) t1_:", t1_)
 
 	t2_ := t0_.Add(t1_).AddAffine(p.ToAffine().Neg())
-	fmt.Println("NGM(XHashG2) t2_:", t2_)
+	//fmt.Println("NGM(XHashG2) t2_:", t2_)
 
-	t3_ := ""
-	fmt.Println("NGM(XHashG2) t3_:", t3_)
+	//t3 = psi((x+1) * P, ec)
+	x1 := new(big.Int).Add(blsX, bigOne)
+	t3_ := p.Mul(x1).ToAffine().Psi().ToProjective()
+	//fmt.Println("NGM(XHashG2) t3_:", t3_)
 
-	rv := ""
-	fmt.Println("NGM(XHashG2) rv:", rv)
+	//rv = t2 - t3 + psi2P
+	rv := t2_.AddAffine(t3_.ToAffine().Neg()).AddAffine(psi2P)
+	// fmt.Println("NGM(XHashG2) rv:", rv)
 
 	// Map to the r-torsion by raising to cofactor power
-	// return p ^ h
-	return p.ToAffine().ScaleByCofactor()
+	return rv
 }
 
 // Untwist ...
