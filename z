@@ -1,5 +1,20 @@
 #go test -run TestVectorSignaturesSign | grep NGM
 go test -run TestCustomNGM
-addendJacobian: G2Projective(x=Fq2(Fq(0x7094a..94424) + Fq(0x22f82..71768) * u), y=Fq2(Fq(0xb5a49..bbb74) + Fq(0x12b0f..b7fab) * u), z=Fq2(Fq(0x8ce48..6aaaf) + Fq(0x52301..ee220) * u))
+NGMgo resJacobian: G2Projective(x=Fq2(Fq(0x7094a..94424) + Fq(0x22f82..71768) * u), y=Fq2(Fq(0xb5a49..bbb74) + Fq(0x12b0f..b7fab) * u), z=Fq2(Fq(0x8ce48..6aaaf) + Fq(0x52301..ee220) * u))
+NGMgo addEndJacobian: G2Projective(x=Fq2(Fq(0x356a2..395ac) + Fq(0x1527e..19861) * u), y=Fq2(Fq(0x40e14..3826f) + Fq(0x42611..841e5) * u), z=Fq2(Fq(0x16965..22196) + Fq(0x9b32a..adc15) * u))
+NGMgo u1: Fq2(Fq(0xfd563..b19c0) + Fq(0xaf52b..5ef5c) * u)
+NGMgo u2: Fq2(Fq(0xdf8aa..8c44e) + Fq(0xc92a2..9ec83) * u)
+NGMgo s1: Fq2(Fq(0xb2215..c15f1) + Fq(0x67d00..c52c7) * u)
+NGMgo s2: Fq2(Fq(0x5be71..86193) + Fq(0x18383..f4211) * u)
+NGMgo h: Fq2(Fq(0x18245..d5539) + Fq(0x19d76..3fd27) * u)
+NGMgo r: Fq2(Fq(0x149d6..bf64d) + Fq(0x11bb3..2ef4a) * u)
+
+NGMgo h_sq: Fq2(Fq(0x18706..24481) + Fq(0x18fa8..08ec2) * u)
+NGMgo h_cu: Fq2(Fq(0x192ba..2166f) + Fq(0x66664..e4b3d) * u)
+
+
+
+
+NGMgo finalres: G2(Infinity)
 PASS
-ok  	gitlab.com/nmarley/go-bls-signatures	0.144s
+ok  	gitlab.com/nmarley/go-bls-signatures	0.145s
