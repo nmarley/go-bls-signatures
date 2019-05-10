@@ -189,9 +189,6 @@ func XSign(message []byte, key *SecretKey) *Signature {
 	h2 := rp.Mul(key.f.n)
 	fmt.Println("NGMgo (XSign) h2 =", h2)
 
-	//h3 := rp.FuckyouMul(key.f.n)
-	//fmt.Println("NGM (XSign) h3 =", h3)
-
 	return &Signature{s: h2}
 }
 

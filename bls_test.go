@@ -347,11 +347,11 @@ func TestVectorSignaturesSign(t *testing.T) {
 			secretKey:   sk1,
 			expectedSig: sig1,
 		},
-		//{
-		//	payload:     []byte{7, 8, 9},
-		//	secretKey:   sk2,
-		//	expectedSig: sig2,
-		//},
+		{
+			payload:     []byte{7, 8, 9},
+			secretKey:   sk2,
+			expectedSig: sig2,
+		},
 	}
 
 	for i, tt := range tests {
