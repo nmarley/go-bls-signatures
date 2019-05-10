@@ -79,7 +79,7 @@ func (g G2Affine) NegAssign() {
 // ToProjective converts an affine point to a projective one.
 func (g G2Affine) ToProjective() *G2Projective {
 	if g.IsZero() {
-		return G2ProjectiveZero
+		return G2ProjectiveZero.Copy()
 	}
 	return NewG2Projective(g.x, g.y, FQ2One)
 }
@@ -313,40 +313,71 @@ func (g G2Projective) ToAffine() *G2Affine {
 }
 
 // Double performs EC doubling on the point.
-func (g G2Projective) Double() *G2Projective {
+//
+// Jacobian elliptic curve point doubling
+// http://www.hyperelliptic.org/EFD/oldefd/jacobian.html
+func (g *G2Projective) Double() *G2Projective {
 	if g.IsZero() {
 		return g.Copy()
 	}
 
+	//x := g.x.Copy()
+	//y := g.y.Copy()
+	//z := g.z.Copy()
+
+	// S = 4*X*Y^2
+
+	// s := x.Mul(y).Mul(y)
+	// FQFour
+
+	//	4 * X * Y * Y
+	//
+	//    Z_sq = Z * Z
+	//    Z_4th = Z_sq * Z_sq
+	//    Y_sq = Y * Y
+	//    Y_4th = Y_sq * Y_sq
+	//
+	//    # M = 3*X^2 + a*Z^4
+	//    M = 3 * X * X
+	//    M += ec.a * Z_4th
+	//
+	//    # X' = M^2 - 2*S
+	//    X_p = M * M - 2 * S
+	//    # Y' = M*(S - X') - 8*Y^4
+	//    Y_p = M * (S - X_p) - 8 * Y_4th
+	//    # Z' = 2*Y*Z
+	//    Z_p = 2 * Y * Z
+	//    return JacobianPoint(X_p, Y_p, Z_p, False, ec)
+
 	// A = x1^2
-	a := g.x.Square()
+	a := g.x.Copy().Square()
 
 	// B = y1^2
-	b := g.y.Square()
+	b := g.y.Copy().Square()
 
 	// C = B^2
-	c := b.Square()
+	c := b.Copy().Square()
 
 	// D = 2*((X1+B)^2-A-C)
-	d := g.x.Add(b)
+	d := g.x.Copy().Add(b)
 	d.SquareAssign()
 	d.SubAssign(a)
 	d.SubAssign(c)
 	d.DoubleAssign()
 
 	// E = 3*A
-	e := a.Double()
+	e := a.Copy().Double()
 	e.AddAssign(a)
 
 	// F = E^2
-	f := e.Square()
+	f := e.Copy().Square()
 
 	// z3 = 2*Y1*Z1
-	newZ := g.z.Mul(g.y)
+	newZ := g.z.Copy().Mul(g.y)
 	newZ.DoubleAssign()
 
 	// x3 = F-2*D
-	newX := f.Sub(d)
+	newX := f.Copy().Sub(d)
 	newX.SubAssign(d)
 
 	c.DoubleAssign()
@@ -360,6 +391,36 @@ func (g G2Projective) Double() *G2Projective {
 	return NewG2Projective(newX, newY, newZ)
 }
 
+//def double_point_jacobian(p1, ec=default_ec, FE=Fq):
+//    """
+//    Jacobian elliptic curve point doubling
+//    http://www.hyperelliptic.org/EFD/oldefd/jacobian.html
+//    """
+//    X, Y, Z = p1.x, p1.y, p1.z
+//    if Y == FE.zero(ec.q) or p1.infinity:
+//        return JacobianPoint(FE.one(ec.q), FE.one(ec.q),
+//                             FE.zero(ec.q), True, ec)
+//
+//    # S = 4*X*Y^2
+//    S = 4 * X * Y * Y
+//
+//    Z_sq = Z * Z
+//    Z_4th = Z_sq * Z_sq
+//    Y_sq = Y * Y
+//    Y_4th = Y_sq * Y_sq
+//
+//    # M = 3*X^2 + a*Z^4
+//    M = 3 * X * X
+//    M += ec.a * Z_4th
+//
+//    # X' = M^2 - 2*S
+//    X_p = M * M - 2 * S
+//    # Y' = M*(S - X') - 8*Y^4
+//    Y_p = M * (S - X_p) - 8 * Y_4th
+//    # Z' = 2*Y*Z
+//    Z_p = 2 * Y * Z
+//    return JacobianPoint(X_p, Y_p, Z_p, False, ec)
+
 // Add performs an EC Add operation with another point.
 func (g G2Projective) Add(other *G2Projective) *G2Projective {
 	if g.IsZero() {
@@ -370,23 +431,23 @@ func (g G2Projective) Add(other *G2Projective) *G2Projective {
 	}
 
 	// Z1Z1 = Z1^2
-	z1z1 := g.z.Square()
+	z1z1 := g.z.Copy().Square()
 
 	// Z2Z2 = Z2^2
-	z2z2 := other.z.Square()
+	z2z2 := other.z.Copy().Square()
 
 	// U1 = X1*Z2Z2
-	u1 := g.x.Mul(z2z2)
+	u1 := g.x.Copy().Mul(z2z2)
 
 	// U2 = x2*Z1Z1
-	u2 := other.x.Mul(z1z1)
+	u2 := other.x.Copy().Mul(z1z1)
 
 	// S1 = Y1*Z2*Z2Z2
-	s1 := g.y.Mul(other.z)
+	s1 := g.y.Copy().Mul(other.z)
 	s1.MulAssign(z2z2)
 
 	// S2 = Y2*Z1*Z1Z1
-	s2 := other.y.Mul(g.z)
+	s2 := other.y.Copy().Mul(g.z)
 	s2.MulAssign(z1z1)
 
 	if u1.Equals(u2) && s1.Equals(s2) {
@@ -395,24 +456,24 @@ func (g G2Projective) Add(other *G2Projective) *G2Projective {
 	}
 
 	// H = U2-U1
-	h := u2.Sub(u1)
+	h := u2.Copy().Sub(u1)
 
 	// I = (2*H)^2
-	i := h.Double()
+	i := h.Copy().Double()
 	i.SquareAssign()
 
 	// J = H * I
-	j := h.Mul(i)
+	j := h.Copy().Mul(i)
 
 	// r = 2*(S2-S1)
-	r := s2.Sub(s1)
+	r := s2.Copy().Sub(s1)
 	r.DoubleAssign()
 
 	// v = U1*I
 	u1.MulAssign(i)
 
 	// X3 = r^2 - J - 2*V
-	newX := r.Square()
+	newX := r.Copy().Square()
 	newX.SubAssign(j)
 	newX.SubAssign(u1)
 	newX.SubAssign(u1)
@@ -425,7 +486,7 @@ func (g G2Projective) Add(other *G2Projective) *G2Projective {
 	u1.SubAssign(s1)
 
 	// Z3 = ((Z1+Z2)^2 - Z1Z1 - Z2Z2)*H
-	newZ := g.z.Add(other.z)
+	newZ := g.z.Copy().Add(other.z)
 	newZ.SquareAssign()
 	newZ.SubAssign(z1z1)
 	newZ.SubAssign(z2z2)
@@ -461,37 +522,37 @@ func (g G2Projective) AddAffine(other *G2Affine) *G2Projective {
 	u2.SubAssign(g.x)
 
 	// HH = H^2
-	hh := u2.Square()
+	hh := u2.Copy().Square()
 
 	// I = 4*HH
-	i := hh.Double()
+	i := hh.Copy().Double()
 	i.DoubleAssign()
 
 	// J = H * I
-	j := u2.Mul(i)
+	j := u2.Copy().Mul(i)
 
 	// r = 2*(S2-Y1)
 	s2.SubAssign(g.y)
 	s2.DoubleAssign()
 
 	// v = X1*I
-	v := g.x.Mul(i)
+	v := g.x.Copy().Mul(i)
 
 	// X3 = r^2 - J - 2*V
-	newX := s2.Square()
+	newX := s2.Copy().Square()
 	newX.SubAssign(j)
 	newX.SubAssign(v)
 	newX.SubAssign(v)
 
 	// Y3 = r*(V - X3) - 2*Y1*J
-	newY := v.Sub(newX)
+	newY := v.Copy().Sub(newX)
 	newY.MulAssign(s2)
-	i0 := g.y.Mul(j)
+	i0 := g.y.Copy().Mul(j)
 	i0.DoubleAssign()
 	newY.SubAssign(i0)
 
 	// Z3 = (Z1+H)^2 - Z1Z1 - HH
-	newZ := g.z.Add(u2)
+	newZ := g.z.Copy().Add(u2)
 	newZ.SquareAssign()
 	newZ.SubAssign(z1z1)
 	newZ.SubAssign(hh)
@@ -551,6 +612,7 @@ func (g *G2Projective) FuckyouMul(b *big.Int) *G2Projective {
 		//	    result += addend
 		if new(big.Int).And(b, bigOne).Cmp(bigZero) > 0 {
 			result = result.Add(addend)
+			fmt.Println("NGM(FUCKYOUMUL) result after add: ", result)
 		}
 		// double point
 		// addend += addend

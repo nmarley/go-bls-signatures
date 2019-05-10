@@ -505,6 +505,28 @@ func TestCustomNGM(t *testing.T) {
 	g2 := bls.NewG2Affine(xVal, yVal)
 	fmt.Println("g2:", g2)
 
-	res := g2.ToProjective().FuckyouMul(sk)
-	fmt.Println("res:", res)
+	dbl := g2.ToProjective().Double()
+	fmt.Println("dbl:", dbl)
+
+	square := g2.ToProjective().Add(g2.Copy().ToProjective())
+	fmt.Println("square:", square)
+
+	//xx := xVal.Mul(xVal)
+	//fmt.Println("xx:", xx)
+	//
+	//xy := xVal.Mul(yVal)
+	//fmt.Println("xy:", xy)
+	//
+	//yx := yVal.Mul(xVal)
+	//fmt.Println("yx:", yx)
+	//
+	//yy := yVal.Mul(yVal)
+	//fmt.Println("yy:", yy)
+
+	bigFour := big.NewInt(4)
+	x4 := xVal.MulInt(bigFour)
+	fmt.Println("x4:", x4)
+
+	// res := g2.ToProjective().FuckyouMul(sk)
+	// fmt.Println("res:", res)
 }

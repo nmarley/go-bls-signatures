@@ -23,6 +23,27 @@ func NewFQ2(c0 *FQ, c1 *FQ) *FQ2 {
 	}
 }
 
+// MulInt multiplies the FQ2 element by a *big.Int by multiplying the int in
+// each FQ field by the argument.
+func (f *FQ2) MulInt(n *big.Int) *FQ2 {
+    // Multiply n by the FQ2's c0 value and store in a temp c0 field.
+	c0 := new(big.Int).Mul(f.c0.n, n)
+
+    // Ensure the c0 value doesn't exceed the finite field by wrapping via
+    // modulo.
+	c0 = new(big.Int).Mod(c0, QFieldModulus)
+
+    // Now multiply n by the FQ2's c1 value and store in a temp c1 field.
+	c1 := new(big.Int).Mul(f.c1.n, n)
+
+    // Same as above -- mod the number to ensure it doesn't exceed the finite
+    // field of the curve.
+	c1 = new(big.Int).Mod(c1, QFieldModulus)
+
+    // Return a new FQ2 object consisting of the multiplied / Mod'd results.
+	return NewFQ2(NewFQ(c0), NewFQ(c1))
+}
+
 func (f FQ2) String() string {
 	return fmt.Sprintf("Fq2(%s + %s * u)", f.c0, f.c1)
 }
