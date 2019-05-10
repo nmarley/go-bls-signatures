@@ -48,7 +48,7 @@ func (g G2Affine) String() string {
 	if g.infinity {
 		return fmt.Sprintf("G2(Infinity)")
 	}
-	return fmt.Sprintf("G2(x=%s, y=%s)", g.x, g.y)
+	return fmt.Sprintf("G2Affine(x=%s, y=%s)", g.x, g.y)
 }
 
 // Copy returns a copy of the G2Affine point.
@@ -261,9 +261,10 @@ var G2ProjectiveOne = G2AffineOne.ToProjective()
 
 func (g G2Projective) String() string {
 	if g.IsZero() {
-		return "G2: Infinity"
+		return "G2(Infinity)"
 	}
-	return g.ToAffine().String()
+
+	return fmt.Sprintf("G2Projective(x=%s, y=%s, z=%s)", g.x, g.y, g.z)
 }
 
 // Copy returns a copy of the G2Projective point.
@@ -321,74 +322,59 @@ func (g *G2Projective) Double() *G2Projective {
 		return g.Copy()
 	}
 
-	//x := g.x.Copy()
-	//y := g.y.Copy()
-	//z := g.z.Copy()
+	x := g.x.Copy()
+	y := g.y.Copy()
+	z := g.z.Copy()
 
 	// S = 4*X*Y^2
+	s := x.Mul(y).Mul(y).MulInt(bigFour)
+	fmt.Println("s:", s)
 
-	// s := x.Mul(y).Mul(y)
-	// FQFour
+	// Z_sq = Z * Z
+	z_sq := z.Mul(z)
+	fmt.Println("z_sq:", z_sq)
 
-	//	4 * X * Y * Y
-	//
-	//    Z_sq = Z * Z
-	//    Z_4th = Z_sq * Z_sq
-	//    Y_sq = Y * Y
-	//    Y_4th = Y_sq * Y_sq
-	//
-	//    # M = 3*X^2 + a*Z^4
-	//    M = 3 * X * X
-	//    M += ec.a * Z_4th
-	//
-	//    # X' = M^2 - 2*S
-	//    X_p = M * M - 2 * S
-	//    # Y' = M*(S - X') - 8*Y^4
-	//    Y_p = M * (S - X_p) - 8 * Y_4th
-	//    # Z' = 2*Y*Z
-	//    Z_p = 2 * Y * Z
-	//    return JacobianPoint(X_p, Y_p, Z_p, False, ec)
+	// Z_4th = Z_sq * Z_sq
+	z_4th := z_sq.Mul(z_sq)
+	fmt.Println("z_4th:", z_4th)
 
-	// A = x1^2
-	a := g.x.Copy().Square()
+	// Y_sq = Y * Y
+	y_sq := y.Mul(y)
+	fmt.Println("y_sq:", y_sq)
 
-	// B = y1^2
-	b := g.y.Copy().Square()
+	// Y_4th = Y_sq * Y_sq
+	y_4th := y_sq.Mul(y_sq)
+	fmt.Println("y_4th:", y_4th)
 
-	// C = B^2
-	c := b.Copy().Square()
+	// M = 3*X^2 + a*Z^4
 
-	// D = 2*((X1+B)^2-A-C)
-	d := g.x.Copy().Add(b)
-	d.SquareAssign()
-	d.SubAssign(a)
-	d.SubAssign(c)
-	d.DoubleAssign()
+	// M = 3 * X * X
+	m := x.Mul(x).MulInt(big.NewInt(3))
+	fmt.Println("m1:", m)
 
-	// E = 3*A
-	e := a.Copy().Double()
-	e.AddAssign(a)
+	// M += ec.a * Z_4th
+	m = m.Add(z_4th.Mul(FQ2Zero))
+	fmt.Println("m2:", m)
 
-	// F = E^2
-	f := e.Copy().Square()
+	// X' = M^2 - 2*S
 
-	// z3 = 2*Y1*Z1
-	newZ := g.z.Copy().Mul(g.y)
-	newZ.DoubleAssign()
+	// X_p = M * M - 2 * S
+	xp := m.Mul(m).Sub(s.MulInt(bigTwo))
+	fmt.Println("xp:", xp)
 
-	// x3 = F-2*D
-	newX := f.Copy().Sub(d)
-	newX.SubAssign(d)
+	// Y' = M*(S - X') - 8*Y^4
 
-	c.DoubleAssign()
-	c.DoubleAssign()
-	c.DoubleAssign()
+	// Y_p = M * (S - X_p) - 8 * Y_4th
+	yp := m.Mul(s.Sub(xp)).Sub(y_4th.MulInt(big.NewInt(8)))
+	fmt.Println("yp:", yp)
 
-	newY := d.Sub(newX)
-	newY.MulAssign(e)
-	newY.SubAssign(c)
+	// Z' = 2*Y*Z
 
-	return NewG2Projective(newX, newY, newZ)
+	// Z_p = 2 * Y * Z
+	zp := y.Mul(z).MulInt(bigTwo)
+	fmt.Println("zp:", zp)
+
+	return NewG2Projective(xp, yp, zp)
 }
 
 //def double_point_jacobian(p1, ec=default_ec, FE=Fq):

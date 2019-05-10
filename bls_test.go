@@ -508,8 +508,8 @@ func TestCustomNGM(t *testing.T) {
 	dbl := g2.ToProjective().Double()
 	fmt.Println("dbl:", dbl)
 
-	square := g2.ToProjective().Add(g2.Copy().ToProjective())
-	fmt.Println("square:", square)
+	// square := g2.ToProjective().Add(g2.Copy().ToProjective())
+	// fmt.Println("square:", square)
 
 	//xx := xVal.Mul(xVal)
 	//fmt.Println("xx:", xx)
@@ -523,9 +523,9 @@ func TestCustomNGM(t *testing.T) {
 	//yy := yVal.Mul(yVal)
 	//fmt.Println("yy:", yy)
 
-	bigFour := big.NewInt(4)
-	x4 := xVal.MulInt(bigFour)
-	fmt.Println("x4:", x4)
+	//bigFour := big.NewInt(4)
+	//x4 := xVal.MulInt(bigFour)
+	//fmt.Println("x4:", x4)
 
 	// res := g2.ToProjective().FuckyouMul(sk)
 	// fmt.Println("res:", res)
