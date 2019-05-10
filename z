@@ -1,20 +1,835 @@
-#go test -run TestVectorSignaturesSign | grep NGM
-go test -run TestCustomNGM
-NGMgo resJacobian: G2Projective(x=Fq2(Fq(0x7094a..94424) + Fq(0x22f82..71768) * u), y=Fq2(Fq(0xb5a49..bbb74) + Fq(0x12b0f..b7fab) * u), z=Fq2(Fq(0x8ce48..6aaaf) + Fq(0x52301..ee220) * u))
-NGMgo addEndJacobian: G2Projective(x=Fq2(Fq(0x356a2..395ac) + Fq(0x1527e..19861) * u), y=Fq2(Fq(0x40e14..3826f) + Fq(0x42611..841e5) * u), z=Fq2(Fq(0x16965..22196) + Fq(0x9b32a..adc15) * u))
-NGMgo u1: Fq2(Fq(0xfd563..b19c0) + Fq(0xaf52b..5ef5c) * u)
-NGMgo u2: Fq2(Fq(0xdf8aa..8c44e) + Fq(0xc92a2..9ec83) * u)
-NGMgo s1: Fq2(Fq(0xb2215..c15f1) + Fq(0x67d00..c52c7) * u)
-NGMgo s2: Fq2(Fq(0x5be71..86193) + Fq(0x18383..f4211) * u)
-NGMgo h: Fq2(Fq(0x18245..d5539) + Fq(0x19d76..3fd27) * u)
-NGMgo r: Fq2(Fq(0x149d6..bf64d) + Fq(0x11bb3..2ef4a) * u)
-
-NGMgo h_sq: Fq2(Fq(0x18706..24481) + Fq(0x18fa8..08ec2) * u)
-NGMgo h_cu: Fq2(Fq(0x192ba..2166f) + Fq(0x66664..e4b3d) * u)
-
-
-
-
-NGMgo finalres: G2(Infinity)
-PASS
-ok  	gitlab.com/nmarley/go-bls-signatures	0.145s
+go test -run TestVectorSignaturesSign | grep NGM
+NGMgo (XSign) key = 988911010713160165787315576590949929128365007408164984854024025064423370654
+NGM(XHashG2) rv: G2Affine(x=Fq2(Fq(0x9e35c..6786f) + Fq(0x12457..23bf9) * u), y=Fq2(Fq(0x1167a..b2aad) + Fq(0x29180..f7110) * u))
+NGMgo (XSign) r = G2Affine(x=Fq2(Fq(0x9e35c..6786f) + Fq(0x12457..23bf9) * u), y=Fq2(Fq(0x1167a..b2aad) + Fq(0x29180..f7110) * u))
+NGMgo (XSign) rp = G2Projective(x=Fq2(Fq(0x9e35c..6786f) + Fq(0x12457..23bf9) * u), y=Fq2(Fq(0x1167a..b2aad) + Fq(0x29180..f7110) * u), z=Fq2(Fq(0x1) + Fq(0x0) * u))
+NGMgo (XSign) h2 = G2Projective(x=Fq2(Fq(0x30acd..05f1d) + Fq(0xdb689..e7326) * u), y=Fq2(Fq(0x180d9..f61e8) + Fq(0xa2397..de351) * u), z=Fq2(Fq(0x17b87..66a12) + Fq(0x57ab5..59798) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x7094a..94424) + Fq(0x22f82..71768) * u), y=Fq2(Fq(0xb5a49..bbb74) + Fq(0x12b0f..b7fab) * u), z=Fq2(Fq(0x8ce48..6aaaf) + Fq(0x52301..ee220) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 494455505356580082893657788295474964564182503704082492427012012532211685327
+NGM(FUCKYOUMUL) result BEFORE add: G2(Infinity)
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x7094a..94424) + Fq(0x22f82..71768) * u), y=Fq2(Fq(0xb5a49..bbb74) + Fq(0x12b0f..b7fab) * u), z=Fq2(Fq(0x8ce48..6aaaf) + Fq(0x52301..ee220) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x7094a..94424) + Fq(0x22f82..71768) * u), y=Fq2(Fq(0xb5a49..bbb74) + Fq(0x12b0f..b7fab) * u), z=Fq2(Fq(0x8ce48..6aaaf) + Fq(0x52301..ee220) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x356a2..395ac) + Fq(0x1527e..19861) * u), y=Fq2(Fq(0x40e14..3826f) + Fq(0x42611..841e5) * u), z=Fq2(Fq(0x16965..22196) + Fq(0x9b32a..adc15) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 247227752678290041446828894147737482282091251852041246213506006266105842663
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x7094a..94424) + Fq(0x22f82..71768) * u), y=Fq2(Fq(0xb5a49..bbb74) + Fq(0x12b0f..b7fab) * u), z=Fq2(Fq(0x8ce48..6aaaf) + Fq(0x52301..ee220) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x356a2..395ac) + Fq(0x1527e..19861) * u), y=Fq2(Fq(0x40e14..3826f) + Fq(0x42611..841e5) * u), z=Fq2(Fq(0x16965..22196) + Fq(0x9b32a..adc15) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xca287..46a12) + Fq(0x5f819..ef792) * u), y=Fq2(Fq(0xd33df..05fda) + Fq(0x19246..32aaf) * u), z=Fq2(Fq(0x4d665..90093) + Fq(0xbe96a..7e5d4) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13fed..6b9b5) + Fq(0xb1bd5..4a997) * u), y=Fq2(Fq(0x746a6..a0777) + Fq(0x148c0..f1914) * u), z=Fq2(Fq(0x36af0..47430) + Fq(0xd9a26..87d96) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 123613876339145020723414447073868741141045625926020623106753003133052921331
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xca287..46a12) + Fq(0x5f819..ef792) * u), y=Fq2(Fq(0xd33df..05fda) + Fq(0x19246..32aaf) * u), z=Fq2(Fq(0x4d665..90093) + Fq(0xbe96a..7e5d4) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x13fed..6b9b5) + Fq(0xb1bd5..4a997) * u), y=Fq2(Fq(0x746a6..a0777) + Fq(0x148c0..f1914) * u), z=Fq2(Fq(0x36af0..47430) + Fq(0xd9a26..87d96) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x367dc..2890c) + Fq(0x6eb7b..e8cc9) * u), y=Fq2(Fq(0xa3e96..7b72a) + Fq(0x13f25..eb5e0) * u), z=Fq2(Fq(0x7b028..a2b5a) + Fq(0xbf0e6..5160a) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xbe9a2..1975e) + Fq(0x1260d..f633c) * u), y=Fq2(Fq(0xbe5f7..ac69a) + Fq(0x11472..16921) * u), z=Fq2(Fq(0x170d2..b6997) + Fq(0x3b237..18a78) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 61806938169572510361707223536934370570522812963010311553376501566526460665
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x367dc..2890c) + Fq(0x6eb7b..e8cc9) * u), y=Fq2(Fq(0xa3e96..7b72a) + Fq(0x13f25..eb5e0) * u), z=Fq2(Fq(0x7b028..a2b5a) + Fq(0xbf0e6..5160a) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xbe9a2..1975e) + Fq(0x1260d..f633c) * u), y=Fq2(Fq(0xbe5f7..ac69a) + Fq(0x11472..16921) * u), z=Fq2(Fq(0x170d2..b6997) + Fq(0x3b237..18a78) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x6d914..5eb3d) + Fq(0xe60db..0da38) * u), y=Fq2(Fq(0x129cd..aa135) + Fq(0x3d567..a208a) * u), z=Fq2(Fq(0x9ba5c..18cda) + Fq(0xa1006..a830b) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1831e..d55d8) + Fq(0x672f2..90e80) * u), y=Fq2(Fq(0xad7ef..e4f1d) + Fq(0x13942..a7bca) * u), z=Fq2(Fq(0x932e9..7b95f) + Fq(0x1bfaa..d21d0) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 30903469084786255180853611768467185285261406481505155776688250783263230332
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x83189..842ec) + Fq(0xe8fa4..77f32) * u), y=Fq2(Fq(0x1557c..8e573) + Fq(0x7f1b3..ad60b) * u), z=Fq2(Fq(0x679fc..4d5c4) + Fq(0xc6da3..d38c6) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 15451734542393127590426805884233592642630703240752577888344125391631615166
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16f67..aae78) + Fq(0x9eb15..b16a3) * u), y=Fq2(Fq(0x14804..f80fb) + Fq(0x6c72c..added) * u), z=Fq2(Fq(0x52d19..18ab8) + Fq(0xbb657..12e76) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 7725867271196563795213402942116796321315351620376288944172062695815807583
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x6d914..5eb3d) + Fq(0xe60db..0da38) * u), y=Fq2(Fq(0x129cd..aa135) + Fq(0x3d567..a208a) * u), z=Fq2(Fq(0x9ba5c..18cda) + Fq(0xa1006..a830b) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x16f67..aae78) + Fq(0x9eb15..b16a3) * u), y=Fq2(Fq(0x14804..f80fb) + Fq(0x6c72c..added) * u), z=Fq2(Fq(0x52d19..18ab8) + Fq(0xbb657..12e76) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x12fd1..005f3) + Fq(0x11735..0875c) * u), y=Fq2(Fq(0x12806..e3c3a) + Fq(0xd9782..a3753) * u), z=Fq2(Fq(0x10de0..94ae0) + Fq(0x10c85..d1550) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x155bf..ccf8c) + Fq(0xc0b97..591ab) * u), y=Fq2(Fq(0xe20d9..5f199) + Fq(0x5badd..ed6fc) * u), z=Fq2(Fq(0x1936a..31043) + Fq(0x3f3d1..79b01) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3862933635598281897606701471058398160657675810188144472086031347907903791
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x12fd1..005f3) + Fq(0x11735..0875c) * u), y=Fq2(Fq(0x12806..e3c3a) + Fq(0xd9782..a3753) * u), z=Fq2(Fq(0x10de0..94ae0) + Fq(0x10c85..d1550) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x155bf..ccf8c) + Fq(0xc0b97..591ab) * u), y=Fq2(Fq(0xe20d9..5f199) + Fq(0x5badd..ed6fc) * u), z=Fq2(Fq(0x1936a..31043) + Fq(0x3f3d1..79b01) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x6230e..a4c1c) + Fq(0x74dfa..c988e) * u), y=Fq2(Fq(0x10d98..f230b) + Fq(0x159f8..a8bcc) * u), z=Fq2(Fq(0x17137..c2301) + Fq(0x7d41d..9b7d0) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xd0599..0a2db) + Fq(0x17541..4c963) * u), y=Fq2(Fq(0x9e1e0..3be09) + Fq(0x15260..15b13) * u), z=Fq2(Fq(0x32cc6..56902) + Fq(0xdb870..09e37) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1931466817799140948803350735529199080328837905094072236043015673953951895
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x6230e..a4c1c) + Fq(0x74dfa..c988e) * u), y=Fq2(Fq(0x10d98..f230b) + Fq(0x159f8..a8bcc) * u), z=Fq2(Fq(0x17137..c2301) + Fq(0x7d41d..9b7d0) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xd0599..0a2db) + Fq(0x17541..4c963) * u), y=Fq2(Fq(0x9e1e0..3be09) + Fq(0x15260..15b13) * u), z=Fq2(Fq(0x32cc6..56902) + Fq(0xdb870..09e37) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xb27ac..356e8) + Fq(0xca540..1110c) * u), y=Fq2(Fq(0x7d868..ec264) + Fq(0x9e28c..e249f) * u), z=Fq2(Fq(0x1818e..6390b) + Fq(0x16723..237f9) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x14af2..9c7e3) + Fq(0x3225d..3fcd4) * u), y=Fq2(Fq(0xc18f9..7ee46) + Fq(0xa6607..0684f) * u), z=Fq2(Fq(0x71c47..78afd) + Fq(0x16807..9fc81) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 965733408899570474401675367764599540164418952547036118021507836976975947
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xb27ac..356e8) + Fq(0xca540..1110c) * u), y=Fq2(Fq(0x7d868..ec264) + Fq(0x9e28c..e249f) * u), z=Fq2(Fq(0x1818e..6390b) + Fq(0x16723..237f9) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x14af2..9c7e3) + Fq(0x3225d..3fcd4) * u), y=Fq2(Fq(0xc18f9..7ee46) + Fq(0xa6607..0684f) * u), z=Fq2(Fq(0x71c47..78afd) + Fq(0x16807..9fc81) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x47daf..71cc2) + Fq(0x1004f..aab2c) * u), y=Fq2(Fq(0x98346..87859) + Fq(0x3a1d9..8def4) * u), z=Fq2(Fq(0xce580..1aa3d) + Fq(0x1e270..42660) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x184a9..1e743) + Fq(0x14d9d..70ba9) * u), y=Fq2(Fq(0x11ac1..3dd02) + Fq(0x8674f..f6ac7) * u), z=Fq2(Fq(0x86a54..2636c) + Fq(0x120f3..f68ba) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 482866704449785237200837683882299770082209476273518059010753918488487973
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x47daf..71cc2) + Fq(0x1004f..aab2c) * u), y=Fq2(Fq(0x98346..87859) + Fq(0x3a1d9..8def4) * u), z=Fq2(Fq(0xce580..1aa3d) + Fq(0x1e270..42660) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x184a9..1e743) + Fq(0x14d9d..70ba9) * u), y=Fq2(Fq(0x11ac1..3dd02) + Fq(0x8674f..f6ac7) * u), z=Fq2(Fq(0x86a54..2636c) + Fq(0x120f3..f68ba) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xa84ee..36242) + Fq(0xcb6b0..572dc) * u), y=Fq2(Fq(0x16b78..7ad6e) + Fq(0x16258..c14b4) * u), z=Fq2(Fq(0x1413c..32832) + Fq(0x10bb9..6c4de) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x15073..3239b) + Fq(0x63ea4..0e672) * u), y=Fq2(Fq(0x8bdcf..5e440) + Fq(0x146e4..108a5) * u), z=Fq2(Fq(0x17ec7..e340f) + Fq(0x62619..8b6b5) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 241433352224892618600418841941149885041104738136759029505376959244243986
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xa1a0d..e296e) + Fq(0x13f47..3d860) * u), y=Fq2(Fq(0x1672c..376f8) + Fq(0x15069..4420c) * u), z=Fq2(Fq(0x146f9..c610d) + Fq(0x1021f..06341) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 120716676112446309300209420970574942520552369068379514752688479622121993
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xa84ee..36242) + Fq(0xcb6b0..572dc) * u), y=Fq2(Fq(0x16b78..7ad6e) + Fq(0x16258..c14b4) * u), z=Fq2(Fq(0x1413c..32832) + Fq(0x10bb9..6c4de) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xa1a0d..e296e) + Fq(0x13f47..3d860) * u), y=Fq2(Fq(0x1672c..376f8) + Fq(0x15069..4420c) * u), z=Fq2(Fq(0x146f9..c610d) + Fq(0x1021f..06341) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x121f2..ee592) + Fq(0x7f0be..9f6bc) * u), y=Fq2(Fq(0x12380..a9773) + Fq(0x15d44..11e7d) * u), z=Fq2(Fq(0x18af0..a3f78) + Fq(0x8cada..acb33) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x58ba7..60302) + Fq(0xa818d..ea71b) * u), y=Fq2(Fq(0x79cf3..50251) + Fq(0xdc43b..75649) * u), z=Fq2(Fq(0xb65b5..26570) + Fq(0xfcba9..ad69d) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 60358338056223154650104710485287471260276184534189757376344239811060996
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10fc9..aba8d) + Fq(0x28f1e..581ed) * u), y=Fq2(Fq(0x19cfc..9ad92) + Fq(0xad458..7280b) * u), z=Fq2(Fq(0x918bc..8e2cb) + Fq(0x18a1b..51e09) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 30179169028111577325052355242643735630138092267094878688172119905530498
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x235b8..5492b) + Fq(0x157ce..4c096) * u), y=Fq2(Fq(0xb44fc..5b9f0) + Fq(0xc37c6..c4359) * u), z=Fq2(Fq(0x612d2..08530) + Fq(0x13997..c32a4) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 15089584514055788662526177621321867815069046133547439344086059952765249
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x121f2..ee592) + Fq(0x7f0be..9f6bc) * u), y=Fq2(Fq(0x12380..a9773) + Fq(0x15d44..11e7d) * u), z=Fq2(Fq(0x18af0..a3f78) + Fq(0x8cada..acb33) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x235b8..5492b) + Fq(0x157ce..4c096) * u), y=Fq2(Fq(0xb44fc..5b9f0) + Fq(0xc37c6..c4359) * u), z=Fq2(Fq(0x612d2..08530) + Fq(0x13997..c32a4) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xdce4e..bb73a) + Fq(0x214a1..bee3d) * u), y=Fq2(Fq(0x3580d..35a67) + Fq(0x43822..25776) * u), z=Fq2(Fq(0xd6d11..dc890) + Fq(0x123cd..322f9) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x177d1..aa5ec) + Fq(0xcb5b4..bad26) * u), y=Fq2(Fq(0x12587..a8444) + Fq(0x5247f..6ef15) * u), z=Fq2(Fq(0x215d3..8d8c9) + Fq(0x10c56..70574) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 7544792257027894331263088810660933907534523066773719672043029976382624
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb7937..c8947) + Fq(0x9b088..46cbf) * u), y=Fq2(Fq(0x17e98..3c201) + Fq(0x5a8ce..e111c) * u), z=Fq2(Fq(0xb138e..af2af) + Fq(0x11aba..70a47) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3772396128513947165631544405330466953767261533386859836021514988191312
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x14835..a94b2) + Fq(0x180f7..d5ad1) * u), y=Fq2(Fq(0xf007e..004e1) + Fq(0x10359..f8257) * u), z=Fq2(Fq(0x16825..23e7a) + Fq(0xca4fd..6f4cc) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1886198064256973582815772202665233476883630766693429918010757494095656
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xc170a..a8ffb) + Fq(0x5e08d..0d2bb) * u), y=Fq2(Fq(0x13cac..60438) + Fq(0xec520..1ff68) * u), z=Fq2(Fq(0xb8a9f..be136) + Fq(0x7dc12..7c089) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 943099032128486791407886101332616738441815383346714959005378747047828
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x139d7..f44f8) + Fq(0x3bb90..8f6af) * u), y=Fq2(Fq(0xdd047..9113d) + Fq(0x7b011..aa7e1) * u), z=Fq2(Fq(0x2f354..d5b41) + Fq(0x5dffa..9b944) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 471549516064243395703943050666308369220907691673357479502689373523914
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10d45..7e35c) + Fq(0xf3524..095d1) * u), y=Fq2(Fq(0xd8179..f041c) + Fq(0x11883..72efa) * u), z=Fq2(Fq(0x13ec2..ba67d) + Fq(0x19674..5c627) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 235774758032121697851971525333154184610453845836678739751344686761957
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xdce4e..bb73a) + Fq(0x214a1..bee3d) * u), y=Fq2(Fq(0x3580d..35a67) + Fq(0x43822..25776) * u), z=Fq2(Fq(0xd6d11..dc890) + Fq(0x123cd..322f9) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x10d45..7e35c) + Fq(0xf3524..095d1) * u), y=Fq2(Fq(0xd8179..f041c) + Fq(0x11883..72efa) * u), z=Fq2(Fq(0x13ec2..ba67d) + Fq(0x19674..5c627) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x16f82..78137) + Fq(0x16f30..c7276) * u), y=Fq2(Fq(0x10d85..cabf9) + Fq(0x18602..a3a95) * u), z=Fq2(Fq(0x196ed..57ea3) + Fq(0x15acc..1f0bd) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xdf8ca..4cf1f) + Fq(0x199c8..2b4d4) * u), y=Fq2(Fq(0xbe299..ab49f) + Fq(0xe7ab6..5ce00) * u), z=Fq2(Fq(0xd667d..353fe) + Fq(0x70665..46ef2) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 117887379016060848925985762666577092305226922918339369875672343380978
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x27d8e..e7285) + Fq(0x1361f..ec79e) * u), y=Fq2(Fq(0x1780b..a306b) + Fq(0x121ba..fb0f2) * u), z=Fq2(Fq(0x7b061..93c66) + Fq(0x5d355..cf012) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 58943689508030424462992881333288546152613461459169684937836171690489
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x16f82..78137) + Fq(0x16f30..c7276) * u), y=Fq2(Fq(0x10d85..cabf9) + Fq(0x18602..a3a95) * u), z=Fq2(Fq(0x196ed..57ea3) + Fq(0x15acc..1f0bd) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x27d8e..e7285) + Fq(0x1361f..ec79e) * u), y=Fq2(Fq(0x1780b..a306b) + Fq(0x121ba..fb0f2) * u), z=Fq2(Fq(0x7b061..93c66) + Fq(0x5d355..cf012) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x127dd..5d063) + Fq(0x1785f..6bef2) * u), y=Fq2(Fq(0x17f98..d3c62) + Fq(0x5164e..b13a4) * u), z=Fq2(Fq(0x543d6..e23d0) + Fq(0x188da..04ecc) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x20628..0f7af) + Fq(0x16134..9cda8) * u), y=Fq2(Fq(0x33f6b..8d662) + Fq(0xcf44b..ccaa0) * u), z=Fq2(Fq(0x7cec8..69b06) + Fq(0xd8507..9f5a2) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 29471844754015212231496440666644273076306730729584842468918085845244
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x11b8e..86f9c) + Fq(0xe77a5..61875) * u), y=Fq2(Fq(0x51256..a4e1c) + Fq(0x12794..19588) * u), z=Fq2(Fq(0x12ca6..44636) + Fq(0xb8452..7adf9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 14735922377007606115748220333322136538153365364792421234459042922622
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xe5566..7a1ab) + Fq(0x47afc..0c005) * u), y=Fq2(Fq(0x10471..46031) + Fq(0x17951..9748a) * u), z=Fq2(Fq(0x4e7fe..bae83) + Fq(0xae4a6..60f0c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 7367961188503803057874110166661068269076682682396210617229521461311
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x127dd..5d063) + Fq(0x1785f..6bef2) * u), y=Fq2(Fq(0x17f98..d3c62) + Fq(0x5164e..b13a4) * u), z=Fq2(Fq(0x543d6..e23d0) + Fq(0x188da..04ecc) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xe5566..7a1ab) + Fq(0x47afc..0c005) * u), y=Fq2(Fq(0x10471..46031) + Fq(0x17951..9748a) * u), z=Fq2(Fq(0x4e7fe..bae83) + Fq(0xae4a6..60f0c) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1733a..3a062) + Fq(0x16d1e..f643b) * u), y=Fq2(Fq(0xccb0f..d837c) + Fq(0x13f2b..f4545) * u), z=Fq2(Fq(0x15a41..877d2) + Fq(0x8fb72..f6732) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xc70cf..5addc) + Fq(0x11714..16099) * u), y=Fq2(Fq(0x12a07..a6a50) + Fq(0xbfaa3..45bb2) * u), z=Fq2(Fq(0x11e77..d141a) + Fq(0x14597..0d2af) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3683980594251901528937055083330534134538341341198105308614760730655
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1733a..3a062) + Fq(0x16d1e..f643b) * u), y=Fq2(Fq(0xccb0f..d837c) + Fq(0x13f2b..f4545) * u), z=Fq2(Fq(0x15a41..877d2) + Fq(0x8fb72..f6732) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xc70cf..5addc) + Fq(0x11714..16099) * u), y=Fq2(Fq(0x12a07..a6a50) + Fq(0xbfaa3..45bb2) * u), z=Fq2(Fq(0x11e77..d141a) + Fq(0x14597..0d2af) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x40fa7..847ff) + Fq(0x19596..4b6f5) * u), y=Fq2(Fq(0x137fb..62cb5) + Fq(0x74f6c..42afa) * u), z=Fq2(Fq(0xb19c1..b55bc) + Fq(0x11cd0..87898) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xc9d99..75235) + Fq(0x593aa..a2489) * u), y=Fq2(Fq(0xad660..15b4b) + Fq(0x318d8..33fc3) * u), z=Fq2(Fq(0x17464..3927f) + Fq(0x11b03..62865) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1841990297125950764468527541665267067269170670599052654307380365327
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x40fa7..847ff) + Fq(0x19596..4b6f5) * u), y=Fq2(Fq(0x137fb..62cb5) + Fq(0x74f6c..42afa) * u), z=Fq2(Fq(0xb19c1..b55bc) + Fq(0x11cd0..87898) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xc9d99..75235) + Fq(0x593aa..a2489) * u), y=Fq2(Fq(0xad660..15b4b) + Fq(0x318d8..33fc3) * u), z=Fq2(Fq(0x17464..3927f) + Fq(0x11b03..62865) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x127ab..b1d14) + Fq(0x1f342..ce472) * u), y=Fq2(Fq(0x1230b..94c18) + Fq(0x1080c..c2524) * u), z=Fq2(Fq(0xbe1a6..4c37f) + Fq(0x313d8..db8f5) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x15c43..03175) + Fq(0x14c0c..36669) * u), y=Fq2(Fq(0xa6460..1404e) + Fq(0x32c96..2e1df) * u), z=Fq2(Fq(0xf50bf..c14b6) + Fq(0x961a2..34c1e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 920995148562975382234263770832633533634585335299526327153690182663
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x127ab..b1d14) + Fq(0x1f342..ce472) * u), y=Fq2(Fq(0x1230b..94c18) + Fq(0x1080c..c2524) * u), z=Fq2(Fq(0xbe1a6..4c37f) + Fq(0x313d8..db8f5) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x15c43..03175) + Fq(0x14c0c..36669) * u), y=Fq2(Fq(0xa6460..1404e) + Fq(0x32c96..2e1df) * u), z=Fq2(Fq(0xf50bf..c14b6) + Fq(0x961a2..34c1e) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1cb78..96daa) + Fq(0x199c9..ca68d) * u), y=Fq2(Fq(0x50eda..828e1) + Fq(0xae833..0824c) * u), z=Fq2(Fq(0x16cb3..4e44b) + Fq(0x34dda..edc4e) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x97561..33280) + Fq(0x1553d..73797) * u), y=Fq2(Fq(0xc6669..92119) + Fq(0xdde17..e1138) * u), z=Fq2(Fq(0x111d4..6401a) + Fq(0x5cbd2..3ced4) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 460497574281487691117131885416316766817292667649763163576845091331
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1cb78..96daa) + Fq(0x199c9..ca68d) * u), y=Fq2(Fq(0x50eda..828e1) + Fq(0xae833..0824c) * u), z=Fq2(Fq(0x16cb3..4e44b) + Fq(0x34dda..edc4e) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x97561..33280) + Fq(0x1553d..73797) * u), y=Fq2(Fq(0xc6669..92119) + Fq(0xdde17..e1138) * u), z=Fq2(Fq(0x111d4..6401a) + Fq(0x5cbd2..3ced4) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x20a12..53e2d) + Fq(0x4876e..d9816) * u), y=Fq2(Fq(0xd44be..05fdc) + Fq(0x166a2..b8975) * u), z=Fq2(Fq(0x155cd..d18af) + Fq(0x43e78..87526) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xbb6db..e9729) + Fq(0x51e02..dc8f7) * u), y=Fq2(Fq(0x6dbf0..07080) + Fq(0x7ced2..4543b) * u), z=Fq2(Fq(0x2f3ad..a5a6d) + Fq(0xb2d2a..eb597) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 230248787140743845558565942708158383408646333824881581788422545665
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x20a12..53e2d) + Fq(0x4876e..d9816) * u), y=Fq2(Fq(0xd44be..05fdc) + Fq(0x166a2..b8975) * u), z=Fq2(Fq(0x155cd..d18af) + Fq(0x43e78..87526) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xbb6db..e9729) + Fq(0x51e02..dc8f7) * u), y=Fq2(Fq(0x6dbf0..07080) + Fq(0x7ced2..4543b) * u), z=Fq2(Fq(0x2f3ad..a5a6d) + Fq(0xb2d2a..eb597) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x3ad69..74e07) + Fq(0x79598..ec393) * u), y=Fq2(Fq(0x13abb..422dc) + Fq(0xb1aae..49041) * u), z=Fq2(Fq(0x13a18..9b96d) + Fq(0x1917b..742df) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xef8f2..8efd6) + Fq(0x12b2b..03ee3) * u), y=Fq2(Fq(0x16cdd..bf8da) + Fq(0x193ff..1dbd1) * u), z=Fq2(Fq(0x380b4..c9a5c) + Fq(0x7d01e..2f1cb) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 115124393570371922779282971354079191704323166912440790894211272832
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x17b7a..4e8eb) + Fq(0x14e19..3be6b) * u), y=Fq2(Fq(0x1411b..89fba) + Fq(0x17da3..0c8cb) * u), z=Fq2(Fq(0x15fc5..d0581) + Fq(0x7b785..79572) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 57562196785185961389641485677039595852161583456220395447105636416
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x29fb7..9e95e) + Fq(0x17994..7595b) * u), y=Fq2(Fq(0x13a82..4a90f) + Fq(0x15332..8ad44) * u), z=Fq2(Fq(0x153e1..0d3f3) + Fq(0x78c97..60930) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 28781098392592980694820742838519797926080791728110197723552818208
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xe78f2..bbdb7) + Fq(0x192be..39060) * u), y=Fq2(Fq(0x51bc5..6d867) + Fq(0x4207d..d5360) * u), z=Fq2(Fq(0x17974..c6f4d) + Fq(0x10060..fac6b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 14390549196296490347410371419259898963040395864055098861776409104
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1458e..b6fc5) + Fq(0x5fa44..e7007) * u), y=Fq2(Fq(0x1958b..091f2) + Fq(0x168df..d6f38) * u), z=Fq2(Fq(0x1099f..7ad0c) + Fq(0x5ad44..b5555) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 7195274598148245173705185709629949481520197932027549430888204552
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16342..71cee) + Fq(0xfd7cb..42846) * u), y=Fq2(Fq(0x14916..e2996) + Fq(0x222fa..3f16a) * u), z=Fq2(Fq(0x5ca50..522cb) + Fq(0x74e72..267c5) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3597637299074122586852592854814974740760098966013774715444102276
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16a32..372b7) + Fq(0x39f60..c716b) * u), y=Fq2(Fq(0x12650..c5221) + Fq(0xbf405..bb2bb) * u), z=Fq2(Fq(0x88f6a..a1b91) + Fq(0x7a11d..ee9a8) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1798818649537061293426296427407487370380049483006887357722051138
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18f9a..0b45b) + Fq(0x13c3f..2a948) * u), y=Fq2(Fq(0xa3f06..39f7b) + Fq(0x144b6..d0999) * u), z=Fq2(Fq(0xbfdf6..5542e) + Fq(0xda540..bb190) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 899409324768530646713148213703743685190024741503443678861025569
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x3ad69..74e07) + Fq(0x79598..ec393) * u), y=Fq2(Fq(0x13abb..422dc) + Fq(0xb1aae..49041) * u), z=Fq2(Fq(0x13a18..9b96d) + Fq(0x1917b..742df) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x18f9a..0b45b) + Fq(0x13c3f..2a948) * u), y=Fq2(Fq(0xa3f06..39f7b) + Fq(0x144b6..d0999) * u), z=Fq2(Fq(0xbfdf6..5542e) + Fq(0xda540..bb190) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x10207..21fc9) + Fq(0x38f4d..2bb1a) * u), y=Fq2(Fq(0x4b290..27122) + Fq(0x445a7..bd803) * u), z=Fq2(Fq(0x3748c..edc5a) + Fq(0x3a9ca..514d1) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x155d7..1ab63) + Fq(0x13d5c..c022c) * u), y=Fq2(Fq(0x137ec..5f465) + Fq(0x97aab..c362f) * u), z=Fq2(Fq(0x8d86c..66012) + Fq(0x4192e..a028b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 449704662384265323356574106851871842595012370751721839430512784
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x135d0..0d1f5) + Fq(0xcff11..7d409) * u), y=Fq2(Fq(0x19c01..a084c) + Fq(0x8d966..b5588) * u), z=Fq2(Fq(0xab37d..5035e) + Fq(0x4145e..ef9aa) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 224852331192132661678287053425935921297506185375860919715256392
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xf1d3a..51be2) + Fq(0x613f3..07400) * u), y=Fq2(Fq(0xe93c8..45df1) + Fq(0xb3d38..bf9e7) * u), z=Fq2(Fq(0x4499c..4e857) + Fq(0x59659..a5c77) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 112426165596066330839143526712967960648753092687930459857628196
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb267b..57b92) + Fq(0x10281..9da3b) * u), y=Fq2(Fq(0x195f1..7339b) + Fq(0xa8a1b..fb7be) * u), z=Fq2(Fq(0x114e1..41e98) + Fq(0xf9061..2227e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 56213082798033165419571763356483980324376546343965229928814098
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x191ba..62021) + Fq(0x19395..9e3b9) * u), y=Fq2(Fq(0xed1c4..b8688) + Fq(0x10d15..84e9d) * u), z=Fq2(Fq(0x24c4b..2e93e) + Fq(0x19fdd..3a7b8) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 28106541399016582709785881678241990162188273171982614964407049
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x10207..21fc9) + Fq(0x38f4d..2bb1a) * u), y=Fq2(Fq(0x4b290..27122) + Fq(0x445a7..bd803) * u), z=Fq2(Fq(0x3748c..edc5a) + Fq(0x3a9ca..514d1) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x191ba..62021) + Fq(0x19395..9e3b9) * u), y=Fq2(Fq(0xed1c4..b8688) + Fq(0x10d15..84e9d) * u), z=Fq2(Fq(0x24c4b..2e93e) + Fq(0x19fdd..3a7b8) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1271d..f5736) + Fq(0x119ee..eb0bf) * u), y=Fq2(Fq(0xce576..70546) + Fq(0xb4a81..47282) * u), z=Fq2(Fq(0xcafe4..1c704) + Fq(0xf6f7c..86544) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13246..09f82) + Fq(0x12dc9..92133) * u), y=Fq2(Fq(0x16105..34468) + Fq(0x18a8a..89d18) * u), z=Fq2(Fq(0x173aa..c34d7) + Fq(0x7f871..3b37b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 14053270699508291354892940839120995081094136585991307482203524
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x150ba..8ad5e) + Fq(0x32d98..8ec6c) * u), y=Fq2(Fq(0x4ef1a..5f78f) + Fq(0xe9a6c..6a65b) * u), z=Fq2(Fq(0x1e31d..fd39c) + Fq(0x14783..4c870) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 7026635349754145677446470419560497540547068292995653741101762
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xfe63c..bf295) + Fq(0xa253f..f6866) * u), y=Fq2(Fq(0xd0739..82273) + Fq(0x19120..61dc3) * u), z=Fq2(Fq(0xa79cc..7fc3f) + Fq(0x9527f..e3b22) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3513317674877072838723235209780248770273534146497826870550881
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1271d..f5736) + Fq(0x119ee..eb0bf) * u), y=Fq2(Fq(0xce576..70546) + Fq(0xb4a81..47282) * u), z=Fq2(Fq(0xcafe4..1c704) + Fq(0xf6f7c..86544) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xfe63c..bf295) + Fq(0xa253f..f6866) * u), y=Fq2(Fq(0xd0739..82273) + Fq(0x19120..61dc3) * u), z=Fq2(Fq(0xa79cc..7fc3f) + Fq(0x9527f..e3b22) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xb827b..818ac) + Fq(0xa7bc8..ed0d6) * u), y=Fq2(Fq(0xd0cdf..3b4da) + Fq(0x17a62..5175d) * u), z=Fq2(Fq(0x229cc..ccb01) + Fq(0x873d1..bfa9f) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x12c78..96b36) + Fq(0xa4975..f9afd) * u), y=Fq2(Fq(0xa44bf..95be2) + Fq(0x6229b..8003b) * u), z=Fq2(Fq(0x16004..c4f08) + Fq(0x16daf..10eca) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1756658837438536419361617604890124385136767073248913435275440
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xbbb3d..ae788) + Fq(0x400df..dcac1) * u), y=Fq2(Fq(0x6343c..f1286) + Fq(0x9ee61..fbd14) * u), z=Fq2(Fq(0xcbb8d..0144c) + Fq(0x14a18..fab24) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 878329418719268209680808802445062192568383536624456717637720
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xbfda9..ba53d) + Fq(0x801e0..15f26) * u), y=Fq2(Fq(0x10ffd..34fce) + Fq(0xe76e7..8770a) * u), z=Fq2(Fq(0xa5a86..2abca) + Fq(0xd6018..13f4c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 439164709359634104840404401222531096284191768312228358818860
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13569..67345) + Fq(0xf9972..4d032) * u), y=Fq2(Fq(0x7ebc2..695a2) + Fq(0x15763..0e927) * u), z=Fq2(Fq(0xfa691..8edce) + Fq(0xb01fc..9454e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 219582354679817052420202200611265548142095884156114179409430
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13ac3..b4141) + Fq(0x172f7..91e41) * u), y=Fq2(Fq(0xb23d7..2313c) + Fq(0x9e460..5b214) * u), z=Fq2(Fq(0x13a08..d4870) + Fq(0x92928..d9c16) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 109791177339908526210101100305632774071047942078057089704715
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xb827b..818ac) + Fq(0xa7bc8..ed0d6) * u), y=Fq2(Fq(0xd0cdf..3b4da) + Fq(0x17a62..5175d) * u), z=Fq2(Fq(0x229cc..ccb01) + Fq(0x873d1..bfa9f) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x13ac3..b4141) + Fq(0x172f7..91e41) * u), y=Fq2(Fq(0xb23d7..2313c) + Fq(0x9e460..5b214) * u), z=Fq2(Fq(0x13a08..d4870) + Fq(0x92928..d9c16) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x125b1..74c4b) + Fq(0x53939..e362e) * u), y=Fq2(Fq(0xd4e4c..895ba) + Fq(0xe3e75..90604) * u), z=Fq2(Fq(0x4be8a..689dd) + Fq(0x15a2d..05068) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x19364..5728a) + Fq(0xc3faa..b1e96) * u), y=Fq2(Fq(0xc75b8..33401) + Fq(0x14e46..02f6e) * u), z=Fq2(Fq(0x13eee..15879) + Fq(0x14d82..3070f) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 54895588669954263105050550152816387035523971039028544852357
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x125b1..74c4b) + Fq(0x53939..e362e) * u), y=Fq2(Fq(0xd4e4c..895ba) + Fq(0xe3e75..90604) * u), z=Fq2(Fq(0x4be8a..689dd) + Fq(0x15a2d..05068) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x19364..5728a) + Fq(0xc3faa..b1e96) * u), y=Fq2(Fq(0xc75b8..33401) + Fq(0x14e46..02f6e) * u), z=Fq2(Fq(0x13eee..15879) + Fq(0x14d82..3070f) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x4d386..9e4c4) + Fq(0x988b2..70f74) * u), y=Fq2(Fq(0x189ff..bb826) + Fq(0x91693..0276f) * u), z=Fq2(Fq(0x19350..b2346) + Fq(0x1634b..1491d) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x6efe9..a3856) + Fq(0xab90c..aa529) * u), y=Fq2(Fq(0x19424..978ba) + Fq(0x4e081..bec9f) * u), z=Fq2(Fq(0xa467f..a60bf) + Fq(0x9ab23..39d59) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 27447794334977131552525275076408193517761985519514272426178
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x19e01..fddcb) + Fq(0x1416b..2a742) * u), y=Fq2(Fq(0xcb440..6bb23) + Fq(0x236f5..4083c) * u), z=Fq2(Fq(0x2de16..d9e79) + Fq(0xf81bf..4b2eb) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 13723897167488565776262637538204096758880992759757136213089
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x4d386..9e4c4) + Fq(0x988b2..70f74) * u), y=Fq2(Fq(0x189ff..bb826) + Fq(0x91693..0276f) * u), z=Fq2(Fq(0x19350..b2346) + Fq(0x1634b..1491d) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x19e01..fddcb) + Fq(0x1416b..2a742) * u), y=Fq2(Fq(0xcb440..6bb23) + Fq(0x236f5..4083c) * u), z=Fq2(Fq(0x2de16..d9e79) + Fq(0xf81bf..4b2eb) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x18f4d..9e197) + Fq(0x73121..64cf9) * u), y=Fq2(Fq(0x103ab..99303) + Fq(0x1bea7..82db9) * u), z=Fq2(Fq(0x79b3c..9796d) + Fq(0x25ecf..0dd97) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16d07..60112) + Fq(0x65665..44891) * u), y=Fq2(Fq(0x7da9d..26e0d) + Fq(0xea0af..2b3fa) * u), z=Fq2(Fq(0x16133..86cb3) + Fq(0x193f2..fce10) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 6861948583744282888131318769102048379440496379878568106544
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb9a85..ff397) + Fq(0x934be..d9f01) * u), y=Fq2(Fq(0x188ba..f634f) + Fq(0x16f95..7411f) * u), z=Fq2(Fq(0x705d3..585de) + Fq(0xc6a7f..fb998) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3430974291872141444065659384551024189720248189939284053272
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13c79..a8a07) + Fq(0x5e9ca..9490d) * u), y=Fq2(Fq(0x5ba20..91683) + Fq(0x95376..13e47) * u), z=Fq2(Fq(0x73900..0e514) + Fq(0x15162..46494) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1715487145936070722032829692275512094860124094969642026636
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x6caf8..19aca) + Fq(0xb6ca3..cd9e4) * u), y=Fq2(Fq(0x2a2d2..4b321) + Fq(0x445e5..54841) * u), z=Fq2(Fq(0x12fd2..1e9df) + Fq(0x125e3..4179b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 857743572968035361016414846137756047430062047484821013318
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb6a22..58b15) + Fq(0xcb56a..d67ca) * u), y=Fq2(Fq(0xa716e..d6026) + Fq(0x12823..aa522) * u), z=Fq2(Fq(0x827c4..709ac) + Fq(0x135c0..99366) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 428871786484017680508207423068878023715031023742410506659
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x18f4d..9e197) + Fq(0x73121..64cf9) * u), y=Fq2(Fq(0x103ab..99303) + Fq(0x1bea7..82db9) * u), z=Fq2(Fq(0x79b3c..9796d) + Fq(0x25ecf..0dd97) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xb6a22..58b15) + Fq(0xcb56a..d67ca) * u), y=Fq2(Fq(0xa716e..d6026) + Fq(0x12823..aa522) * u), z=Fq2(Fq(0x827c4..709ac) + Fq(0x135c0..99366) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x18b19..c18d4) + Fq(0x19a55..568ea) * u), y=Fq2(Fq(0x4c860..72ab7) + Fq(0x56ad5..caafb) * u), z=Fq2(Fq(0x164a9..17918) + Fq(0x14911..fc53c) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x15d92..79a65) + Fq(0x21de7..c4246) * u), y=Fq2(Fq(0x112da..d5936) + Fq(0xfbd30..abd8f) * u), z=Fq2(Fq(0x5206f..27849) + Fq(0x18690..d4a90) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 214435893242008840254103711534439011857515511871205253329
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x18b19..c18d4) + Fq(0x19a55..568ea) * u), y=Fq2(Fq(0x4c860..72ab7) + Fq(0x56ad5..caafb) * u), z=Fq2(Fq(0x164a9..17918) + Fq(0x14911..fc53c) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x15d92..79a65) + Fq(0x21de7..c4246) * u), y=Fq2(Fq(0x112da..d5936) + Fq(0xfbd30..abd8f) * u), z=Fq2(Fq(0x5206f..27849) + Fq(0x18690..d4a90) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xa1e50..b44e0) + Fq(0xd4bf5..1e5d6) * u), y=Fq2(Fq(0xf4afb..b9486) + Fq(0xae0f8..b6060) * u), z=Fq2(Fq(0x14c47..9a18a) + Fq(0x4a01e..ea256) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xe45f6..404a9) + Fq(0xa2b26..fbbe8) * u), y=Fq2(Fq(0x157f5..36bfd) + Fq(0x9daca..911cb) * u), z=Fq2(Fq(0xfddbc..fd390) + Fq(0xc2dce..40650) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 107217946621004420127051855767219505928757755935602626664
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xdc509..44940) + Fq(0xb575a..c922c) * u), y=Fq2(Fq(0x160e6..817ee) + Fq(0x1869c..af443) * u), z=Fq2(Fq(0x1712e..a06e0) + Fq(0x13900..74bbc) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 53608973310502210063525927883609752964378877967801313332
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x17edb..1c18e) + Fq(0x16077..bcb7a) * u), y=Fq2(Fq(0x14625..f33db) + Fq(0x20897..574b9) * u), z=Fq2(Fq(0x1303e..60f79) + Fq(0xd4d16..d6893) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 26804486655251105031762963941804876482189438983900656666
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x17c51..950c8) + Fq(0x17d89..972b0) * u), y=Fq2(Fq(0xc6535..63784) + Fq(0x14e74..0bb8d) * u), z=Fq2(Fq(0x16d49..48858) + Fq(0xdef2e..8bdf2) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 13402243327625552515881481970902438241094719491950328333
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xa1e50..b44e0) + Fq(0xd4bf5..1e5d6) * u), y=Fq2(Fq(0xf4afb..b9486) + Fq(0xae0f8..b6060) * u), z=Fq2(Fq(0x14c47..9a18a) + Fq(0x4a01e..ea256) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x17c51..950c8) + Fq(0x17d89..972b0) * u), y=Fq2(Fq(0xc6535..63784) + Fq(0x14e74..0bb8d) * u), z=Fq2(Fq(0x16d49..48858) + Fq(0xdef2e..8bdf2) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x19709..817cb) + Fq(0xdf780..b449d) * u), y=Fq2(Fq(0x97610..bd75b) + Fq(0xe6347..28632) * u), z=Fq2(Fq(0x1c8ff..f801b) + Fq(0x181e1..116de) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x970de..77eba) + Fq(0x14fb9..12ee7) * u), y=Fq2(Fq(0xdddd0..279b1) + Fq(0x107ef..53e25) * u), z=Fq2(Fq(0x6a612..a12a8) + Fq(0x13da3..839de) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 6701121663812776257940740985451219120547359745975164166
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16e13..c1743) + Fq(0x7f822..3e12d) * u), y=Fq2(Fq(0xb5026..5dd64) + Fq(0x604bf..a8572) * u), z=Fq2(Fq(0x13edd..4f55c) + Fq(0x15d1c..f7f99) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3350560831906388128970370492725609560273679872987582083
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x19709..817cb) + Fq(0xdf780..b449d) * u), y=Fq2(Fq(0x97610..bd75b) + Fq(0xe6347..28632) * u), z=Fq2(Fq(0x1c8ff..f801b) + Fq(0x181e1..116de) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x16e13..c1743) + Fq(0x7f822..3e12d) * u), y=Fq2(Fq(0xb5026..5dd64) + Fq(0x604bf..a8572) * u), z=Fq2(Fq(0x13edd..4f55c) + Fq(0x15d1c..f7f99) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x12bf5..ba9bb) + Fq(0x18e4a..0e3c1) * u), y=Fq2(Fq(0x15a8e..7e348) + Fq(0x12528..9cb1a) * u), z=Fq2(Fq(0x46588..a43d3) + Fq(0x185f4..139e8) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1162d..b5733) + Fq(0x19afe..c2468) * u), y=Fq2(Fq(0x14bf1..e9794) + Fq(0x99c74..bc3da) * u), z=Fq2(Fq(0x16ba8..aeb2c) + Fq(0x19dd7..e2aa7) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1675280415953194064485185246362804780136839936493791041
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x12bf5..ba9bb) + Fq(0x18e4a..0e3c1) * u), y=Fq2(Fq(0x15a8e..7e348) + Fq(0x12528..9cb1a) * u), z=Fq2(Fq(0x46588..a43d3) + Fq(0x185f4..139e8) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1162d..b5733) + Fq(0x19afe..c2468) * u), y=Fq2(Fq(0x14bf1..e9794) + Fq(0x99c74..bc3da) * u), z=Fq2(Fq(0x16ba8..aeb2c) + Fq(0x19dd7..e2aa7) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1189d..bfcac) + Fq(0x178c8..7353f) * u), y=Fq2(Fq(0xe4ad3..63493) + Fq(0x11216..1c532) * u), z=Fq2(Fq(0x502a9..aa715) + Fq(0x11203..3d937) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x712f2..9bbf4) + Fq(0x14994..dd465) * u), y=Fq2(Fq(0xe599c..59e93) + Fq(0x1498e..ef6a4) * u), z=Fq2(Fq(0x27768..4450f) + Fq(0x3d201..394bf) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 837640207976597032242592623181402390068419968246895520
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16d20..a416f) + Fq(0xd37e4..42e44) * u), y=Fq2(Fq(0xcd810..39653) + Fq(0xc5a5f..99ead) * u), z=Fq2(Fq(0x380e6..8c807) + Fq(0x1292f..5e595) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 418820103988298516121296311590701195034209984123447760
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x132f2..0c0eb) + Fq(0xc7d04..13929) * u), y=Fq2(Fq(0x95ca6..688f2) + Fq(0x2e7d1..47af9) * u), z=Fq2(Fq(0x1cf18..48b36) + Fq(0x31488..5a8c9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 209410051994149258060648155795350597517104992061723880
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x15d4e..fa42e) + Fq(0x29033..7752e) * u), y=Fq2(Fq(0x4b686..6e1b9) + Fq(0xeec88..1ff2b) * u), z=Fq2(Fq(0xb92a6..99710) + Fq(0x51e16..ae4bc) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 104705025997074629030324077897675298758552496030861940
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x177d1..115e0) + Fq(0x16201..07bff) * u), y=Fq2(Fq(0xdd7e5..69e77) + Fq(0x641a0..edfbc) * u), z=Fq2(Fq(0x64ee0..450d9) + Fq(0xcca5e..e3e61) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 52352512998537314515162038948837649379276248015430970
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x114fd..74b29) + Fq(0xf74fe..ba14c) * u), y=Fq2(Fq(0x14e6a..1883d) + Fq(0x16a76..3b632) * u), z=Fq2(Fq(0xf11b6..66256) + Fq(0x17c53..4a6ba) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 26176256499268657257581019474418824689638124007715485
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1189d..bfcac) + Fq(0x178c8..7353f) * u), y=Fq2(Fq(0xe4ad3..63493) + Fq(0x11216..1c532) * u), z=Fq2(Fq(0x502a9..aa715) + Fq(0x11203..3d937) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x114fd..74b29) + Fq(0xf74fe..ba14c) * u), y=Fq2(Fq(0x14e6a..1883d) + Fq(0x16a76..3b632) * u), z=Fq2(Fq(0xf11b6..66256) + Fq(0x17c53..4a6ba) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x4ca41..5f250) + Fq(0xf8c94..98108) * u), y=Fq2(Fq(0x47963..b0418) + Fq(0x8ee48..5c74b) * u), z=Fq2(Fq(0xac6af..b953e) + Fq(0xc97f3..d184b) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18f95..562bf) + Fq(0xa7d49..33a27) * u), y=Fq2(Fq(0x162ef..ceb38) + Fq(0xc0e85..83077) * u), z=Fq2(Fq(0x16136..14e6d) + Fq(0xf52a0..59f6c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 13088128249634328628790509737209412344819062003857742
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18754..68fc8) + Fq(0x17455..84aef) * u), y=Fq2(Fq(0x18b23..6b662) + Fq(0xfb3d5..7e303) * u), z=Fq2(Fq(0x9d622..4fc8b) + Fq(0x17fe7..a9cc7) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 6544064124817164314395254868604706172409531001928871
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x4ca41..5f250) + Fq(0xf8c94..98108) * u), y=Fq2(Fq(0x47963..b0418) + Fq(0x8ee48..5c74b) * u), z=Fq2(Fq(0xac6af..b953e) + Fq(0xc97f3..d184b) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x18754..68fc8) + Fq(0x17455..84aef) * u), y=Fq2(Fq(0x18b23..6b662) + Fq(0xfb3d5..7e303) * u), z=Fq2(Fq(0x9d622..4fc8b) + Fq(0x17fe7..a9cc7) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xf0222..e0bbd) + Fq(0x15a23..817b2) * u), y=Fq2(Fq(0x16f48..3e867) + Fq(0x46777..1bc44) * u), z=Fq2(Fq(0x12ff0..acd8c) + Fq(0x1688a..bea47) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x7d790..2c169) + Fq(0x67ad7..77b68) * u), y=Fq2(Fq(0x11c5a..906c5) + Fq(0x19c5c..d7957) * u), z=Fq2(Fq(0xfa267..f079f) + Fq(0x9eb98..d4d72) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3272032062408582157197627434302353086204765500964435
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xf0222..e0bbd) + Fq(0x15a23..817b2) * u), y=Fq2(Fq(0x16f48..3e867) + Fq(0x46777..1bc44) * u), z=Fq2(Fq(0x12ff0..acd8c) + Fq(0x1688a..bea47) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x7d790..2c169) + Fq(0x67ad7..77b68) * u), y=Fq2(Fq(0x11c5a..906c5) + Fq(0x19c5c..d7957) * u), z=Fq2(Fq(0xfa267..f079f) + Fq(0x9eb98..d4d72) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x10588..1c319) + Fq(0x37afb..e837d) * u), y=Fq2(Fq(0xd9e58..219b9) + Fq(0x10812..a794f) * u), z=Fq2(Fq(0x75fc8..9c7cb) + Fq(0xb76e8..d6123) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xaeef7..0963e) + Fq(0x13959..f65fc) * u), y=Fq2(Fq(0xc0377..f3ef4) + Fq(0x19044..d4bdd) * u), z=Fq2(Fq(0x132cf..7df05) + Fq(0x89581..31169) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1636016031204291078598813717151176543102382750482217
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x10588..1c319) + Fq(0x37afb..e837d) * u), y=Fq2(Fq(0xd9e58..219b9) + Fq(0x10812..a794f) * u), z=Fq2(Fq(0x75fc8..9c7cb) + Fq(0xb76e8..d6123) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xaeef7..0963e) + Fq(0x13959..f65fc) * u), y=Fq2(Fq(0xc0377..f3ef4) + Fq(0x19044..d4bdd) * u), z=Fq2(Fq(0x132cf..7df05) + Fq(0x89581..31169) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x47a60..80a31) + Fq(0x672c9..7aa2b) * u), y=Fq2(Fq(0x8ff01..bdd82) + Fq(0xaa8d8..c6f80) * u), z=Fq2(Fq(0x8db5e..7f41c) + Fq(0x15c71..780bd) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x64d48..9d260) + Fq(0x1455b..24802) * u), y=Fq2(Fq(0x7f978..47cd4) + Fq(0x14d9c..1e8ff) * u), z=Fq2(Fq(0x1939f..8a465) + Fq(0x69227..b98d2) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 818008015602145539299406858575588271551191375241108
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10dce..4f0aa) + Fq(0x82824..7fca9) * u), y=Fq2(Fq(0xc5a71..1ad9c) + Fq(0x53a8f..7c325) * u), z=Fq2(Fq(0x12c2d..795db) + Fq(0x2d50a..dbe24) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 409004007801072769649703429287794135775595687620554
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x8e543..530f5) + Fq(0x54144..3bf46) * u), y=Fq2(Fq(0x90b9c..73a5f) + Fq(0xfb228..72f2e) * u), z=Fq2(Fq(0x6eb12..b8428) + Fq(0x18a9d..bfe26) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 204502003900536384824851714643897067887797843810277
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x47a60..80a31) + Fq(0x672c9..7aa2b) * u), y=Fq2(Fq(0x8ff01..bdd82) + Fq(0xaa8d8..c6f80) * u), z=Fq2(Fq(0x8db5e..7f41c) + Fq(0x15c71..780bd) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x8e543..530f5) + Fq(0x54144..3bf46) * u), y=Fq2(Fq(0x90b9c..73a5f) + Fq(0xfb228..72f2e) * u), z=Fq2(Fq(0x6eb12..b8428) + Fq(0x18a9d..bfe26) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xf4242..c4c6d) + Fq(0x35835..ae0fb) * u), y=Fq2(Fq(0x88aeb..9554a) + Fq(0x4b0f5..43fa2) * u), z=Fq2(Fq(0x10f57..afb8b) + Fq(0x248be..5ef3d) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x4b5e1..03bf4) + Fq(0x949cc..52f75) * u), y=Fq2(Fq(0x12885..305a0) + Fq(0x120be..3fbd3) * u), z=Fq2(Fq(0x121d0..f8a7f) + Fq(0xc1ee9..0be90) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 102251001950268192412425857321948533943898921905138
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9da4d..fe100) + Fq(0x13299..01033) * u), y=Fq2(Fq(0x11fa3..40a9d) + Fq(0xc1cb7..15de3) * u), z=Fq2(Fq(0x198e9..2b006) + Fq(0xe23da..a1367) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 51125500975134096206212928660974266971949460952569
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xf4242..c4c6d) + Fq(0x35835..ae0fb) * u), y=Fq2(Fq(0x88aeb..9554a) + Fq(0x4b0f5..43fa2) * u), z=Fq2(Fq(0x10f57..afb8b) + Fq(0x248be..5ef3d) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x9da4d..fe100) + Fq(0x13299..01033) * u), y=Fq2(Fq(0x11fa3..40a9d) + Fq(0xc1cb7..15de3) * u), z=Fq2(Fq(0x198e9..2b006) + Fq(0xe23da..a1367) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x14e8b..52862) + Fq(0xa9bc9..00221) * u), y=Fq2(Fq(0x18a37..89e32) + Fq(0x7fc65..2df83) * u), z=Fq2(Fq(0x11dea..7c5cf) + Fq(0x10f02..00022) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18177..f02dd) + Fq(0x1694a..23d1c) * u), y=Fq2(Fq(0x1983d..abb07) + Fq(0xc03de..564ed) * u), z=Fq2(Fq(0x11679..7e031) + Fq(0xbdd4b..58d6c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 25562750487567048103106464330487133485974730476284
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x135cf..0a5a0) + Fq(0x15715..6abba) * u), y=Fq2(Fq(0x146ff..cddb1) + Fq(0x2dcf3..8d9bf) * u), z=Fq2(Fq(0xe54ba..7612a) + Fq(0x1150c..533e9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 12781375243783524051553232165243566742987365238142
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xd77c9..7fe12) + Fq(0x17921..f6d71) * u), y=Fq2(Fq(0x50a90..12a65) + Fq(0x175ec..70e2e) * u), z=Fq2(Fq(0x17fe5..a1bfd) + Fq(0x4486a..37b62) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 6390687621891762025776616082621783371493682619071
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x14e8b..52862) + Fq(0xa9bc9..00221) * u), y=Fq2(Fq(0x18a37..89e32) + Fq(0x7fc65..2df83) * u), z=Fq2(Fq(0x11dea..7c5cf) + Fq(0x10f02..00022) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xd77c9..7fe12) + Fq(0x17921..f6d71) * u), y=Fq2(Fq(0x50a90..12a65) + Fq(0x175ec..70e2e) * u), z=Fq2(Fq(0x17fe5..a1bfd) + Fq(0x4486a..37b62) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x749f2..ad658) + Fq(0x646b6..2c4d6) * u), y=Fq2(Fq(0x11f25..8855f) + Fq(0x53ad8..53f04) * u), z=Fq2(Fq(0x58cc3..91997) + Fq(0xb9df7..05719) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xfd866..f22e1) + Fq(0x2f369..14cdb) * u), y=Fq2(Fq(0x10875..946df) + Fq(0x51ffb..aa2c0) * u), z=Fq2(Fq(0x1040e..8bad3) + Fq(0x119f1..e7b0c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3195343810945881012888308041310891685746841309535
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x749f2..ad658) + Fq(0x646b6..2c4d6) * u), y=Fq2(Fq(0x11f25..8855f) + Fq(0x53ad8..53f04) * u), z=Fq2(Fq(0x58cc3..91997) + Fq(0xb9df7..05719) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xfd866..f22e1) + Fq(0x2f369..14cdb) * u), y=Fq2(Fq(0x10875..946df) + Fq(0x51ffb..aa2c0) * u), z=Fq2(Fq(0x1040e..8bad3) + Fq(0x119f1..e7b0c) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x6ea35..6301f) + Fq(0xcda74..b2a38) * u), y=Fq2(Fq(0x28644..d43ab) + Fq(0x19853..72fb5) * u), z=Fq2(Fq(0x211ca..d6832) + Fq(0x9c484..f06b2) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x41c37..9fd93) + Fq(0x192a9..298a6) * u), y=Fq2(Fq(0x139aa..e19a9) + Fq(0x18f7b..5ee83) * u), z=Fq2(Fq(0x1027a..a5fc3) + Fq(0x1395f..ba0e4) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1597671905472940506444154020655445842873420654767
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x6ea35..6301f) + Fq(0xcda74..b2a38) * u), y=Fq2(Fq(0x28644..d43ab) + Fq(0x19853..72fb5) * u), z=Fq2(Fq(0x211ca..d6832) + Fq(0x9c484..f06b2) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x41c37..9fd93) + Fq(0x192a9..298a6) * u), y=Fq2(Fq(0x139aa..e19a9) + Fq(0x18f7b..5ee83) * u), z=Fq2(Fq(0x1027a..a5fc3) + Fq(0x1395f..ba0e4) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x14813..5bcb6) + Fq(0xc4cf6..44099) * u), y=Fq2(Fq(0xa53af..a2bef) + Fq(0x19af0..af3ae) * u), z=Fq2(Fq(0x1bf07..abb99) + Fq(0x14879..fa9b2) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x52990..3e0c1) + Fq(0x1141d..b09b8) * u), y=Fq2(Fq(0x14be8..d55bc) + Fq(0xf9a82..fd5bc) * u), z=Fq2(Fq(0x425e7..64a7d) + Fq(0x9b1bb..430a6) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 798835952736470253222077010327722921436710327383
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x14813..5bcb6) + Fq(0xc4cf6..44099) * u), y=Fq2(Fq(0xa53af..a2bef) + Fq(0x19af0..af3ae) * u), z=Fq2(Fq(0x1bf07..abb99) + Fq(0x14879..fa9b2) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x52990..3e0c1) + Fq(0x1141d..b09b8) * u), y=Fq2(Fq(0x14be8..d55bc) + Fq(0xf9a82..fd5bc) * u), z=Fq2(Fq(0x425e7..64a7d) + Fq(0x9b1bb..430a6) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x17f9c..169b7) + Fq(0x9d813..d2c35) * u), y=Fq2(Fq(0x3edce..c953d) + Fq(0xd3756..a6682) * u), z=Fq2(Fq(0x18511..c1b42) + Fq(0x6e350..84603) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1f1dd..f6772) + Fq(0xea6f2..272ff) * u), y=Fq2(Fq(0x1221e..0c0ca) + Fq(0x16f58..549f0) * u), z=Fq2(Fq(0xadd64..368df) + Fq(0x16284..3f681) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 399417976368235126611038505163861460718355163691
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x17f9c..169b7) + Fq(0x9d813..d2c35) * u), y=Fq2(Fq(0x3edce..c953d) + Fq(0xd3756..a6682) * u), z=Fq2(Fq(0x18511..c1b42) + Fq(0x6e350..84603) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1f1dd..f6772) + Fq(0xea6f2..272ff) * u), y=Fq2(Fq(0x1221e..0c0ca) + Fq(0x16f58..549f0) * u), z=Fq2(Fq(0xadd64..368df) + Fq(0x16284..3f681) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x15967..08716) + Fq(0x130b7..d7698) * u), y=Fq2(Fq(0xf5683..0d5a5) + Fq(0x1085c..8b2df) * u), z=Fq2(Fq(0x2c496..4cdf4) + Fq(0x3e8ca..5d98d) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13357..a6f8a) + Fq(0x215cc..562e6) * u), y=Fq2(Fq(0x155ea..ed854) + Fq(0xef1c7..1ad38) * u), z=Fq2(Fq(0xece32..c027e) + Fq(0x128f1..15557) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 199708988184117563305519252581930730359177581845
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x15967..08716) + Fq(0x130b7..d7698) * u), y=Fq2(Fq(0xf5683..0d5a5) + Fq(0x1085c..8b2df) * u), z=Fq2(Fq(0x2c496..4cdf4) + Fq(0x3e8ca..5d98d) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x13357..a6f8a) + Fq(0x215cc..562e6) * u), y=Fq2(Fq(0x155ea..ed854) + Fq(0xef1c7..1ad38) * u), z=Fq2(Fq(0xece32..c027e) + Fq(0x128f1..15557) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x55b35..24c55) + Fq(0x18d2f..8c169) * u), y=Fq2(Fq(0x68d9e..1a1d6) + Fq(0xe0d0e..edd8c) * u), z=Fq2(Fq(0xe7573..3941a) + Fq(0x2f11a..cd7a8) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1d543..ab7af) + Fq(0xdaf28..78b2f) * u), y=Fq2(Fq(0xd981e..18142) + Fq(0x50929..3e1e0) * u), z=Fq2(Fq(0x126f9..60fa2) + Fq(0x111cf..e62c1) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 99854494092058781652759626290965365179588790922
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9c628..a047d) + Fq(0xbcfab..e22ec) * u), y=Fq2(Fq(0x87a8b..16589) + Fq(0x2f41c..e5f8f) * u), z=Fq2(Fq(0x69569..0c303) + Fq(0xfa670..8ccc7) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 49927247046029390826379813145482682589794395461
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x55b35..24c55) + Fq(0x18d2f..8c169) * u), y=Fq2(Fq(0x68d9e..1a1d6) + Fq(0xe0d0e..edd8c) * u), z=Fq2(Fq(0xe7573..3941a) + Fq(0x2f11a..cd7a8) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x9c628..a047d) + Fq(0xbcfab..e22ec) * u), y=Fq2(Fq(0x87a8b..16589) + Fq(0x2f41c..e5f8f) * u), z=Fq2(Fq(0x69569..0c303) + Fq(0xfa670..8ccc7) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x306dd..798bf) + Fq(0xdd5d8..f3995) * u), y=Fq2(Fq(0x12660..c8b19) + Fq(0x8a27b..3f8e1) * u), z=Fq2(Fq(0x772b1..822fe) + Fq(0x9f7c1..84fb5) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x111bb..6358a) + Fq(0x42ea0..41e90) * u), y=Fq2(Fq(0x31ae2..e66d6) + Fq(0x78179..6df0a) * u), z=Fq2(Fq(0xde767..46363) + Fq(0x91190..cda50) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 24963623523014695413189906572741341294897197730
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xf6c5b..16429) + Fq(0x8f3be..abef0) * u), y=Fq2(Fq(0x32683..9cd25) + Fq(0xd933a..b7135) * u), z=Fq2(Fq(0xab779..6044b) + Fq(0x1aab0..a97d9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 12481811761507347706594953286370670647448598865
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x306dd..798bf) + Fq(0xdd5d8..f3995) * u), y=Fq2(Fq(0x12660..c8b19) + Fq(0x8a27b..3f8e1) * u), z=Fq2(Fq(0x772b1..822fe) + Fq(0x9f7c1..84fb5) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xf6c5b..16429) + Fq(0x8f3be..abef0) * u), y=Fq2(Fq(0x32683..9cd25) + Fq(0xd933a..b7135) * u), z=Fq2(Fq(0xab779..6044b) + Fq(0x1aab0..a97d9) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xc39d8..e2d12) + Fq(0xec529..ffc69) * u), y=Fq2(Fq(0x15f9a..c26b0) + Fq(0x10629..4e307) * u), z=Fq2(Fq(0x16fe9..517d9) + Fq(0xe4243..01307) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xd9d7e..9644b) + Fq(0x8b09f..4e7c3) * u), y=Fq2(Fq(0x396e2..2efd6) + Fq(0x8122a..39593) * u), z=Fq2(Fq(0x766fc..6612e) + Fq(0x39bad..bcb52) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 6240905880753673853297476643185335323724299432
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x115bb..5488f) + Fq(0x84a87..ad1bd) * u), y=Fq2(Fq(0x7a893..38daa) + Fq(0xef9d0..d979f) * u), z=Fq2(Fq(0x19f03..5f7b1) + Fq(0x17785..c3d8e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3120452940376836926648738321592667661862149716
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16909..17c7a) + Fq(0xb1788..ca009) * u), y=Fq2(Fq(0xeac2d..2f6b7) + Fq(0x6fc5a..77222) * u), z=Fq2(Fq(0x1175d..7815b) + Fq(0xb7345..bab90) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1560226470188418463324369160796333830931074858
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x17261..82ddc) + Fq(0x4e0dc..ea9fd) * u), y=Fq2(Fq(0x5ba47..d7333) + Fq(0x300c0..f9d95) * u), z=Fq2(Fq(0x10bbd..5a1a0) + Fq(0x8ead3..5e132) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 780113235094209231662184580398166915465537429
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xc39d8..e2d12) + Fq(0xec529..ffc69) * u), y=Fq2(Fq(0x15f9a..c26b0) + Fq(0x10629..4e307) * u), z=Fq2(Fq(0x16fe9..517d9) + Fq(0xe4243..01307) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x17261..82ddc) + Fq(0x4e0dc..ea9fd) * u), y=Fq2(Fq(0x5ba47..d7333) + Fq(0x300c0..f9d95) * u), z=Fq2(Fq(0x10bbd..5a1a0) + Fq(0x8ead3..5e132) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x945f1..f4c41) + Fq(0xb5b76..409d8) * u), y=Fq2(Fq(0x11f5d..3edc8) + Fq(0x163ad..c6de8) * u), z=Fq2(Fq(0x160c3..fbb53) + Fq(0xa6d9f..46bfb) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb3711..d11d7) + Fq(0x120a4..317c6) * u), y=Fq2(Fq(0xf89d8..34d76) + Fq(0xcd1e6..896fe) * u), z=Fq2(Fq(0x17770..b4874) + Fq(0x16ec6..7e245) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 390056617547104615831092290199083457732768714
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x106f4..3433e) + Fq(0xcd440..a749b) * u), y=Fq2(Fq(0x42ac9..2379a) + Fq(0x13a82..06ea0) * u), z=Fq2(Fq(0xb5d9b..8af85) + Fq(0x15cbe..4bdc3) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 195028308773552307915546145099541728866384357
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x945f1..f4c41) + Fq(0xb5b76..409d8) * u), y=Fq2(Fq(0x11f5d..3edc8) + Fq(0x163ad..c6de8) * u), z=Fq2(Fq(0x160c3..fbb53) + Fq(0xa6d9f..46bfb) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x106f4..3433e) + Fq(0xcd440..a749b) * u), y=Fq2(Fq(0x42ac9..2379a) + Fq(0x13a82..06ea0) * u), z=Fq2(Fq(0xb5d9b..8af85) + Fq(0x15cbe..4bdc3) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x22ac1..5096a) + Fq(0x18878..2fdd9) * u), y=Fq2(Fq(0xbfe5b..ae15f) + Fq(0xc83be..c8e16) * u), z=Fq2(Fq(0x6052e..afbe4) + Fq(0x2949a..7b972) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb84a3..a95b1) + Fq(0x3999b..4548f) * u), y=Fq2(Fq(0xa2535..38bdd) + Fq(0x11905..80a26) * u), z=Fq2(Fq(0x18141..5106f) + Fq(0x79c0b..8ce4f) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 97514154386776153957773072549770864433192178
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9c098..9d8f0) + Fq(0x16bfd..61560) * u), y=Fq2(Fq(0x16eb1..bad95) + Fq(0xb66b1..3dc8f) * u), z=Fq2(Fq(0xabacc..c7882) + Fq(0x19f8f..fefdc) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 48757077193388076978886536274885432216596089
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x22ac1..5096a) + Fq(0x18878..2fdd9) * u), y=Fq2(Fq(0xbfe5b..ae15f) + Fq(0xc83be..c8e16) * u), z=Fq2(Fq(0x6052e..afbe4) + Fq(0x2949a..7b972) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x9c098..9d8f0) + Fq(0x16bfd..61560) * u), y=Fq2(Fq(0x16eb1..bad95) + Fq(0xb66b1..3dc8f) * u), z=Fq2(Fq(0xabacc..c7882) + Fq(0x19f8f..fefdc) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x194a9..0bc2c) + Fq(0x12d81..e41d8) * u), y=Fq2(Fq(0x3bb78..07808) + Fq(0xf0842..b5da3) * u), z=Fq2(Fq(0xf65c9..8d194) + Fq(0x317dd..7dec6) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x38c02..6ee4b) + Fq(0x10ae8..47368) * u), y=Fq2(Fq(0x2c700..c6499) + Fq(0x3c8c4..b6790) * u), z=Fq2(Fq(0xddf86..bed31) + Fq(0x445cc..10f7d) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 24378538596694038489443268137442716108298044
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x59854..e7f15) + Fq(0x32bab..80a0e) * u), y=Fq2(Fq(0xc9626..a56b9) + Fq(0x85b23..1f1da) * u), z=Fq2(Fq(0xbf781..8d233) + Fq(0x474ff..3576a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 12189269298347019244721634068721358054149022
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x159ad..2598b) + Fq(0x828d7..7bca1) * u), y=Fq2(Fq(0x16255..66eab) + Fq(0x3b543..ba809) * u), z=Fq2(Fq(0x71670..1cd44) + Fq(0x10949..0b886) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 6094634649173509622360817034360679027074511
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x194a9..0bc2c) + Fq(0x12d81..e41d8) * u), y=Fq2(Fq(0x3bb78..07808) + Fq(0xf0842..b5da3) * u), z=Fq2(Fq(0xf65c9..8d194) + Fq(0x317dd..7dec6) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x159ad..2598b) + Fq(0x828d7..7bca1) * u), y=Fq2(Fq(0x16255..66eab) + Fq(0x3b543..ba809) * u), z=Fq2(Fq(0x71670..1cd44) + Fq(0x10949..0b886) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xe75b6..e1d48) + Fq(0xf4953..1bc5f) * u), y=Fq2(Fq(0x7d1e4..80c6a) + Fq(0x6b600..ae0ff) * u), z=Fq2(Fq(0xed70c..4d8f0) + Fq(0x1630e..423c5) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x15541..856a8) + Fq(0x10d4c..f4b19) * u), y=Fq2(Fq(0x1144f..4533b) + Fq(0x193ec..6a3b6) * u), z=Fq2(Fq(0x1685a..0f6e1) + Fq(0x305c6..ba6f9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 3047317324586754811180408517180339513537255
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xe75b6..e1d48) + Fq(0xf4953..1bc5f) * u), y=Fq2(Fq(0x7d1e4..80c6a) + Fq(0x6b600..ae0ff) * u), z=Fq2(Fq(0xed70c..4d8f0) + Fq(0x1630e..423c5) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x15541..856a8) + Fq(0x10d4c..f4b19) * u), y=Fq2(Fq(0x1144f..4533b) + Fq(0x193ec..6a3b6) * u), z=Fq2(Fq(0x1685a..0f6e1) + Fq(0x305c6..ba6f9) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x3cd47..1e271) + Fq(0x8a92d..a04ed) * u), y=Fq2(Fq(0x15625..5d29d) + Fq(0x17bb4..f72e3) * u), z=Fq2(Fq(0xd9582..279cb) + Fq(0x1067e..408c4) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x43610..c41c2) + Fq(0x10598..60037) * u), y=Fq2(Fq(0xdeec2..dc775) + Fq(0x7f3da..ef1cb) * u), z=Fq2(Fq(0x167ab..ec54e) + Fq(0xea3fe..a2531) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1523658662293377405590204258590169756768627
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x3cd47..1e271) + Fq(0x8a92d..a04ed) * u), y=Fq2(Fq(0x15625..5d29d) + Fq(0x17bb4..f72e3) * u), z=Fq2(Fq(0xd9582..279cb) + Fq(0x1067e..408c4) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x43610..c41c2) + Fq(0x10598..60037) * u), y=Fq2(Fq(0xdeec2..dc775) + Fq(0x7f3da..ef1cb) * u), z=Fq2(Fq(0x167ab..ec54e) + Fq(0xea3fe..a2531) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x2f924..370b7) + Fq(0xaa87d..bfb3a) * u), y=Fq2(Fq(0x13335..638f5) + Fq(0x1676c..279e2) * u), z=Fq2(Fq(0xa580e..e9dbe) + Fq(0x31683..5f163) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x132d1..ae6ed) + Fq(0xc38d8..ac56d) * u), y=Fq2(Fq(0x12334..53794) + Fq(0x15c54..d90c7) * u), z=Fq2(Fq(0x2b37e..3c7bd) + Fq(0x78005..98930) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 761829331146688702795102129295084878384313
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x2f924..370b7) + Fq(0xaa87d..bfb3a) * u), y=Fq2(Fq(0x13335..638f5) + Fq(0x1676c..279e2) * u), z=Fq2(Fq(0xa580e..e9dbe) + Fq(0x31683..5f163) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x132d1..ae6ed) + Fq(0xc38d8..ac56d) * u), y=Fq2(Fq(0x12334..53794) + Fq(0x15c54..d90c7) * u), z=Fq2(Fq(0x2b37e..3c7bd) + Fq(0x78005..98930) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x13fb6..69edf) + Fq(0x1742a..ee2b7) * u), y=Fq2(Fq(0x189f5..32edf) + Fq(0x122ba..400dd) * u), z=Fq2(Fq(0x1968f..195fa) + Fq(0x14244..9df3f) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x11ac0..33691) + Fq(0x153df..8dba7) * u), y=Fq2(Fq(0xdc84e..6ac75) + Fq(0x68a38..9e2fc) * u), z=Fq2(Fq(0x10d94..96a94) + Fq(0x145f3..b2f44) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 380914665573344351397551064647542439192156
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xf5fc3..38808) + Fq(0x12553..36ff8) * u), y=Fq2(Fq(0x3e4af..00c6a) + Fq(0x1a3d2..3a5a4) * u), z=Fq2(Fq(0x13970..c936c) + Fq(0x1fccf..e4ff5) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 190457332786672175698775532323771219596078
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x3c2e7..51d86) + Fq(0x17c26..3cccf) * u), y=Fq2(Fq(0x1099b..cb5bb) + Fq(0x17da5..d9111) * u), z=Fq2(Fq(0xdb119..86f0d) + Fq(0x17c2d..73881) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 95228666393336087849387766161885609798039
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x13fb6..69edf) + Fq(0x1742a..ee2b7) * u), y=Fq2(Fq(0x189f5..32edf) + Fq(0x122ba..400dd) * u), z=Fq2(Fq(0x1968f..195fa) + Fq(0x14244..9df3f) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x3c2e7..51d86) + Fq(0x17c26..3cccf) * u), y=Fq2(Fq(0x1099b..cb5bb) + Fq(0x17da5..d9111) * u), z=Fq2(Fq(0xdb119..86f0d) + Fq(0x17c2d..73881) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x12091..64d28) + Fq(0x12b10..5d435) * u), y=Fq2(Fq(0x345e2..ddbcc) + Fq(0x179f9..525bf) * u), z=Fq2(Fq(0x187b2..4b833) + Fq(0x163d0..41af7) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x188e5..2c0f8) + Fq(0x9dc08..35bb5) * u), y=Fq2(Fq(0x11a7e..58fdf) + Fq(0x17f63..2c5ea) * u), z=Fq2(Fq(0xf42c3..d9996) + Fq(0x10eac..b651e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 47614333196668043924693883080942804899019
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x12091..64d28) + Fq(0x12b10..5d435) * u), y=Fq2(Fq(0x345e2..ddbcc) + Fq(0x179f9..525bf) * u), z=Fq2(Fq(0x187b2..4b833) + Fq(0x163d0..41af7) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x188e5..2c0f8) + Fq(0x9dc08..35bb5) * u), y=Fq2(Fq(0x11a7e..58fdf) + Fq(0x17f63..2c5ea) * u), z=Fq2(Fq(0xf42c3..d9996) + Fq(0x10eac..b651e) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x19ccc..8f782) + Fq(0x42a0e..8bf75) * u), y=Fq2(Fq(0xc45d9..c3ec3) + Fq(0xbc713..31f05) * u), z=Fq2(Fq(0x86403..de98e) + Fq(0xe4726..ce23e) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x49e0e..c03f5) + Fq(0x2585e..552b3) * u), y=Fq2(Fq(0x16b67..80d0d) + Fq(0xdbcad..b33ab) * u), z=Fq2(Fq(0x3efa5..102ea) + Fq(0x150db..7a453) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 23807166598334021962346941540471402449509
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x19ccc..8f782) + Fq(0x42a0e..8bf75) * u), y=Fq2(Fq(0xc45d9..c3ec3) + Fq(0xbc713..31f05) * u), z=Fq2(Fq(0x86403..de98e) + Fq(0xe4726..ce23e) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x49e0e..c03f5) + Fq(0x2585e..552b3) * u), y=Fq2(Fq(0x16b67..80d0d) + Fq(0xdbcad..b33ab) * u), z=Fq2(Fq(0x3efa5..102ea) + Fq(0x150db..7a453) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xd761b..66f19) + Fq(0x166b4..9d704) * u), y=Fq2(Fq(0x38d09..798b1) + Fq(0xd18ee..85f98) * u), z=Fq2(Fq(0x141cf..6ce97) + Fq(0x9e23d..79fc9) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1889a..09797) + Fq(0x131a2..933ac) * u), y=Fq2(Fq(0x11862..3f018) + Fq(0x18763..ed349) * u), z=Fq2(Fq(0x880dc..b834d) + Fq(0x10944..ff097) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 11903583299167010981173470770235701224754
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x58cb0..4ad7c) + Fq(0x18b32..9e3bc) * u), y=Fq2(Fq(0x14fe4..2dbbc) + Fq(0x12b31..d2d0f) * u), z=Fq2(Fq(0xf419a..e3978) + Fq(0x498cb..7c52c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 5951791649583505490586735385117850612377
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xd761b..66f19) + Fq(0x166b4..9d704) * u), y=Fq2(Fq(0x38d09..798b1) + Fq(0xd18ee..85f98) * u), z=Fq2(Fq(0x141cf..6ce97) + Fq(0x9e23d..79fc9) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x58cb0..4ad7c) + Fq(0x18b32..9e3bc) * u), y=Fq2(Fq(0x14fe4..2dbbc) + Fq(0x12b31..d2d0f) * u), z=Fq2(Fq(0xf419a..e3978) + Fq(0x498cb..7c52c) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x185c1..12cb6) + Fq(0x119ec..a52bc) * u), y=Fq2(Fq(0x66ae1..fefc8) + Fq(0x167b9..68888) * u), z=Fq2(Fq(0x186fc..58ba5) + Fq(0x8988c..4c843) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x25aed..793b0) + Fq(0x12f37..6f5d3) * u), y=Fq2(Fq(0x11549..6e0b2) + Fq(0x14087..dcb79) * u), z=Fq2(Fq(0x12330..aa9ba) + Fq(0xc4ac2..22b85) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2975895824791752745293367692558925306188
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x37cd5..a6a8c) + Fq(0x1309a..380e1) * u), y=Fq2(Fq(0x64cdb..d1280) + Fq(0x845f1..9b965) * u), z=Fq2(Fq(0x196d8..cd25a) + Fq(0x12b57..3e320) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1487947912395876372646683846279462653094
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xc291a..ef849) + Fq(0x19741..8eac0) * u), y=Fq2(Fq(0x17628..fa550) + Fq(0x18078..e231a) * u), z=Fq2(Fq(0x12130..99686) + Fq(0xe54f3..74178) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 743973956197938186323341923139731326547
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x185c1..12cb6) + Fq(0x119ec..a52bc) * u), y=Fq2(Fq(0x66ae1..fefc8) + Fq(0x167b9..68888) * u), z=Fq2(Fq(0x186fc..58ba5) + Fq(0x8988c..4c843) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xc291a..ef849) + Fq(0x19741..8eac0) * u), y=Fq2(Fq(0x17628..fa550) + Fq(0x18078..e231a) * u), z=Fq2(Fq(0x12130..99686) + Fq(0xe54f3..74178) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x18ef2..732b1) + Fq(0x16d5b..42cbd) * u), y=Fq2(Fq(0x2fcd1..f7b1b) + Fq(0x15ed7..5ecad) * u), z=Fq2(Fq(0xb090c..66522) + Fq(0x188e8..9bd2e) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1cc7e..0ce01) + Fq(0x6b50c..1b41d) * u), y=Fq2(Fq(0x10245..29365) + Fq(0xa7198..7357f) * u), z=Fq2(Fq(0x12659..9d09f) + Fq(0xdf415..36784) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 371986978098969093161670961569865663273
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x18ef2..732b1) + Fq(0x16d5b..42cbd) * u), y=Fq2(Fq(0x2fcd1..f7b1b) + Fq(0x15ed7..5ecad) * u), z=Fq2(Fq(0xb090c..66522) + Fq(0x188e8..9bd2e) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1cc7e..0ce01) + Fq(0x6b50c..1b41d) * u), y=Fq2(Fq(0x10245..29365) + Fq(0xa7198..7357f) * u), z=Fq2(Fq(0x12659..9d09f) + Fq(0xdf415..36784) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x35a4a..5bed9) + Fq(0x14a9f..4fcdd) * u), y=Fq2(Fq(0xa47ff..bb125) + Fq(0xbe685..923fc) * u), z=Fq2(Fq(0xe0992..f12fe) + Fq(0xf6bef..de1e3) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x38e66..b0f2b) + Fq(0xc02e6..849a1) * u), y=Fq2(Fq(0x17551..e7170) + Fq(0xbada3..231b7) * u), z=Fq2(Fq(0x90818..904a4) + Fq(0x6d602..1c6e9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 185993489049484546580835480784932831636
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xc2792..ee562) + Fq(0x109b8..b84c3) * u), y=Fq2(Fq(0xc680e..ae69a) + Fq(0x9b4d5..30e4c) * u), z=Fq2(Fq(0x93032..42823) + Fq(0xc1044..92313) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 92996744524742273290417740392466415818
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x15c8c..6d6ca) + Fq(0x3ea7e..44495) * u), y=Fq2(Fq(0x14ef0..36db0) + Fq(0xe6b81..ef56e) * u), z=Fq2(Fq(0x476ad..1e9d3) + Fq(0x1375e..d68bd) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 46498372262371136645208870196233207909
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x35a4a..5bed9) + Fq(0x14a9f..4fcdd) * u), y=Fq2(Fq(0xa47ff..bb125) + Fq(0xbe685..923fc) * u), z=Fq2(Fq(0xe0992..f12fe) + Fq(0xf6bef..de1e3) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x15c8c..6d6ca) + Fq(0x3ea7e..44495) * u), y=Fq2(Fq(0x14ef0..36db0) + Fq(0xe6b81..ef56e) * u), z=Fq2(Fq(0x476ad..1e9d3) + Fq(0x1375e..d68bd) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x8ce28..ac60a) + Fq(0x4ced4..c7906) * u), y=Fq2(Fq(0x46b87..c6a0d) + Fq(0x131c0..6dd1e) * u), z=Fq2(Fq(0x6131a..a9ffa) + Fq(0x33ef3..bc456) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10596..2b8f9) + Fq(0x13012..d8d14) * u), y=Fq2(Fq(0xfc344..e57d6) + Fq(0x84e63..489d6) * u), z=Fq2(Fq(0x19cbb..3c258) + Fq(0xfd71b..e5417) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 23249186131185568322604435098116603954
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb8b3e..18f1c) + Fq(0x12bec..6b914) * u), y=Fq2(Fq(0xabb29..dd15d) + Fq(0x795a1..c31c1) * u), z=Fq2(Fq(0x7d09f..07329) + Fq(0x7b13d..901ab) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 11624593065592784161302217549058301977
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x8ce28..ac60a) + Fq(0x4ced4..c7906) * u), y=Fq2(Fq(0x46b87..c6a0d) + Fq(0x131c0..6dd1e) * u), z=Fq2(Fq(0x6131a..a9ffa) + Fq(0x33ef3..bc456) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xb8b3e..18f1c) + Fq(0x12bec..6b914) * u), y=Fq2(Fq(0xabb29..dd15d) + Fq(0x795a1..c31c1) * u), z=Fq2(Fq(0x7d09f..07329) + Fq(0x7b13d..901ab) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x4a427..bef1b) + Fq(0x9c2ca..22ede) * u), y=Fq2(Fq(0xd8a3c..276a5) + Fq(0x328b6..fbb28) * u), z=Fq2(Fq(0x24a0d..279ac) + Fq(0x8af9c..ab9c2) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13708..323b4) + Fq(0xa6cf4..aa274) * u), y=Fq2(Fq(0xbffb0..1b5dc) + Fq(0x8736e..113b0) * u), z=Fq2(Fq(0x160b7..23580) + Fq(0xa9993..36392) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 5812296532796392080651108774529150988
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x11335..6ce4f) + Fq(0xa70ac..eeb43) * u), y=Fq2(Fq(0x19b22..4d11a) + Fq(0xec39e..0c9ea) * u), z=Fq2(Fq(0xfb9b3..16d0b) + Fq(0x132e4..531dd) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2906148266398196040325554387264575494
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10b95..9b6e1) + Fq(0x24776..6bf54) * u), y=Fq2(Fq(0x10fb0..11627) + Fq(0x10c77..e1868) * u), z=Fq2(Fq(0x164fc..2563d) + Fq(0x564d7..831b1) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1453074133199098020162777193632287747
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x4a427..bef1b) + Fq(0x9c2ca..22ede) * u), y=Fq2(Fq(0xd8a3c..276a5) + Fq(0x328b6..fbb28) * u), z=Fq2(Fq(0x24a0d..279ac) + Fq(0x8af9c..ab9c2) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x10b95..9b6e1) + Fq(0x24776..6bf54) * u), y=Fq2(Fq(0x10fb0..11627) + Fq(0x10c77..e1868) * u), z=Fq2(Fq(0x164fc..2563d) + Fq(0x564d7..831b1) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x77d26..1cfc0) + Fq(0x19101..c2f36) * u), y=Fq2(Fq(0x19514..d8213) + Fq(0xcf2d7..2373b) * u), z=Fq2(Fq(0x1900c..ae1fd) + Fq(0x34657..f0cef) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xa850b..0f099) + Fq(0xd70aa..9b6ef) * u), y=Fq2(Fq(0xa912f..437b7) + Fq(0x44071..d2507) * u), z=Fq2(Fq(0x1338d..49a2b) + Fq(0x2edb7..535a2) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 726537066599549010081388596816143873
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x77d26..1cfc0) + Fq(0x19101..c2f36) * u), y=Fq2(Fq(0x19514..d8213) + Fq(0xcf2d7..2373b) * u), z=Fq2(Fq(0x1900c..ae1fd) + Fq(0x34657..f0cef) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xa850b..0f099) + Fq(0xd70aa..9b6ef) * u), y=Fq2(Fq(0xa912f..437b7) + Fq(0x44071..d2507) * u), z=Fq2(Fq(0x1338d..49a2b) + Fq(0x2edb7..535a2) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x17262..9dd5e) + Fq(0x83da9..d6a18) * u), y=Fq2(Fq(0xaba39..6bf9a) + Fq(0xd240a..3369b) * u), z=Fq2(Fq(0x1068d..30361) + Fq(0xa4452..12573) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x5e305..13508) + Fq(0x119af..c4ef9) * u), y=Fq2(Fq(0x10b66..52fdb) + Fq(0x198eb..e2f13) * u), z=Fq2(Fq(0xdb76e..4654e) + Fq(0x3b2e4..d87bc) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 363268533299774505040694298408071936
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10c5a..4f7e6) + Fq(0x140a6..20d9a) * u), y=Fq2(Fq(0x13cec..cc4ef) + Fq(0x4f03a..46b26) * u), z=Fq2(Fq(0xb32f4..eb545) + Fq(0x18b7e..f501c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 181634266649887252520347149204035968
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xdc807..5cf7a) + Fq(0x10e77..8d12e) * u), y=Fq2(Fq(0x1111d..a4be2) + Fq(0x18124..6b878) * u), z=Fq2(Fq(0x5148f..22282) + Fq(0x195be..835c8) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 90817133324943626260173574602017984
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x6efc9..135ee) + Fq(0xcb6ba..52a19) * u), y=Fq2(Fq(0x17c02..a3c09) + Fq(0x1e63e..021ee) * u), z=Fq2(Fq(0x132f8..975f9) + Fq(0x79f0a..35fb2) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 45408566662471813130086787301008992
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x172f6..346ca) + Fq(0x5a0c9..5325e) * u), y=Fq2(Fq(0x156c7..b2e88) + Fq(0x17066..cd933) * u), z=Fq2(Fq(0x94fe3..137dd) + Fq(0x6347f..f6e9a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 22704283331235906565043393650504496
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x108aa..d8221) + Fq(0x1fcd5..02d31) * u), y=Fq2(Fq(0xe4371..20eed) + Fq(0xf1a79..b4553) * u), z=Fq2(Fq(0xd096c..cdab8) + Fq(0x160aa..836ff) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 11352141665617953282521696825252248
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xc6e1b..e25bc) + Fq(0xe8a73..8842c) * u), y=Fq2(Fq(0x1077d..4ecf0) + Fq(0x4d9f7..fce23) * u), z=Fq2(Fq(0x15df3..3a39b) + Fq(0xd013a..019c7) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 5676070832808976641260848412626124
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9f23f..627a1) + Fq(0x45b57..03729) * u), y=Fq2(Fq(0xeeb5f..05c35) + Fq(0x78123..53014) * u), z=Fq2(Fq(0x151dd..fc66a) + Fq(0xf2872..65973) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2838035416404488320630424206313062
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x168fe..52e44) + Fq(0xbd807..62619) * u), y=Fq2(Fq(0xe8439..f9fee) + Fq(0x14598..7149b) * u), z=Fq2(Fq(0x13071..7768f) + Fq(0x458f4..2aafa) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1419017708202244160315212103156531
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x17262..9dd5e) + Fq(0x83da9..d6a18) * u), y=Fq2(Fq(0xaba39..6bf9a) + Fq(0xd240a..3369b) * u), z=Fq2(Fq(0x1068d..30361) + Fq(0xa4452..12573) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x168fe..52e44) + Fq(0xbd807..62619) * u), y=Fq2(Fq(0xe8439..f9fee) + Fq(0x14598..7149b) * u), z=Fq2(Fq(0x13071..7768f) + Fq(0x458f4..2aafa) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xdd0ac..c04df) + Fq(0x610cf..b236c) * u), y=Fq2(Fq(0xac8d1..a3e52) + Fq(0x17247..1ecbb) * u), z=Fq2(Fq(0x174b2..e15bd) + Fq(0xf162c..8ddec) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1643c..b3097) + Fq(0xdc832..6e17a) * u), y=Fq2(Fq(0x58be8..ab216) + Fq(0x21223..a55eb) * u), z=Fq2(Fq(0x12f56..85fe4) + Fq(0x13194..47b2a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 709508854101122080157606051578265
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xdd0ac..c04df) + Fq(0x610cf..b236c) * u), y=Fq2(Fq(0xac8d1..a3e52) + Fq(0x17247..1ecbb) * u), z=Fq2(Fq(0x174b2..e15bd) + Fq(0xf162c..8ddec) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1643c..b3097) + Fq(0xdc832..6e17a) * u), y=Fq2(Fq(0x58be8..ab216) + Fq(0x21223..a55eb) * u), z=Fq2(Fq(0x12f56..85fe4) + Fq(0x13194..47b2a) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x162da..307ee) + Fq(0x12201..b57c2) * u), y=Fq2(Fq(0x1dbcb..eda8c) + Fq(0xa3d16..38727) * u), z=Fq2(Fq(0xd5368..95070) + Fq(0x1299d..0fb11) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1e741..44bb1) + Fq(0x151ce..92731) * u), y=Fq2(Fq(0x614a8..0a041) + Fq(0x18741..3c0c5) * u), z=Fq2(Fq(0x19f98..e29f4) + Fq(0x86a7f..d053b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 354754427050561040078803025789132
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x2aa77..f7b16) + Fq(0x134c9..97921) * u), y=Fq2(Fq(0xd45c2..063cc) + Fq(0x1726f..d10cf) * u), z=Fq2(Fq(0x6d36c..49953) + Fq(0xd4a0d..d8244) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 177377213525280520039401512894566
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x28441..7b3a9) + Fq(0xb76b2..999b2) * u), y=Fq2(Fq(0xa0d4a..b95e4) + Fq(0x1590f..44af4) * u), z=Fq2(Fq(0xf0b14..9a0d2) + Fq(0x15ebb..f59a9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 88688606762640260019700756447283
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x162da..307ee) + Fq(0x12201..b57c2) * u), y=Fq2(Fq(0x1dbcb..eda8c) + Fq(0xa3d16..38727) * u), z=Fq2(Fq(0xd5368..95070) + Fq(0x1299d..0fb11) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x28441..7b3a9) + Fq(0xb76b2..999b2) * u), y=Fq2(Fq(0xa0d4a..b95e4) + Fq(0x1590f..44af4) * u), z=Fq2(Fq(0xf0b14..9a0d2) + Fq(0x15ebb..f59a9) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xa860b..b638e) + Fq(0x902c3..884fc) * u), y=Fq2(Fq(0x593bf..541af) + Fq(0x6b661..48be3) * u), z=Fq2(Fq(0xc6b16..28ab5) + Fq(0x7155f..e5c30) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x5293b..33765) + Fq(0x11453..89e4f) * u), y=Fq2(Fq(0x42115..416d8) + Fq(0x7c916..6fcf2) * u), z=Fq2(Fq(0x11656..268bc) + Fq(0x60681..60232) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 44344303381320130009850378223641
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xa860b..b638e) + Fq(0x902c3..884fc) * u), y=Fq2(Fq(0x593bf..541af) + Fq(0x6b661..48be3) * u), z=Fq2(Fq(0xc6b16..28ab5) + Fq(0x7155f..e5c30) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x5293b..33765) + Fq(0x11453..89e4f) * u), y=Fq2(Fq(0x42115..416d8) + Fq(0x7c916..6fcf2) * u), z=Fq2(Fq(0x11656..268bc) + Fq(0x60681..60232) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xbf0c2..73a06) + Fq(0x4a916..d8ca4) * u), y=Fq2(Fq(0x197a0..6ee22) + Fq(0x199ce..cc48f) * u), z=Fq2(Fq(0x159e4..b33b4) + Fq(0x11ff0..eeab7) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13bfc..fe35a) + Fq(0x13396..a451c) * u), y=Fq2(Fq(0x598cf..484ce) + Fq(0x4342b..57a8d) * u), z=Fq2(Fq(0x1918b..9e4be) + Fq(0xf00a7..866a4) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 22172151690660065004925189111820
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16c82..1d89a) + Fq(0xfea18..2f2c5) * u), y=Fq2(Fq(0x10be0..6903b) + Fq(0x1456f..ab0ed) * u), z=Fq2(Fq(0x76271..40877) + Fq(0x11f7d..4c315) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 11086075845330032502462594555910
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x122fb..eddc0) + Fq(0xf83d8..658ef) * u), y=Fq2(Fq(0x17cc9..b0753) + Fq(0x2d375..6d72c) * u), z=Fq2(Fq(0x60ae6..099fb) + Fq(0xba973..69ea2) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 5543037922665016251231297277955
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xbf0c2..73a06) + Fq(0x4a916..d8ca4) * u), y=Fq2(Fq(0x197a0..6ee22) + Fq(0x199ce..cc48f) * u), z=Fq2(Fq(0x159e4..b33b4) + Fq(0x11ff0..eeab7) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x122fb..eddc0) + Fq(0xf83d8..658ef) * u), y=Fq2(Fq(0x17cc9..b0753) + Fq(0x2d375..6d72c) * u), z=Fq2(Fq(0x60ae6..099fb) + Fq(0xba973..69ea2) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xebe44..9116a) + Fq(0x7dbf6..ca613) * u), y=Fq2(Fq(0x759f0..26923) + Fq(0x15472..3dc1f) * u), z=Fq2(Fq(0x23e5d..6d88a) + Fq(0xea56d..d213b) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xf69ed..84285) + Fq(0xbc4eb..b36e2) * u), y=Fq2(Fq(0x52bd4..e50af) + Fq(0x10626..bef40) * u), z=Fq2(Fq(0x503ae..86ac3) + Fq(0x19b38..9e39c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2771518961332508125615648638977
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xebe44..9116a) + Fq(0x7dbf6..ca613) * u), y=Fq2(Fq(0x759f0..26923) + Fq(0x15472..3dc1f) * u), z=Fq2(Fq(0x23e5d..6d88a) + Fq(0xea56d..d213b) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xf69ed..84285) + Fq(0xbc4eb..b36e2) * u), y=Fq2(Fq(0x52bd4..e50af) + Fq(0x10626..bef40) * u), z=Fq2(Fq(0x503ae..86ac3) + Fq(0x19b38..9e39c) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xc22c7..c6071) + Fq(0x12301..0da65) * u), y=Fq2(Fq(0x12f5d..c5739) + Fq(0x93fff..e6d93) * u), z=Fq2(Fq(0x1099b..512b9) + Fq(0x67e2d..6f451) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9f4fa..2a725) + Fq(0x19735..d3cc6) * u), y=Fq2(Fq(0x11565..516e1) + Fq(0x10535..c4bff) * u), z=Fq2(Fq(0xd0c42..60906) + Fq(0x217f9..b363f) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1385759480666254062807824319488
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xe170d..d9846) + Fq(0xf3652..b5193) * u), y=Fq2(Fq(0xfbad7..7e811) + Fq(0xb51ea..dc922) * u), z=Fq2(Fq(0x179f6..c6730) + Fq(0x17aa3..1b37b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 692879740333127031403912159744
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xef6fa..d38c8) + Fq(0x16b51..416cf) * u), y=Fq2(Fq(0x146b3..4893a) + Fq(0x3ed1e..a932a) * u), z=Fq2(Fq(0x39c09..5f29d) + Fq(0x187ca..364d9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 346439870166563515701956079872
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x54aeb..6e336) + Fq(0x16347..5901b) * u), y=Fq2(Fq(0x12f48..b9f0b) + Fq(0x54d28..72130) * u), z=Fq2(Fq(0x10168..9389d) + Fq(0xb9b43..3e341) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 173219935083281757850978039936
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x34f93..ee701) + Fq(0x11ef5..221a6) * u), y=Fq2(Fq(0x17f9d..9554a) + Fq(0x15535..fad4f) * u), z=Fq2(Fq(0x6f567..e9d20) + Fq(0x130ac..9d7e7) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 86609967541640878925489019968
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x35741..d10bd) + Fq(0x3db5a..d1ca0) * u), y=Fq2(Fq(0x10322..f6020) + Fq(0x176c1..2abdc) * u), z=Fq2(Fq(0xae8b7..61b2f) + Fq(0xb9df2..56df8) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 43304983770820439462744509984
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x66a29..1f4a5) + Fq(0x727b6..a4476) * u), y=Fq2(Fq(0xde4e5..8a419) + Fq(0x11955..60def) * u), z=Fq2(Fq(0x15dbc..8d75f) + Fq(0x1783e..4da12) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 21652491885410219731372254992
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xe4c02..4ea44) + Fq(0x160f0..84cf7) * u), y=Fq2(Fq(0x794c4..ec6f7) + Fq(0x654bb..f3c4a) * u), z=Fq2(Fq(0x13e12..f0b1c) + Fq(0x179e9..e5c13) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 10826245942705109865686127496
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x2e873..82a18) + Fq(0x39aac..04141) * u), y=Fq2(Fq(0x2c8af..72b59) + Fq(0x77948..94364) * u), z=Fq2(Fq(0xd34d7..e75e7) + Fq(0xed73c..838a8) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 5413122971352554932843063748
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18a63..0f3d1) + Fq(0x7c89f..f7caa) * u), y=Fq2(Fq(0xf9141..ce50c) + Fq(0xc6a78..0c7d5) * u), z=Fq2(Fq(0x1307e..3bca3) + Fq(0x18942..84822) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2706561485676277466421531874
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x15fa1..c6d59) + Fq(0x264d3..00a10) * u), y=Fq2(Fq(0x17ef9..3f6d2) + Fq(0x17874..06cb8) * u), z=Fq2(Fq(0x622f8..e132f) + Fq(0x12a16..5a220) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1353280742838138733210765937
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xc22c7..c6071) + Fq(0x12301..0da65) * u), y=Fq2(Fq(0x12f5d..c5739) + Fq(0x93fff..e6d93) * u), z=Fq2(Fq(0x1099b..512b9) + Fq(0x67e2d..6f451) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x15fa1..c6d59) + Fq(0x264d3..00a10) * u), y=Fq2(Fq(0x17ef9..3f6d2) + Fq(0x17874..06cb8) * u), z=Fq2(Fq(0x622f8..e132f) + Fq(0x12a16..5a220) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x172ba..8fcbb) + Fq(0x7e0c6..44952) * u), y=Fq2(Fq(0xe844e..f8c50) + Fq(0x13baa..d5b61) * u), z=Fq2(Fq(0xc6ef0..2c59d) + Fq(0x181c9..4d694) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb122a..276a4) + Fq(0x18212..073b2) * u), y=Fq2(Fq(0x11e79..76ffb) + Fq(0x1ee10..f4e0f) * u), z=Fq2(Fq(0x18716..b0bdb) + Fq(0xd6eef..4ba37) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 676640371419069366605382968
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x452aa..35d89) + Fq(0x91751..9608d) * u), y=Fq2(Fq(0x5c60e..95b18) + Fq(0x17951..0c8ea) * u), z=Fq2(Fq(0x634d2..1963e) + Fq(0x68c32..c5191) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 338320185709534683302691484
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xdc704..a8266) + Fq(0x8c65f..6febb) * u), y=Fq2(Fq(0x1a7cd..79604) + Fq(0x8fb80..77321) * u), z=Fq2(Fq(0xa502b..0eb9e) + Fq(0x1211d..b77ed) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 169160092854767341651345742
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1085d..997d2) + Fq(0xcc023..9fabc) * u), y=Fq2(Fq(0x2864b..b860d) + Fq(0xcc2c1..22742) * u), z=Fq2(Fq(0x50e02..4b7b8) + Fq(0xb9251..ef54a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 84580046427383670825672871
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x172ba..8fcbb) + Fq(0x7e0c6..44952) * u), y=Fq2(Fq(0xe844e..f8c50) + Fq(0x13baa..d5b61) * u), z=Fq2(Fq(0xc6ef0..2c59d) + Fq(0x181c9..4d694) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1085d..997d2) + Fq(0xcc023..9fabc) * u), y=Fq2(Fq(0x2864b..b860d) + Fq(0xcc2c1..22742) * u), z=Fq2(Fq(0x50e02..4b7b8) + Fq(0xb9251..ef54a) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x73e56..66c8f) + Fq(0xe728e..21da8) * u), y=Fq2(Fq(0x89709..9d41e) + Fq(0xba2e1..858b7) * u), z=Fq2(Fq(0x29aaf..a3cfe) + Fq(0xb6cc3..b161d) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x39ab1..fd6cc) + Fq(0x15469..e1e0b) * u), y=Fq2(Fq(0xec44c..bea0c) + Fq(0xd7bab..57ec3) * u), z=Fq2(Fq(0x17fdc..0a95a) + Fq(0x112ee..29ba1) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 42290023213691835412836435
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x73e56..66c8f) + Fq(0xe728e..21da8) * u), y=Fq2(Fq(0x89709..9d41e) + Fq(0xba2e1..858b7) * u), z=Fq2(Fq(0x29aaf..a3cfe) + Fq(0xb6cc3..b161d) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x39ab1..fd6cc) + Fq(0x15469..e1e0b) * u), y=Fq2(Fq(0xec44c..bea0c) + Fq(0xd7bab..57ec3) * u), z=Fq2(Fq(0x17fdc..0a95a) + Fq(0x112ee..29ba1) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xf9b46..72f10) + Fq(0x17417..d9725) * u), y=Fq2(Fq(0x11fa8..aba79) + Fq(0x17989..771df) * u), z=Fq2(Fq(0xea98b..d83ae) + Fq(0xc375f..21645) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1649c..209a9) + Fq(0x15add..7e000) * u), y=Fq2(Fq(0x53558..43386) + Fq(0x71c51..931e1) * u), z=Fq2(Fq(0x17bba..61fa3) + Fq(0x638c7..d4257) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 21145011606845917706418217
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xf9b46..72f10) + Fq(0x17417..d9725) * u), y=Fq2(Fq(0x11fa8..aba79) + Fq(0x17989..771df) * u), z=Fq2(Fq(0xea98b..d83ae) + Fq(0xc375f..21645) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1649c..209a9) + Fq(0x15add..7e000) * u), y=Fq2(Fq(0x53558..43386) + Fq(0x71c51..931e1) * u), z=Fq2(Fq(0x17bba..61fa3) + Fq(0x638c7..d4257) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x8c8b9..8a496) + Fq(0xaea25..35185) * u), y=Fq2(Fq(0xeea02..b421e) + Fq(0x16777..cd13e) * u), z=Fq2(Fq(0x24045..5ebb6) + Fq(0xce94c..61946) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9a2a5..bf804) + Fq(0xa4c6b..f2076) * u), y=Fq2(Fq(0x5c24e..d07ec) + Fq(0x1b1db..53eb5) * u), z=Fq2(Fq(0x8ba74..11e89) + Fq(0x12dfd..c37ae) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 10572505803422958853209108
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xeb6c2..06fd1) + Fq(0x6231e..fad26) * u), y=Fq2(Fq(0x1842a..f492b) + Fq(0xb33cb..a2a9f) * u), z=Fq2(Fq(0xba343..31846) + Fq(0x19b61..973f2) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 5286252901711479426604554
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xf4e20..9eb25) + Fq(0xb191d..9ace3) * u), y=Fq2(Fq(0xa2d73..b2b39) + Fq(0xf32b8..03b96) * u), z=Fq2(Fq(0x498d9..17af6) + Fq(0x293e0..2ca16) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2643126450855739713302277
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x8c8b9..8a496) + Fq(0xaea25..35185) * u), y=Fq2(Fq(0xeea02..b421e) + Fq(0x16777..cd13e) * u), z=Fq2(Fq(0x24045..5ebb6) + Fq(0xce94c..61946) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xf4e20..9eb25) + Fq(0xb191d..9ace3) * u), y=Fq2(Fq(0xa2d73..b2b39) + Fq(0xf32b8..03b96) * u), z=Fq2(Fq(0x498d9..17af6) + Fq(0x293e0..2ca16) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x11007..c0ecc) + Fq(0x19e25..1b9bd) * u), y=Fq2(Fq(0x10972..612e2) + Fq(0x59043..530f9) * u), z=Fq2(Fq(0xcddb4..c6b69) + Fq(0xf4733..9614f) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xfd0c3..0df7d) + Fq(0x10f0b..793d2) * u), y=Fq2(Fq(0x17040..b2a5e) + Fq(0x9caa5..425ff) * u), z=Fq2(Fq(0x1966d..ec3f8) + Fq(0x19e3a..7cc63) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1321563225427869856651138
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1541c..4d22d) + Fq(0x7909e..a04d4) * u), y=Fq2(Fq(0x1188c..5b315) + Fq(0xdc90c..5e116) * u), z=Fq2(Fq(0x3ed31..83658) + Fq(0x131a6..11237) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 660781612713934928325569
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x11007..c0ecc) + Fq(0x19e25..1b9bd) * u), y=Fq2(Fq(0x10972..612e2) + Fq(0x59043..530f9) * u), z=Fq2(Fq(0xcddb4..c6b69) + Fq(0xf4733..9614f) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1541c..4d22d) + Fq(0x7909e..a04d4) * u), y=Fq2(Fq(0x1188c..5b315) + Fq(0xdc90c..5e116) * u), z=Fq2(Fq(0x3ed31..83658) + Fq(0x131a6..11237) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1333d..6de97) + Fq(0x10760..a40dd) * u), y=Fq2(Fq(0x1106a..2a408) + Fq(0x149f8..0f022) * u), z=Fq2(Fq(0xde60c..32de7) + Fq(0xba6ca..0692c) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9835d..4783c) + Fq(0x14da8..1c2dd) * u), y=Fq2(Fq(0xa4b1d..30b13) + Fq(0xb911f..0e6d9) * u), z=Fq2(Fq(0xd0f51..ab611) + Fq(0x18a1b..cba2a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 330390806356967464162784
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x21a8c..45896) + Fq(0xf9725..6f2bf) * u), y=Fq2(Fq(0x1877d..5865d) + Fq(0x1675d..8bf1c) * u), z=Fq2(Fq(0x11cf4..10e98) + Fq(0xc0b37..e1b6f) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 165195403178483732081392
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x2da1c..45241) + Fq(0x18b2e..e5913) * u), y=Fq2(Fq(0x16b34..4fb7f) + Fq(0xcf6a5..da4fe) * u), z=Fq2(Fq(0xa60bd..2996a) + Fq(0xeda64..3394e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 82597701589241866040696
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13e70..4067c) + Fq(0x12e68..985d9) * u), y=Fq2(Fq(0x5fd90..58bc1) + Fq(0x16e5f..2125c) * u), z=Fq2(Fq(0x384e5..e9145) + Fq(0xdc122..ddf10) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 41298850794620933020348
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x11c3d..2d48f) + Fq(0xf6b0a..a3a06) * u), y=Fq2(Fq(0xed81f..f3858) + Fq(0x6eb29..6e0ba) * u), z=Fq2(Fq(0xf567d..ba00d) + Fq(0x18d0b..a70e5) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 20649425397310466510174
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x16a32..74fa1) + Fq(0x17a03..e9b3f) * u), y=Fq2(Fq(0x1859e..c660d) + Fq(0x1775c..a5964) * u), z=Fq2(Fq(0x1a5db..65a3d) + Fq(0x3e586..520b9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 10324712698655233255087
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1333d..6de97) + Fq(0x10760..a40dd) * u), y=Fq2(Fq(0x1106a..2a408) + Fq(0x149f8..0f022) * u), z=Fq2(Fq(0xde60c..32de7) + Fq(0xba6ca..0692c) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x16a32..74fa1) + Fq(0x17a03..e9b3f) * u), y=Fq2(Fq(0x1859e..c660d) + Fq(0x1775c..a5964) * u), z=Fq2(Fq(0x1a5db..65a3d) + Fq(0x3e586..520b9) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x17a25..9b0dc) + Fq(0x17588..527fb) * u), y=Fq2(Fq(0x16fcf..8d9d9) + Fq(0x18f89..5ee0f) * u), z=Fq2(Fq(0x3ca8f..13772) + Fq(0x302cd..5af98) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xdb1e9..836ac) + Fq(0x18a52..d857a) * u), y=Fq2(Fq(0x122ad..1cf40) + Fq(0x141a4..710a0) * u), z=Fq2(Fq(0x6b27b..4d3f3) + Fq(0x1f440..400a6) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 5162356349327616627543
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x17a25..9b0dc) + Fq(0x17588..527fb) * u), y=Fq2(Fq(0x16fcf..8d9d9) + Fq(0x18f89..5ee0f) * u), z=Fq2(Fq(0x3ca8f..13772) + Fq(0x302cd..5af98) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xdb1e9..836ac) + Fq(0x18a52..d857a) * u), y=Fq2(Fq(0x122ad..1cf40) + Fq(0x141a4..710a0) * u), z=Fq2(Fq(0x6b27b..4d3f3) + Fq(0x1f440..400a6) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xfd34b..ae304) + Fq(0x99e4d..f04f8) * u), y=Fq2(Fq(0x12104..d7a54) + Fq(0x60009..7b521) * u), z=Fq2(Fq(0xfeae2..7a98c) + Fq(0x18a2a..e033e) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x67347..33235) + Fq(0xe1bc6..cf04b) * u), y=Fq2(Fq(0x12d28..4523e) + Fq(0x16b0b..108c3) * u), z=Fq2(Fq(0x5f83c..fab3c) + Fq(0x17fb6..11757) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2581178174663808313771
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xfd34b..ae304) + Fq(0x99e4d..f04f8) * u), y=Fq2(Fq(0x12104..d7a54) + Fq(0x60009..7b521) * u), z=Fq2(Fq(0xfeae2..7a98c) + Fq(0x18a2a..e033e) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x67347..33235) + Fq(0xe1bc6..cf04b) * u), y=Fq2(Fq(0x12d28..4523e) + Fq(0x16b0b..108c3) * u), z=Fq2(Fq(0x5f83c..fab3c) + Fq(0x17fb6..11757) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x2b4e0..a6113) + Fq(0x80b7d..e638f) * u), y=Fq2(Fq(0x45551..c5ce1) + Fq(0x10dbf..836ce) * u), z=Fq2(Fq(0x6549d..2d8b8) + Fq(0x31f70..a8360) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xff5cd..bd4ef) + Fq(0xbecea..2d54d) * u), y=Fq2(Fq(0xaba60..a98eb) + Fq(0xf6669..aa7cf) * u), z=Fq2(Fq(0xb178b..f54ee) + Fq(0x14abb..7f407) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1290589087331904156885
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x2b4e0..a6113) + Fq(0x80b7d..e638f) * u), y=Fq2(Fq(0x45551..c5ce1) + Fq(0x10dbf..836ce) * u), z=Fq2(Fq(0x6549d..2d8b8) + Fq(0x31f70..a8360) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xff5cd..bd4ef) + Fq(0xbecea..2d54d) * u), y=Fq2(Fq(0xaba60..a98eb) + Fq(0xf6669..aa7cf) * u), z=Fq2(Fq(0xb178b..f54ee) + Fq(0x14abb..7f407) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x7d063..05f2e) + Fq(0x1f332..cd18a) * u), y=Fq2(Fq(0x35193..889ee) + Fq(0xcb163..a9cb7) * u), z=Fq2(Fq(0x7fa7f..5f6e4) + Fq(0x31b7e..cb84d) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10264..6d8e3) + Fq(0x1320a..deb47) * u), y=Fq2(Fq(0x191c6..d9dc2) + Fq(0x14505..e7f4c) * u), z=Fq2(Fq(0xf6789..36782) + Fq(0x1141c..d564f) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 645294543665952078442
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1094e..c5484) + Fq(0xb52ce..b966c) * u), y=Fq2(Fq(0x154fe..cb4a7) + Fq(0xa48b7..24158) * u), z=Fq2(Fq(0xa769d..74ff0) + Fq(0xad0df..ea637) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 322647271832976039221
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x7d063..05f2e) + Fq(0x1f332..cd18a) * u), y=Fq2(Fq(0x35193..889ee) + Fq(0xcb163..a9cb7) * u), z=Fq2(Fq(0x7fa7f..5f6e4) + Fq(0x31b7e..cb84d) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1094e..c5484) + Fq(0xb52ce..b966c) * u), y=Fq2(Fq(0x154fe..cb4a7) + Fq(0xa48b7..24158) * u), z=Fq2(Fq(0xa769d..74ff0) + Fq(0xad0df..ea637) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x53528..2ee71) + Fq(0x62ae0..99fdb) * u), y=Fq2(Fq(0x1ea24..ebeab) + Fq(0x1bb50..39669) * u), z=Fq2(Fq(0x81060..261ee) + Fq(0xc09b2..a0541) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xa7609..1e573) + Fq(0xb51f9..371d9) * u), y=Fq2(Fq(0x1663a..31450) + Fq(0x16a43..80238) * u), z=Fq2(Fq(0x39ea2..11d89) + Fq(0xb6d63..c4b48) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 161323635916488019610
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb3ab3..bccb1) + Fq(0xbfa8e..37960) * u), y=Fq2(Fq(0x11fd1..c9c42) + Fq(0x1125e..de68e) * u), z=Fq2(Fq(0x14950..c9442) + Fq(0x59037..72049) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 80661817958244009805
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x53528..2ee71) + Fq(0x62ae0..99fdb) * u), y=Fq2(Fq(0x1ea24..ebeab) + Fq(0x1bb50..39669) * u), z=Fq2(Fq(0x81060..261ee) + Fq(0xc09b2..a0541) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xb3ab3..bccb1) + Fq(0xbfa8e..37960) * u), y=Fq2(Fq(0x11fd1..c9c42) + Fq(0x1125e..de68e) * u), z=Fq2(Fq(0x14950..c9442) + Fq(0x59037..72049) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x182ca..5e5bf) + Fq(0x16a8f..b326d) * u), y=Fq2(Fq(0x14911..adc4b) + Fq(0x1cbcf..d8819) * u), z=Fq2(Fq(0xcfac6..274d0) + Fq(0x26aee..1f9f8) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x5f47c..89713) + Fq(0x703ed..e2495) * u), y=Fq2(Fq(0x16e8a..db43a) + Fq(0x6e1d1..f937f) * u), z=Fq2(Fq(0xf9059..7edca) + Fq(0xdb93d..d0141) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 40330908979122004902
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x287ed..a5ff0) + Fq(0x7ec4d..e00fb) * u), y=Fq2(Fq(0xb3cb2..409cb) + Fq(0x154e4..1476f) * u), z=Fq2(Fq(0x4e5e9..768df) + Fq(0x7f5b8..7360e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 20165454489561002451
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x182ca..5e5bf) + Fq(0x16a8f..b326d) * u), y=Fq2(Fq(0x14911..adc4b) + Fq(0x1cbcf..d8819) * u), z=Fq2(Fq(0xcfac6..274d0) + Fq(0x26aee..1f9f8) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x287ed..a5ff0) + Fq(0x7ec4d..e00fb) * u), y=Fq2(Fq(0xb3cb2..409cb) + Fq(0x154e4..1476f) * u), z=Fq2(Fq(0x4e5e9..768df) + Fq(0x7f5b8..7360e) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1485b..a552f) + Fq(0x16d62..b70c8) * u), y=Fq2(Fq(0xc0e65..2e4c4) + Fq(0x14ce6..a7d89) * u), z=Fq2(Fq(0xb39dd..8c1fa) + Fq(0x128f8..e503e) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1043d..83160) + Fq(0x11aaa..5a9a4) * u), y=Fq2(Fq(0xb5956..85ead) + Fq(0xebfd1..cc7c5) * u), z=Fq2(Fq(0x6ec3f..11470) + Fq(0x16353..291dc) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 10082727244780501225
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1485b..a552f) + Fq(0x16d62..b70c8) * u), y=Fq2(Fq(0xc0e65..2e4c4) + Fq(0x14ce6..a7d89) * u), z=Fq2(Fq(0xb39dd..8c1fa) + Fq(0x128f8..e503e) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1043d..83160) + Fq(0x11aaa..5a9a4) * u), y=Fq2(Fq(0xb5956..85ead) + Fq(0xebfd1..cc7c5) * u), z=Fq2(Fq(0x6ec3f..11470) + Fq(0x16353..291dc) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xd6ef6..2e44f) + Fq(0x15bd0..35f28) * u), y=Fq2(Fq(0x700d9..93bf2) + Fq(0x13116..f043b) * u), z=Fq2(Fq(0x34012..75b4d) + Fq(0x19dbb..734bf) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x101e0..ac240) + Fq(0xf8fbc..7745d) * u), y=Fq2(Fq(0x17cfd..ce78d) + Fq(0xdf205..53fbd) * u), z=Fq2(Fq(0x8e364..76506) + Fq(0xfb799..f24d7) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 5041363622390250612
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x149a8..cfde5) + Fq(0xbddaf..ebd3a) * u), y=Fq2(Fq(0x82d86..fe2d9) + Fq(0x18327..fd39e) * u), z=Fq2(Fq(0xe4e58..ac4a0) + Fq(0xdc35d..c7837) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2520681811195125306
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1840f..71765) + Fq(0x1664f..99918) * u), y=Fq2(Fq(0x153bd..c9753) + Fq(0xe3681..e6865) * u), z=Fq2(Fq(0x4d11d..d2317) + Fq(0xb22b9..b2e11) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1260340905597562653
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xd6ef6..2e44f) + Fq(0x15bd0..35f28) * u), y=Fq2(Fq(0x700d9..93bf2) + Fq(0x13116..f043b) * u), z=Fq2(Fq(0x34012..75b4d) + Fq(0x19dbb..734bf) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1840f..71765) + Fq(0x1664f..99918) * u), y=Fq2(Fq(0x153bd..c9753) + Fq(0xe3681..e6865) * u), z=Fq2(Fq(0x4d11d..d2317) + Fq(0xb22b9..b2e11) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x14b58..3586e) + Fq(0x11c44..bfa2b) * u), y=Fq2(Fq(0x169c4..44082) + Fq(0x8e475..611e1) * u), z=Fq2(Fq(0xdb5fd..b99a2) + Fq(0xa5bfe..bc56b) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xae8f9..367a0) + Fq(0x1313c..4af20) * u), y=Fq2(Fq(0xed143..fb51b) + Fq(0x19032..5dcf1) * u), z=Fq2(Fq(0xf2a12..462d5) + Fq(0x1963f..25085) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 630170452798781326
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x3f50b..b26fe) + Fq(0xc241e..77002) * u), y=Fq2(Fq(0x18b33..37109) + Fq(0x1765a..1f442) * u), z=Fq2(Fq(0x19d7b..6d032) + Fq(0x34c14..ab459) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 315085226399390663
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x14b58..3586e) + Fq(0x11c44..bfa2b) * u), y=Fq2(Fq(0x169c4..44082) + Fq(0x8e475..611e1) * u), z=Fq2(Fq(0xdb5fd..b99a2) + Fq(0xa5bfe..bc56b) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x3f50b..b26fe) + Fq(0xc241e..77002) * u), y=Fq2(Fq(0x18b33..37109) + Fq(0x1765a..1f442) * u), z=Fq2(Fq(0x19d7b..6d032) + Fq(0x34c14..ab459) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x14fa8..7641f) + Fq(0xe6388..ece31) * u), y=Fq2(Fq(0x45029..69755) + Fq(0x8b443..82020) * u), z=Fq2(Fq(0xa22c9..f95c2) + Fq(0xa8070..8fea4) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x2e4a1..a4e65) + Fq(0x52a7f..868a3) * u), y=Fq2(Fq(0xa9512..8008d) + Fq(0x3a3c5..18682) * u), z=Fq2(Fq(0x12fe4..e20e9) + Fq(0x12f90..75ac5) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 157542613199695331
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x14fa8..7641f) + Fq(0xe6388..ece31) * u), y=Fq2(Fq(0x45029..69755) + Fq(0x8b443..82020) * u), z=Fq2(Fq(0xa22c9..f95c2) + Fq(0xa8070..8fea4) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x2e4a1..a4e65) + Fq(0x52a7f..868a3) * u), y=Fq2(Fq(0xa9512..8008d) + Fq(0x3a3c5..18682) * u), z=Fq2(Fq(0x12fe4..e20e9) + Fq(0x12f90..75ac5) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xbdbbc..b11c5) + Fq(0xf282c..2706f) * u), y=Fq2(Fq(0x12fa6..284dc) + Fq(0xbe1c1..5ffa9) * u), z=Fq2(Fq(0xe09cf..c9825) + Fq(0x132fc..49850) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1469b..576c8) + Fq(0xfa2dc..28b7e) * u), y=Fq2(Fq(0x1102f..79da5) + Fq(0x49465..a30b9) * u), z=Fq2(Fq(0x10b5b..8577c) + Fq(0x1084a..8a6c9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 78771306599847665
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xbdbbc..b11c5) + Fq(0xf282c..2706f) * u), y=Fq2(Fq(0x12fa6..284dc) + Fq(0xbe1c1..5ffa9) * u), z=Fq2(Fq(0xe09cf..c9825) + Fq(0x132fc..49850) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1469b..576c8) + Fq(0xfa2dc..28b7e) * u), y=Fq2(Fq(0x1102f..79da5) + Fq(0x49465..a30b9) * u), z=Fq2(Fq(0x10b5b..8577c) + Fq(0x1084a..8a6c9) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x9b61f..3c5e6) + Fq(0x152a7..34d70) * u), y=Fq2(Fq(0xb7411..ff955) + Fq(0x114cf..93444) * u), z=Fq2(Fq(0x13b20..91e3d) + Fq(0x130b9..642aa) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x15b91..fc0b3) + Fq(0xf060e..89f95) * u), y=Fq2(Fq(0x17e31..cdf70) + Fq(0xb8506..4e659) * u), z=Fq2(Fq(0x17128..0a4f7) + Fq(0xc32f7..e48e9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 39385653299923832
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xa0570..5354b) + Fq(0x15530..11744) * u), y=Fq2(Fq(0x304d9..09491) + Fq(0xe970d..6d815) * u), z=Fq2(Fq(0x180e2..ebf58) + Fq(0x291ce..d6925) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 19692826649961916
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x4bf39..13ead) + Fq(0x74d50..059d0) * u), y=Fq2(Fq(0x8f4fd..9141f) + Fq(0x8e565..5c9f7) * u), z=Fq2(Fq(0x121fd..c3245) + Fq(0x1823d..02e5c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 9846413324980958
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18192..df41e) + Fq(0x11718..b3474) * u), y=Fq2(Fq(0x17812..91557) + Fq(0xf5be8..7fe91) * u), z=Fq2(Fq(0x10400..cc1ec) + Fq(0x13a02..b317e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 4923206662490479
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x9b61f..3c5e6) + Fq(0x152a7..34d70) * u), y=Fq2(Fq(0xb7411..ff955) + Fq(0x114cf..93444) * u), z=Fq2(Fq(0x13b20..91e3d) + Fq(0x130b9..642aa) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x18192..df41e) + Fq(0x11718..b3474) * u), y=Fq2(Fq(0x17812..91557) + Fq(0xf5be8..7fe91) * u), z=Fq2(Fq(0x10400..cc1ec) + Fq(0x13a02..b317e) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1887a..2e6cd) + Fq(0x61cce..ce4d7) * u), y=Fq2(Fq(0x1d3f6..1f226) + Fq(0x14488..14f61) * u), z=Fq2(Fq(0x3c947..8cc9e) + Fq(0xaa42e..d68fd) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x21a1e..e70d7) + Fq(0x9283b..e3e3e) * u), y=Fq2(Fq(0x126a5..d63da) + Fq(0x183ba..9f420) * u), z=Fq2(Fq(0x12c87..da340) + Fq(0x14cd3..79171) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2461603331245239
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1887a..2e6cd) + Fq(0x61cce..ce4d7) * u), y=Fq2(Fq(0x1d3f6..1f226) + Fq(0x14488..14f61) * u), z=Fq2(Fq(0x3c947..8cc9e) + Fq(0xaa42e..d68fd) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x21a1e..e70d7) + Fq(0x9283b..e3e3e) * u), y=Fq2(Fq(0x126a5..d63da) + Fq(0x183ba..9f420) * u), z=Fq2(Fq(0x12c87..da340) + Fq(0x14cd3..79171) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x75575..bcb56) + Fq(0x5e558..1f263) * u), y=Fq2(Fq(0x3b74a..d9651) + Fq(0x16af8..9db3c) * u), z=Fq2(Fq(0x1044c..2200f) + Fq(0x8cae6..62477) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x14851..d4b96) + Fq(0x17f32..26f2a) * u), y=Fq2(Fq(0x18471..15c31) + Fq(0x37453..7ceb0) * u), z=Fq2(Fq(0x5b7fc..5820a) + Fq(0xa3e98..5d963) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1230801665622619
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x75575..bcb56) + Fq(0x5e558..1f263) * u), y=Fq2(Fq(0x3b74a..d9651) + Fq(0x16af8..9db3c) * u), z=Fq2(Fq(0x1044c..2200f) + Fq(0x8cae6..62477) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x14851..d4b96) + Fq(0x17f32..26f2a) * u), y=Fq2(Fq(0x18471..15c31) + Fq(0x37453..7ceb0) * u), z=Fq2(Fq(0x5b7fc..5820a) + Fq(0xa3e98..5d963) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x6b76a..f1610) + Fq(0xbee41..3b067) * u), y=Fq2(Fq(0x37867..d30e7) + Fq(0x6fa88..eca54) * u), z=Fq2(Fq(0x41eac..3bd5f) + Fq(0x32983..d49cc) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x71eb2..119b0) + Fq(0x82953..a8fbe) * u), y=Fq2(Fq(0x19beb..4b5e0) + Fq(0x1887d..c15ef) * u), z=Fq2(Fq(0x72568..c4e9d) + Fq(0x14aca..2ff59) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 615400832811309
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x6b76a..f1610) + Fq(0xbee41..3b067) * u), y=Fq2(Fq(0x37867..d30e7) + Fq(0x6fa88..eca54) * u), z=Fq2(Fq(0x41eac..3bd5f) + Fq(0x32983..d49cc) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x71eb2..119b0) + Fq(0x82953..a8fbe) * u), y=Fq2(Fq(0x19beb..4b5e0) + Fq(0x1887d..c15ef) * u), z=Fq2(Fq(0x72568..c4e9d) + Fq(0x14aca..2ff59) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x972f1..5cd3d) + Fq(0x94a6b..64999) * u), y=Fq2(Fq(0xa924c..f8390) + Fq(0x16507..039b1) * u), z=Fq2(Fq(0x18583..4d26b) + Fq(0x66199..ed8b2) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x31e4e..99c11) + Fq(0x3424a..86b99) * u), y=Fq2(Fq(0xee1b5..0c388) + Fq(0x168fd..5509d) * u), z=Fq2(Fq(0x166be..67f31) + Fq(0xee209..04d6a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 307700416405654
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x4203d..7c016) + Fq(0x175c0..262cf) * u), y=Fq2(Fq(0x17c91..144bf) + Fq(0xb9343..b15aa) * u), z=Fq2(Fq(0x80d97..4ef26) + Fq(0x14af5..9b6ac) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 153850208202827
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x972f1..5cd3d) + Fq(0x94a6b..64999) * u), y=Fq2(Fq(0xa924c..f8390) + Fq(0x16507..039b1) * u), z=Fq2(Fq(0x18583..4d26b) + Fq(0x66199..ed8b2) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x4203d..7c016) + Fq(0x175c0..262cf) * u), y=Fq2(Fq(0x17c91..144bf) + Fq(0xb9343..b15aa) * u), z=Fq2(Fq(0x80d97..4ef26) + Fq(0x14af5..9b6ac) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x323dc..79b78) + Fq(0xfd8d7..83288) * u), y=Fq2(Fq(0x17978..c9d28) + Fq(0x14d75..d8409) * u), z=Fq2(Fq(0x10fff..2e117) + Fq(0xe86b6..6d929) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xc8475..2af52) + Fq(0x449c0..945fb) * u), y=Fq2(Fq(0xa786d..4e90d) + Fq(0x169fa..bf436) * u), z=Fq2(Fq(0x38bb2..caec7) + Fq(0x33c0e..64df9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 76925104101413
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x323dc..79b78) + Fq(0xfd8d7..83288) * u), y=Fq2(Fq(0x17978..c9d28) + Fq(0x14d75..d8409) * u), z=Fq2(Fq(0x10fff..2e117) + Fq(0xe86b6..6d929) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xc8475..2af52) + Fq(0x449c0..945fb) * u), y=Fq2(Fq(0xa786d..4e90d) + Fq(0x169fa..bf436) * u), z=Fq2(Fq(0x38bb2..caec7) + Fq(0x33c0e..64df9) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x33048..5b5d2) + Fq(0x6494c..885c8) * u), y=Fq2(Fq(0x6790f..7e6dd) + Fq(0x162f4..e30ef) * u), z=Fq2(Fq(0xba04d..67f35) + Fq(0x16136..3788f) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x14edc..a503d) + Fq(0x495b2..f9153) * u), y=Fq2(Fq(0x16bad..e3044) + Fq(0x15906..86429) * u), z=Fq2(Fq(0xc9172..d67aa) + Fq(0x17367..16c14) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 38462552050706
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1744a..36a85) + Fq(0x9f294..4e4b4) * u), y=Fq2(Fq(0x195db..23c62) + Fq(0xeea61..4d6d7) * u), z=Fq2(Fq(0xd390e..3c296) + Fq(0x141d4..f499a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 19231276025353
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x33048..5b5d2) + Fq(0x6494c..885c8) * u), y=Fq2(Fq(0x6790f..7e6dd) + Fq(0x162f4..e30ef) * u), z=Fq2(Fq(0xba04d..67f35) + Fq(0x16136..3788f) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x1744a..36a85) + Fq(0x9f294..4e4b4) * u), y=Fq2(Fq(0x195db..23c62) + Fq(0xeea61..4d6d7) * u), z=Fq2(Fq(0xd390e..3c296) + Fq(0x141d4..f499a) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x367c8..cf620) + Fq(0x62072..8d53d) * u), y=Fq2(Fq(0x13959..06afc) + Fq(0x12468..d8197) * u), z=Fq2(Fq(0xcf253..22890) + Fq(0x14f6c..a451e) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xefadc..c3484) + Fq(0x98636..c80e4) * u), y=Fq2(Fq(0x9f785..515d0) + Fq(0x18cb8..ab594) * u), z=Fq2(Fq(0xd14a5..ea357) + Fq(0x18335..d572a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 9615638012676
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x12251..ebc6d) + Fq(0xcc430..0a1e1) * u), y=Fq2(Fq(0x4d14e..0eb52) + Fq(0x17041..1a9a8) * u), z=Fq2(Fq(0xbdb60..58227) + Fq(0x2d4dd..37e0f) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 4807819006338
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x12ac8..bafe2) + Fq(0x949ab..4a283) * u), y=Fq2(Fq(0x623a7..b6971) + Fq(0x9dd95..02d96) * u), z=Fq2(Fq(0xaeb1c..51896) + Fq(0x962e1..ebbc0) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2403909503169
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x367c8..cf620) + Fq(0x62072..8d53d) * u), y=Fq2(Fq(0x13959..06afc) + Fq(0x12468..d8197) * u), z=Fq2(Fq(0xcf253..22890) + Fq(0x14f6c..a451e) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x12ac8..bafe2) + Fq(0x949ab..4a283) * u), y=Fq2(Fq(0x623a7..b6971) + Fq(0x9dd95..02d96) * u), z=Fq2(Fq(0xaeb1c..51896) + Fq(0x962e1..ebbc0) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xba592..030d8) + Fq(0x2831b..16488) * u), y=Fq2(Fq(0xa9761..6c2cd) + Fq(0xf2d89..aa7e6) * u), z=Fq2(Fq(0x161d0..820b2) + Fq(0x4ed48..1fed1) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x3f948..60379) + Fq(0x50e82..1aebc) * u), y=Fq2(Fq(0x45c30..8da11) + Fq(0x33c0a..48451) * u), z=Fq2(Fq(0x796d8..a80d7) + Fq(0xe1f16..54aa1) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1201954751584
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18f49..3302f) + Fq(0xd76a0..b69bf) * u), y=Fq2(Fq(0x19a9c..5ac14) + Fq(0x6d71c..c2e1a) * u), z=Fq2(Fq(0xebb96..86012) + Fq(0x19483..739c8) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 600977375792
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10331..1b3a3) + Fq(0x6aef2..cee31) * u), y=Fq2(Fq(0xc4ff8..0b513) + Fq(0x14b00..4578c) * u), z=Fq2(Fq(0xa2254..f2178) + Fq(0x58322..9f218) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 300488687896
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x326c7..c6760) + Fq(0x13a62..a51a0) * u), y=Fq2(Fq(0x802ef..fc74e) + Fq(0xeb4e4..dde83) * u), z=Fq2(Fq(0xad05d..26e0a) + Fq(0x4f4cb..b8306) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 150244343948
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18088..333e6) + Fq(0x19cea..beb95) * u), y=Fq2(Fq(0x18fa2..25b76) + Fq(0x18084..36c43) * u), z=Fq2(Fq(0xb599c..e8698) + Fq(0xa9070..85814) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 75122171974
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x69bf2..1ce39) + Fq(0x193e0..d9b8d) * u), y=Fq2(Fq(0x2a65e..4c492) + Fq(0x185c8..8f559) * u), z=Fq2(Fq(0xd0e3e..144a9) + Fq(0x3db3d..fa08f) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 37561085987
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xba592..030d8) + Fq(0x2831b..16488) * u), y=Fq2(Fq(0xa9761..6c2cd) + Fq(0xf2d89..aa7e6) * u), z=Fq2(Fq(0x161d0..820b2) + Fq(0x4ed48..1fed1) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x69bf2..1ce39) + Fq(0x193e0..d9b8d) * u), y=Fq2(Fq(0x2a65e..4c492) + Fq(0x185c8..8f559) * u), z=Fq2(Fq(0xd0e3e..144a9) + Fq(0x3db3d..fa08f) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x112a6..d5c56) + Fq(0x13d36..ff9c4) * u), y=Fq2(Fq(0x52554..cec9e) + Fq(0x766be..ad6c9) * u), z=Fq2(Fq(0xdc20f..ed05a) + Fq(0x17184..e105b) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x49bb4..04a5e) + Fq(0x112df..836a2) * u), y=Fq2(Fq(0x19c1a..880d0) + Fq(0xbf249..80189) * u), z=Fq2(Fq(0x70858..5a3b2) + Fq(0x731e1..9d5d4) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 18780542993
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x112a6..d5c56) + Fq(0x13d36..ff9c4) * u), y=Fq2(Fq(0x52554..cec9e) + Fq(0x766be..ad6c9) * u), z=Fq2(Fq(0xdc20f..ed05a) + Fq(0x17184..e105b) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x49bb4..04a5e) + Fq(0x112df..836a2) * u), y=Fq2(Fq(0x19c1a..880d0) + Fq(0xbf249..80189) * u), z=Fq2(Fq(0x70858..5a3b2) + Fq(0x731e1..9d5d4) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xf905d..766f4) + Fq(0xae909..b2bd3) * u), y=Fq2(Fq(0x71ffe..6ca60) + Fq(0xc141c..e5b85) * u), z=Fq2(Fq(0xd8c3c..8def0) + Fq(0x86f18..26636) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xd82c9..a8cd3) + Fq(0x7da25..e1779) * u), y=Fq2(Fq(0xcca28..c8db4) + Fq(0x76b40..0a1c2) * u), z=Fq2(Fq(0x98025..5bdb6) + Fq(0x59c1e..02c0c) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 9390271496
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10d09..c459f) + Fq(0xeab74..de4d4) * u), y=Fq2(Fq(0xe2170..7036d) + Fq(0xe3299..d9407) * u), z=Fq2(Fq(0x45242..bb54b) + Fq(0x127eb..7818e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 4695135748
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xa00e0..5a343) + Fq(0x1f10f..fe14d) * u), y=Fq2(Fq(0xc4421..622f5) + Fq(0xef9fc..64298) * u), z=Fq2(Fq(0x62800..acc2f) + Fq(0xacd75..a94aa) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2347567874
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10e17..97aa5) + Fq(0xf7107..04897) * u), y=Fq2(Fq(0xec015..9dfe1) + Fq(0x73c76..4f8c1) * u), z=Fq2(Fq(0x4dfe4..fe4cd) + Fq(0x114db..054a5) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1173783937
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xf905d..766f4) + Fq(0xae909..b2bd3) * u), y=Fq2(Fq(0x71ffe..6ca60) + Fq(0xc141c..e5b85) * u), z=Fq2(Fq(0xd8c3c..8def0) + Fq(0x86f18..26636) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x10e17..97aa5) + Fq(0xf7107..04897) * u), y=Fq2(Fq(0xec015..9dfe1) + Fq(0x73c76..4f8c1) * u), z=Fq2(Fq(0x4dfe4..fe4cd) + Fq(0x114db..054a5) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x19372..f51b6) + Fq(0x99199..f4921) * u), y=Fq2(Fq(0x19b98..37a6e) + Fq(0x1cba7..05d25) * u), z=Fq2(Fq(0x12004..a94cc) + Fq(0xc8c9e..c9b73) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x602f5..3051c) + Fq(0x198ca..53f59) * u), y=Fq2(Fq(0x16ed7..918ac) + Fq(0x19ee7..4ee43) * u), z=Fq2(Fq(0x18317..e7fdf) + Fq(0x92440..ed187) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 586891968
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x11cf2..f1442) + Fq(0xbee86..be357) * u), y=Fq2(Fq(0xcb792..4a03d) + Fq(0x9b6ec..6e4ff) * u), z=Fq2(Fq(0x9550e..a37c0) + Fq(0x16a1d..74c1b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 293445984
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x94454..a6cd6) + Fq(0xb2e95..fd519) * u), y=Fq2(Fq(0x3b229..01e02) + Fq(0x195bf..3dec3) * u), z=Fq2(Fq(0x9e5ec..efd55) + Fq(0x1615f..7d438) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 146722992
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1ac74..04599) + Fq(0xadf05..b3caa) * u), y=Fq2(Fq(0x26d71..42f70) + Fq(0xdf973..d542e) * u), z=Fq2(Fq(0x29b6a..1f4c3) + Fq(0x19a88..a4be5) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 73361496
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x19159..17776) + Fq(0x19166..ab961) * u), y=Fq2(Fq(0x1447a..9466c) + Fq(0x76454..fc0ef) * u), z=Fq2(Fq(0x156c5..a17b2) + Fq(0xbc7bd..3d165) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 36680748
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x192ee..2c2f7) + Fq(0x69344..7bfe5) * u), y=Fq2(Fq(0x10bf0..b8ef7) + Fq(0xf7843..dc2f4) * u), z=Fq2(Fq(0x132fe..31e6f) + Fq(0x51bbc..8d049) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 18340374
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x17068..7d992) + Fq(0x131b9..b29e9) * u), y=Fq2(Fq(0xcd70e..1f845) + Fq(0x8aec1..6e85b) * u), z=Fq2(Fq(0xb3838..f4fa0) + Fq(0x6021e..019b7) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 9170187
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x19372..f51b6) + Fq(0x99199..f4921) * u), y=Fq2(Fq(0x19b98..37a6e) + Fq(0x1cba7..05d25) * u), z=Fq2(Fq(0x12004..a94cc) + Fq(0xc8c9e..c9b73) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x17068..7d992) + Fq(0x131b9..b29e9) * u), y=Fq2(Fq(0xcd70e..1f845) + Fq(0x8aec1..6e85b) * u), z=Fq2(Fq(0xb3838..f4fa0) + Fq(0x6021e..019b7) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x13b0c..0ee84) + Fq(0xf8081..b1eb6) * u), y=Fq2(Fq(0x1443a..1a5a3) + Fq(0x123e3..623eb) * u), z=Fq2(Fq(0x14545..79da9) + Fq(0x11960..3756b) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x152e6..2caf1) + Fq(0x16e55..96908) * u), y=Fq2(Fq(0xd31de..d3c27) + Fq(0x17413..c1413) * u), z=Fq2(Fq(0x102e4..c861b) + Fq(0x19bab..8400a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 4585093
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x13b0c..0ee84) + Fq(0xf8081..b1eb6) * u), y=Fq2(Fq(0x1443a..1a5a3) + Fq(0x123e3..623eb) * u), z=Fq2(Fq(0x14545..79da9) + Fq(0x11960..3756b) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x152e6..2caf1) + Fq(0x16e55..96908) * u), y=Fq2(Fq(0xd31de..d3c27) + Fq(0x17413..c1413) * u), z=Fq2(Fq(0x102e4..c861b) + Fq(0x19bab..8400a) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1579d..55423) + Fq(0x103c5..ed46a) * u), y=Fq2(Fq(0xf65ae..cfe3a) + Fq(0x10f67..44487) * u), z=Fq2(Fq(0xb0096..121ea) + Fq(0x15359..d9e71) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13ac3..a1111) + Fq(0x19f53..6fc71) * u), y=Fq2(Fq(0x17e1d..b7e38) + Fq(0x17fad..d6294) * u), z=Fq2(Fq(0x487bd..5b1f7) + Fq(0x137e7..e886d) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2292546
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9d22d..69ee1) + Fq(0x17135..3f39e) * u), y=Fq2(Fq(0xc74d8..b952a) + Fq(0xc9546..f1f3e) * u), z=Fq2(Fq(0x26bb4..22b20) + Fq(0x1427f..c84d8) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1146273
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1579d..55423) + Fq(0x103c5..ed46a) * u), y=Fq2(Fq(0xf65ae..cfe3a) + Fq(0x10f67..44487) * u), z=Fq2(Fq(0xb0096..121ea) + Fq(0x15359..d9e71) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x9d22d..69ee1) + Fq(0x17135..3f39e) * u), y=Fq2(Fq(0xc74d8..b952a) + Fq(0xc9546..f1f3e) * u), z=Fq2(Fq(0x26bb4..22b20) + Fq(0x1427f..c84d8) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x181d8..749f5) + Fq(0xe1e98..ebc6d) * u), y=Fq2(Fq(0xf6858..69540) + Fq(0x8874f..c3f6c) * u), z=Fq2(Fq(0xcc034..503e4) + Fq(0x15028..ab19f) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xb94e7..6509d) + Fq(0x5d5e7..91c64) * u), y=Fq2(Fq(0xd1d11..bb8e4) + Fq(0xbca7c..932e0) * u), z=Fq2(Fq(0x1883c..e596f) + Fq(0x8c74a..2dbc1) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 573136
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x25589..c9576) + Fq(0xbe719..5cc38) * u), y=Fq2(Fq(0xecd77..100b6) + Fq(0x1cbc7..5f3ca) * u), z=Fq2(Fq(0x8ea4b..2f149) + Fq(0x2a77a..5805e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 286568
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x162d1..e40bc) + Fq(0x2a5df..101d9) * u), y=Fq2(Fq(0x16464..934da) + Fq(0xd4b28..32059) * u), z=Fq2(Fq(0x6e786..b89bc) + Fq(0x16ab0..e40e9) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 143284
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x12f39..993d1) + Fq(0x134e6..9e8ab) * u), y=Fq2(Fq(0x989b4..1b92a) + Fq(0x171e5..ab597) * u), z=Fq2(Fq(0x7e4e4..dc2c6) + Fq(0x60dc5..e61e0) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 71642
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x18174..abd2b) + Fq(0x94802..b1cbc) * u), y=Fq2(Fq(0x18017..c954c) + Fq(0x2e762..05739) * u), z=Fq2(Fq(0xe2b98..8b240) + Fq(0x39606..7ab3b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 35821
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x181d8..749f5) + Fq(0xe1e98..ebc6d) * u), y=Fq2(Fq(0xf6858..69540) + Fq(0x8874f..c3f6c) * u), z=Fq2(Fq(0xcc034..503e4) + Fq(0x15028..ab19f) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x18174..abd2b) + Fq(0x94802..b1cbc) * u), y=Fq2(Fq(0x18017..c954c) + Fq(0x2e762..05739) * u), z=Fq2(Fq(0xe2b98..8b240) + Fq(0x39606..7ab3b) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x17386..0b8f8) + Fq(0x5be4c..fe27b) * u), y=Fq2(Fq(0x102f7..6fc14) + Fq(0xb449f..4a842) * u), z=Fq2(Fq(0x586fa..0bf0d) + Fq(0xfc02f..a6ec1) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xc29ea..14600) + Fq(0x744c0..ff2dc) * u), y=Fq2(Fq(0x11902..f9a18) + Fq(0x17a98..cef58) * u), z=Fq2(Fq(0x540f0..4cd54) + Fq(0xa8269..b7901) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 17910
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x51643..c78e1) + Fq(0x17064..6bdcd) * u), y=Fq2(Fq(0x156be..9af35) + Fq(0x18976..385ba) * u), z=Fq2(Fq(0x1982d..ef92e) + Fq(0xc0f24..2f1ea) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 8955
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x17386..0b8f8) + Fq(0x5be4c..fe27b) * u), y=Fq2(Fq(0x102f7..6fc14) + Fq(0xb449f..4a842) * u), z=Fq2(Fq(0x586fa..0bf0d) + Fq(0xfc02f..a6ec1) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x51643..c78e1) + Fq(0x17064..6bdcd) * u), y=Fq2(Fq(0x156be..9af35) + Fq(0x18976..385ba) * u), z=Fq2(Fq(0x1982d..ef92e) + Fq(0xc0f24..2f1ea) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x157fd..f6d98) + Fq(0x75a45..9ebd3) * u), y=Fq2(Fq(0xdc9f4..2a0a6) + Fq(0x5c7f7..c4187) * u), z=Fq2(Fq(0x18112..12305) + Fq(0x7fc23..098c3) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xf60e8..3431b) + Fq(0x1748a..1a194) * u), y=Fq2(Fq(0xac06e..85249) + Fq(0x104c1..b3df7) * u), z=Fq2(Fq(0x12ff8..57fc0) + Fq(0x2e35b..9df38) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 4477
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x157fd..f6d98) + Fq(0x75a45..9ebd3) * u), y=Fq2(Fq(0xdc9f4..2a0a6) + Fq(0x5c7f7..c4187) * u), z=Fq2(Fq(0x18112..12305) + Fq(0x7fc23..098c3) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xf60e8..3431b) + Fq(0x1748a..1a194) * u), y=Fq2(Fq(0xac06e..85249) + Fq(0x104c1..b3df7) * u), z=Fq2(Fq(0x12ff8..57fc0) + Fq(0x2e35b..9df38) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0xe6789..cd515) + Fq(0x18a3f..8178c) * u), y=Fq2(Fq(0x96034..bf1d3) + Fq(0x5be54..284de) * u), z=Fq2(Fq(0x90040..5ff36) + Fq(0xee329..17459) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9b891..3d91c) + Fq(0x27aa5..15cc2) * u), y=Fq2(Fq(0xae16c..b84bc) + Fq(0x8479c..dd2ed) * u), z=Fq2(Fq(0xe4f0b..1acac) + Fq(0xb1c7e..6a934) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2238
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x6b5ad..1eff3) + Fq(0x10ea9..30391) * u), y=Fq2(Fq(0x16767..7df18) + Fq(0x86815..a3f8d) * u), z=Fq2(Fq(0x1047c..72a89) + Fq(0x14328..861bb) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1119
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0xe6789..cd515) + Fq(0x18a3f..8178c) * u), y=Fq2(Fq(0x96034..bf1d3) + Fq(0x5be54..284de) * u), z=Fq2(Fq(0x90040..5ff36) + Fq(0xee329..17459) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x6b5ad..1eff3) + Fq(0x10ea9..30391) * u), y=Fq2(Fq(0x16767..7df18) + Fq(0x86815..a3f8d) * u), z=Fq2(Fq(0x1047c..72a89) + Fq(0x14328..861bb) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x12774..07218) + Fq(0x79531..8548c) * u), y=Fq2(Fq(0x184b9..51de4) + Fq(0x12c63..aef2a) * u), z=Fq2(Fq(0x104f6..a8077) + Fq(0x53f73..3b65e) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x129ad..06bf0) + Fq(0x184d4..59421) * u), y=Fq2(Fq(0x123c0..d6ac6) + Fq(0xd50ea..c4e78) * u), z=Fq2(Fq(0x16b8c..01bea) + Fq(0x108be..f4f9b) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 559
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x12774..07218) + Fq(0x79531..8548c) * u), y=Fq2(Fq(0x184b9..51de4) + Fq(0x12c63..aef2a) * u), z=Fq2(Fq(0x104f6..a8077) + Fq(0x53f73..3b65e) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x129ad..06bf0) + Fq(0x184d4..59421) * u), y=Fq2(Fq(0x123c0..d6ac6) + Fq(0xd50ea..c4e78) * u), z=Fq2(Fq(0x16b8c..01bea) + Fq(0x108be..f4f9b) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x4a96f..16e1e) + Fq(0x997d0..42e30) * u), y=Fq2(Fq(0x14fee..fb4b2) + Fq(0x19c7d..ec56f) * u), z=Fq2(Fq(0x31163..ec3e1) + Fq(0x12eca..68537) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x121f9..ea34b) + Fq(0x5de00..d8f84) * u), y=Fq2(Fq(0x18e31..33c48) + Fq(0x8dec6..f2953) * u), z=Fq2(Fq(0x19e01..dd034) + Fq(0x8aad3..a7b15) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 279
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x4a96f..16e1e) + Fq(0x997d0..42e30) * u), y=Fq2(Fq(0x14fee..fb4b2) + Fq(0x19c7d..ec56f) * u), z=Fq2(Fq(0x31163..ec3e1) + Fq(0x12eca..68537) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x121f9..ea34b) + Fq(0x5de00..d8f84) * u), y=Fq2(Fq(0x18e31..33c48) + Fq(0x8dec6..f2953) * u), z=Fq2(Fq(0x19e01..dd034) + Fq(0x8aad3..a7b15) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x313e6..e152c) + Fq(0x10759..0a0f1) * u), y=Fq2(Fq(0x3fae4..4ec59) + Fq(0x14112..e3aeb) * u), z=Fq2(Fq(0x11fe4..53aa2) + Fq(0x19a56..39cdb) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x9c601..199cd) + Fq(0xee49b..44942) * u), y=Fq2(Fq(0x12bf4..118c8) + Fq(0xc30b8..93e2a) * u), z=Fq2(Fq(0xec183..f12f2) + Fq(0xf5fe0..a4072) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 139
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x313e6..e152c) + Fq(0x10759..0a0f1) * u), y=Fq2(Fq(0x3fae4..4ec59) + Fq(0x14112..e3aeb) * u), z=Fq2(Fq(0x11fe4..53aa2) + Fq(0x19a56..39cdb) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x9c601..199cd) + Fq(0xee49b..44942) * u), y=Fq2(Fq(0x12bf4..118c8) + Fq(0xc30b8..93e2a) * u), z=Fq2(Fq(0xec183..f12f2) + Fq(0xf5fe0..a4072) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x1042f..fd02e) + Fq(0x856ae..9a2c6) * u), y=Fq2(Fq(0x1225a..f1f8e) + Fq(0x2ae59..5bcef) * u), z=Fq2(Fq(0x1472f..8c6d7) + Fq(0x17baf..35110) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0xabb7c..1fdd0) + Fq(0x8345e..3df0a) * u), y=Fq2(Fq(0xd9b7f..af78a) + Fq(0xc7d5b..f964d) * u), z=Fq2(Fq(0x6da69..0762b) + Fq(0x15512..fe707) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 69
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x1042f..fd02e) + Fq(0x856ae..9a2c6) * u), y=Fq2(Fq(0x1225a..f1f8e) + Fq(0x2ae59..5bcef) * u), z=Fq2(Fq(0x1472f..8c6d7) + Fq(0x17baf..35110) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0xabb7c..1fdd0) + Fq(0x8345e..3df0a) * u), y=Fq2(Fq(0xd9b7f..af78a) + Fq(0xc7d5b..f964d) * u), z=Fq2(Fq(0x6da69..0762b) + Fq(0x15512..fe707) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x9fcfc..27568) + Fq(0x49db7..4aa10) * u), y=Fq2(Fq(0x68a1f..fe82e) + Fq(0x1421d..56356) * u), z=Fq2(Fq(0x11912..a0f4d) + Fq(0x16400..66971) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x7ec67..0c46f) + Fq(0xb67ec..0e481) * u), y=Fq2(Fq(0xb01a3..f2804) + Fq(0xfe00a..25a5b) * u), z=Fq2(Fq(0x90e42..ec6af) + Fq(0xc152b..6595a) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 34
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10898..b9dc4) + Fq(0x5dc8c..6c1ba) * u), y=Fq2(Fq(0xd3aa8..dcf80) + Fq(0xf23b0..e7be3) * u), z=Fq2(Fq(0x45d7f..48ad8) + Fq(0x1ee77..c20b6) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 17
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x9fcfc..27568) + Fq(0x49db7..4aa10) * u), y=Fq2(Fq(0x68a1f..fe82e) + Fq(0x1421d..56356) * u), z=Fq2(Fq(0x11912..a0f4d) + Fq(0x16400..66971) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x10898..b9dc4) + Fq(0x5dc8c..6c1ba) * u), y=Fq2(Fq(0xd3aa8..dcf80) + Fq(0xf23b0..e7be3) * u), z=Fq2(Fq(0x45d7f..48ad8) + Fq(0x1ee77..c20b6) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x310b7..22450) + Fq(0x24db2..a9903) * u), y=Fq2(Fq(0x9856a..6146d) + Fq(0xdd1bc..6f99a) * u), z=Fq2(Fq(0x57fbf..01346) + Fq(0xeee43..622f6) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x13000..dc9d0) + Fq(0x9efe5..08dd5) * u), y=Fq2(Fq(0x1526a..b6e09) + Fq(0x773d2..3a63c) * u), z=Fq2(Fq(0x589f3..1136a) + Fq(0x15165..c388e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 8
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x1335c..321aa) + Fq(0x65a16..f65d6) * u), y=Fq2(Fq(0x59a5c..77ed6) + Fq(0xc3d25..1ef05) * u), z=Fq2(Fq(0x16aa6..f6678) + Fq(0xe350e..29bec) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 4
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x10e3a..2d992) + Fq(0x1799b..6746d) * u), y=Fq2(Fq(0xf5c27..0129e) + Fq(0xcee72..53aed) * u), z=Fq2(Fq(0x5b52a..61f9e) + Fq(0x1997f..aa45f) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 2
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x50f9a..b87ea) + Fq(0x7ee6a..f01bd) * u), y=Fq2(Fq(0x11644..32c40) + Fq(0x4ed4b..e5f07) * u), z=Fq2(Fq(0x12f87..783a2) + Fq(0xa6d97..7d96e) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 1
+NGM(FUCKYOUMUL) result BEFORE add: G2Projective(x=Fq2(Fq(0x310b7..22450) + Fq(0x24db2..a9903) * u), y=Fq2(Fq(0x9856a..6146d) + Fq(0xdd1bc..6f99a) * u), z=Fq2(Fq(0x57fbf..01346) + Fq(0xeee43..622f6) * u))
+NGM(FUCKYOUMUL) addend BEFORE add: G2Projective(x=Fq2(Fq(0x50f9a..b87ea) + Fq(0x7ee6a..f01bd) * u), y=Fq2(Fq(0x11644..32c40) + Fq(0x4ed4b..e5f07) * u), z=Fq2(Fq(0x12f87..783a2) + Fq(0xa6d97..7d96e) * u))
+NGM(FUCKYOUMUL) result after add: G2Projective(x=Fq2(Fq(0x20e42..fbde5) + Fq(0xfc757..201bd) * u), y=Fq2(Fq(0x14a63..6f337) + Fq(0x1a5a1..8449f) * u), z=Fq2(Fq(0x6d46b..fb497) + Fq(0x8431b..e7419) * u))
+NGM(FUCKYOUMUL) addend after double: G2Projective(x=Fq2(Fq(0x130c5..989c3) + Fq(0xb59b6..a3a65) * u), y=Fq2(Fq(0x15f90..a8e1a) + Fq(0x14658..1d4f6) * u), z=Fq2(Fq(0x17645..51c39) + Fq(0x67883..f5db5) * u))
+NGM(FUCKYOUMUL) new n after Rsh: 0
+NGM (XSign) h3 = G2Projective(x=Fq2(Fq(0x20e42..fbde5) + Fq(0xfc757..201bd) * u), y=Fq2(Fq(0x14a63..6f337) + Fq(0x1a5a1..8449f) * u), z=Fq2(Fq(0x6d46b..fb497) + Fq(0x8431b..e7419) * u))
+#go test -run TestCustomNGM

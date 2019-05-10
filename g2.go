@@ -407,58 +407,58 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 
 	// U1 = X1*Z2^2
 	u1 := g.x.Mul(other.z.Square())
-	fmt.Println("NGMgo u1:", u1)
+	// fmt.Println("NGMgo u1:", u1)
 
 	// U2 = X2*Z1^2
 	u2 := other.x.Mul(g.z.Square())
-	fmt.Println("NGMgo u2:", u2)
+// 	fmt.Println("NGMgo u2:", u2)
 
 	// S1 = Y1*Z2^3
 	s1 := g.y.Mul(other.z.Square().Mul(other.z))
-	fmt.Println("NGMgo s1:", s1)
+	// fmt.Println("NGMgo s1:", s1)
 
 	// S2 = Y2*Z1^3
 	s2 := other.y.Mul(g.z.Square().Mul(g.z))
-	fmt.Println("NGMgo s2:", s2)
+	// fmt.Println("NGMgo s2:", s2)
 
 	if u1.Equals(u2) {
-		fmt.Println("NGMgo u1.Equals(u2) (SIC)")
+		// fmt.Println("NGMgo u1.Equals(u2) (SIC)")
 		if !s1.Equals(s2) {
-			fmt.Println("NGMgo NOT!!! s1.Equals(s2) (SIC)")
+			// fmt.Println("NGMgo NOT!!! s1.Equals(s2) (SIC)")
 			NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 		} else {
-			fmt.Println("NGMgo Else double g (GG)")
+			// fmt.Println("NGMgo Else double g (GG)")
 			return g.Double()
 		}
 	}
 
 	// H = U2 - U1
 	h := u2.Sub(u1)
-	fmt.Println("NGMgo h:", h)
+	// fmt.Println("NGMgo h:", h)
 
 	// R = S2 - S1
 	r := s2.Sub(s1)
-	fmt.Println("NGMgo r:", r)
+	// fmt.Println("NGMgo r:", r)
 
 	//H_sq = H * H
 	h_sq := h.Square()
-	fmt.Println("NGMgo h_sq:", h_sq)
+	// fmt.Println("NGMgo h_sq:", h_sq)
 
 	//H_cu = H * H_sq
 	h_cu := h_sq.Mul(h)
-	fmt.Println("NGMgo h_cu:", h_cu)
+	// fmt.Println("NGMgo h_cu:", h_cu)
 
 	// X3 = R^2 - H^3 - 2*U1*H^2
 	x3 := r.Square().Sub(h_cu).Sub(u1.Mul(h_sq).MulInt(bigTwo))
-	fmt.Println("NGMgo x3:", x3)
+	// fmt.Println("NGMgo x3:", x3)
 
 	// Y3 = R*(U1*H^2 - X3) - S1*H^3
 	y3 := r.Mul(u1.Mul(h_sq).Sub(x3)).Sub(s1.Mul(h_cu))
-	fmt.Println("NGMgo y3:", y3)
+	// fmt.Println("NGMgo y3:", y3)
 
 	// Z3 = H*Z1*Z2
 	z3 := h.Mul(g.z).Mul(other.z)
-	fmt.Println("NGMgo z3:", z3)
+	// fmt.Println("NGMgo z3:", z3)
 
 	return NewG2Projective(x3, y3, z3)
 }
@@ -954,7 +954,7 @@ func HashG2(msg []byte, domain uint64) *G2Projective {
 }
 
 // XHashG2 maps any string to a deterministic random point in G2.
-func XHashG2(msg []byte) *G2Projective {
+func XHashG2(msg []byte) *G2Affine {
 	// h <- hash256(m)
 	h := Hash256(msg)
 
@@ -1044,10 +1044,10 @@ func XHashG2(msg []byte) *G2Projective {
 
 	//rv = t2 - t3 + psi2P
 	rv := t2_.AddAffine(t3_.ToAffine().Neg()).AddAffine(psi2P)
-	// fmt.Println("NGM(XHashG2) rv:", rv)
+	fmt.Println("NGM(XHashG2) rv:", rv.ToAffine())
 
 	// Map to the r-torsion by raising to cofactor power
-	return rv
+	return rv.ToAffine()
 }
 
 // Untwist ...
