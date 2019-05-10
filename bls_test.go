@@ -475,9 +475,9 @@ func TestCustomNGM(t *testing.T) {
 	sk, _ := new(big.Int).SetString("22fb42c08c12de3a6af053880199806532e79515f94e83461612101f9412f9e", 16)
 	fmt.Println("NGMgo sk:", sk)
 
-	fu := rp.FuckyouMul(sk)
-	fmt.Println("NGMgo fu:", fu)
+	// fu := rp.FuckyouMul(sk)
+	// fmt.Println("NGMgo fu:", fu)
 
-	reg := rp.Mul(sk)
-	fmt.Println("NGMgo reg:", reg)
+	res := rp.Mul(sk)
+	fmt.Println("NGMgo res:", res)
 }

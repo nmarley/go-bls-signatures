@@ -607,29 +607,10 @@ func (g G2Projective) AddAffine(other *G2Affine) *G2Projective {
 }
 
 // Mul performs a EC multiply operation on the point.
-func (g G2Projective) Mul(b *big.Int) *G2Projective {
-	bs := b.Bytes()
-	res := G2ProjectiveZero.Copy()
-	// b.BitLen()
-	for i := uint(0); i < uint((b.BitLen()+7)/8)*8; i++ {
-		part := i / 8
-		bit := 7 - i%8
-		o := bs[part]&(1<<(bit)) > 0
-		res = res.Double()
-		if o {
-			res = res.Add(&g)
-		}
-	}
-	return res
-}
-
-// NGM
-
-// FuckyouMul performs a Go fuck yourself asshole
-func (g *G2Projective) FuckyouMul(n *big.Int) *G2Projective {
-	//Double and add:
-	// https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
-
+// Double and add:
+// https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
+func (g *G2Projective) Mul(n *big.Int) *G2Projective {
+	// TODO: this
 	//	if p1.infinity or c % ec.q == 0:
 	//	return JacobianPoint(FE.one(ec.q), FE.one(ec.q),
 	//		FE.zero(ec.q), True, ec)
@@ -641,55 +622,22 @@ func (g *G2Projective) FuckyouMul(n *big.Int) *G2Projective {
 
 	addend := g.Copy()
 	result := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
-	//fmt.Println("NGM(FUCKYOUMUL) result(initial): ", result)
-	//fmt.Println("NGM(FUCKYOUMUL) addend:", addend)
-	//fmt.Println("NGM(FUCKYOUMUL) n:", n)
 
 	// while n > 0:
 	for n.Cmp(bigZero) > 0 {
-		// if b is odd
-		//	    result += addend
+		// if n is odd
 		if n.Bit(0) == 1 {
-			fmt.Println("NGM(FUCKYOUMUL) result BEFORE add:", result)
-			fmt.Println("NGM(FUCKYOUMUL) addend BEFORE add:", addend)
-
+			//	result += addend
 			result = result.Add(addend)
-			fmt.Println("NGM(FUCKYOUMUL) result after add:", result)
 		}
 		// double point
 		addend = addend.Double()
-		fmt.Println("NGM(FUCKYOUMUL) addend after double:", addend)
-
 		// c = c >> 1
 		n = new(big.Int).Rsh(n, 1)
-		fmt.Println("NGM(FUCKYOUMUL) new n after Rsh:", n)
 	}
 
 	return result
 }
-
-//def scalar_mult_jacobian(c, p1, ec=default_ec, FE=Fq):
-//"""
-//	Double and add:
-//https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
-//	"""
-//	# p1 is the Projective point and c is the int / scalar to multiply by
-//
-//	if p1.infinity or c % ec.q == 0:
-//	return JacobianPoint(FE.one(ec.q), FE.one(ec.q),
-//		FE.zero(ec.q), True, ec)
-//	if isinstance(c, FE):
-//	c = int(c)
-//	result = JacobianPoint(FE.one(ec.q), FE.one(ec.q),
-//		FE.zero(ec.q), True, ec)
-//	addend = p1
-//	while c > 0:
-//	if c & 1:
-//	result += addend
-//	# double point
-//	addend += addend
-//	c = c >> 1
-//	return result
 
 var blsX, _ = new(big.Int).SetString("d201000000010000", 16)
 
