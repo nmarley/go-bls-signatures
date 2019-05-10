@@ -411,7 +411,7 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 
 	// U2 = X2*Z1^2
 	u2 := other.x.Mul(g.z.Square())
-// 	fmt.Println("NGMgo u2:", u2)
+	// 	fmt.Println("NGMgo u2:", u2)
 
 	// S1 = Y1*Z2^3
 	s1 := g.y.Mul(other.z.Square().Mul(other.z))
