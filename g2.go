@@ -322,59 +322,46 @@ func (g *G2Projective) Double() *G2Projective {
 		return g.Copy()
 	}
 
-	x := g.x.Copy()
-	y := g.y.Copy()
-	z := g.z.Copy()
+	// A = x1^2
+	a := g.x.Copy().Square()
 
-	// S = 4*X*Y^2
-	s := x.Mul(y).Mul(y).MulInt(bigFour)
-	fmt.Println("s:", s)
+	// B = y1^2
+	b := g.y.Copy().Square()
 
-	// Z_sq = Z * Z
-	z_sq := z.Mul(z)
-	fmt.Println("z_sq:", z_sq)
+	// C = B^2
+	c := b.Copy().Square()
 
-	// Z_4th = Z_sq * Z_sq
-	z_4th := z_sq.Mul(z_sq)
-	fmt.Println("z_4th:", z_4th)
+	// D = 2*((X1+B)^2-A-C)
+	d := g.x.Copy().Add(b)
+	d.SquareAssign()
+	d.SubAssign(a)
+	d.SubAssign(c)
+	d.DoubleAssign()
 
-	// Y_sq = Y * Y
-	y_sq := y.Mul(y)
-	fmt.Println("y_sq:", y_sq)
+	// E = 3*A
+	e := a.Copy().Double()
+	e.AddAssign(a)
 
-	// Y_4th = Y_sq * Y_sq
-	y_4th := y_sq.Mul(y_sq)
-	fmt.Println("y_4th:", y_4th)
+	// F = E^2
+	f := e.Copy().Square()
 
-	// M = 3*X^2 + a*Z^4
+	// z3 = 2*Y1*Z1
+	newZ := g.z.Copy().Mul(g.y)
+	newZ.DoubleAssign()
 
-	// M = 3 * X * X
-	m := x.Mul(x).MulInt(big.NewInt(3))
-	fmt.Println("m1:", m)
+	// x3 = F-2*D
+	newX := f.Copy().Sub(d)
+	newX.SubAssign(d)
 
-	// M += ec.a * Z_4th
-	m = m.Add(z_4th.Mul(FQ2Zero))
-	fmt.Println("m2:", m)
+	c.DoubleAssign()
+	c.DoubleAssign()
+	c.DoubleAssign()
 
-	// X' = M^2 - 2*S
+	newY := d.Sub(newX)
+	newY.MulAssign(e)
+	newY.SubAssign(c)
 
-	// X_p = M * M - 2 * S
-	xp := m.Mul(m).Sub(s.MulInt(bigTwo))
-	fmt.Println("xp:", xp)
-
-	// Y' = M*(S - X') - 8*Y^4
-
-	// Y_p = M * (S - X_p) - 8 * Y_4th
-	yp := m.Mul(s.Sub(xp)).Sub(y_4th.MulInt(big.NewInt(8)))
-	fmt.Println("yp:", yp)
-
-	// Z' = 2*Y*Z
-
-	// Z_p = 2 * Y * Z
-	zp := y.Mul(z).MulInt(bigTwo)
-	fmt.Println("zp:", zp)
-
-	return NewG2Projective(xp, yp, zp)
+	return NewG2Projective(newX, newY, newZ)
 }
 
 //def double_point_jacobian(p1, ec=default_ec, FE=Fq):
@@ -566,7 +553,7 @@ func (g G2Projective) Mul(b *big.Int) *G2Projective {
 // NGM
 
 // FuckyouMul performs a Go fuck yourself asshole
-func (g *G2Projective) FuckyouMul(b *big.Int) *G2Projective {
+func (g *G2Projective) FuckyouMul(n *big.Int) *G2Projective {
 	//Double and add:
 	// https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
 
@@ -579,33 +566,30 @@ func (g *G2Projective) FuckyouMul(b *big.Int) *G2Projective {
 	//	return G2AffineZero.ToProjective()
 	//}
 
-	fmt.Println("NGM(FUCKYOUMUL) b: ", b)
-
-	// TODO: just replace this w/"g"
 	addend := g.Copy()
-
-	//result := G2ProjectiveZero.Copy()
 	result := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
-	fmt.Println("NGM(FUCKYOUMUL) result(initial): ", result)
+	//fmt.Println("NGM(FUCKYOUMUL) result(initial): ", result)
+	//fmt.Println("NGM(FUCKYOUMUL) addend:", addend)
+	//fmt.Println("NGM(FUCKYOUMUL) n:", n)
 
-	fmt.Println("NGM(FUCKYOUMUL) addend:", addend)
-
-	fmt.Println("NGM(FUCKYOUMUL) c:", b)
-
-	//	while c > 0:
-	for b.Cmp(bigZero) > 0 {
-		//	if c & 1:
+	// while n > 0:
+	for n.Cmp(bigZero) > 0 {
+		// if b is odd
 		//	    result += addend
-		if new(big.Int).And(b, bigOne).Cmp(bigZero) > 0 {
+		if n.Bit(0) == 1 {
+			fmt.Println("NGM(FUCKYOUMUL) result BEFORE add:", result)
+			fmt.Println("NGM(FUCKYOUMUL) addend BEFORE add:", addend)
+
 			result = result.Add(addend)
-			fmt.Println("NGM(FUCKYOUMUL) result after add: ", result)
+			fmt.Println("NGM(FUCKYOUMUL) result after add:", result)
 		}
 		// double point
-		// addend += addend
-		addend = addend.Add(addend)
+		addend = addend.Double()
+		fmt.Println("NGM(FUCKYOUMUL) addend after double:", addend)
 
 		// c = c >> 1
-		b = new(big.Int).Rsh(b, 1)
+		n = new(big.Int).Rsh(n, 1)
+		fmt.Println("NGM(FUCKYOUMUL) new n after Rsh:", n)
 	}
 
 	return result
