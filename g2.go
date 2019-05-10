@@ -463,6 +463,84 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 	return NewG2Projective(x3, y3, z3)
 }
 
+// Add performs an EC Add operation with another point.
+func (g G2Projective) OldAdd(other *G2Projective) *G2Projective {
+	if g.IsZero() {
+		return other.Copy()
+	}
+	if other.IsZero() {
+		return g.Copy()
+	}
+
+	// Z1Z1 = Z1^2
+	z1z1 := g.z.Copy()
+	z1z1.SquareAssign()
+
+	// Z2Z2 = Z2^2
+	z2z2 := other.z.Copy()
+	z2z2.SquareAssign()
+
+	// U1 = X1*Z2Z2
+	u1 := g.x.Copy()
+	u1.MulAssign(z2z2)
+
+	// U2 = x2*Z1Z1
+	u2 := other.x.Copy()
+	u2.MulAssign(z1z1)
+
+	// S1 = Y1*Z2*Z2Z2
+	s1 := g.y.Copy()
+	s1.MulAssign(other.z)
+	s1.MulAssign(z2z2)
+
+	// S2 = Y2*Z1*Z1Z1
+	s2 := other.y.Copy()
+	s2.MulAssign(g.z)
+	s2.MulAssign(z1z1)
+
+	if u1.Equals(u2) && s1.Equals(s2) {
+		// points are equal
+		return g.Double()
+	}
+
+	// H = U2-U1
+	h := u2.Copy()
+	h.SubAssign(u1)
+
+	// I = H^2
+	i := h.Square()
+
+	// J = H * I
+	j := h.Mul(i)
+
+	// R = S2 - S1
+	r := s2.Copy()
+	r.SubAssign(s1)
+
+	// v = U1*I
+	u1.MulAssign(i)
+
+	// X3 = r^2 - J - 2*V
+	newX := r.Copy()
+	newX.SquareAssign()
+	newX.SubAssign(j)
+	newX.SubAssign(u1)
+	newX.SubAssign(u1)
+
+	// Y3 = r*(U1*H^2 - X3) - S1*J
+	// Y3 = R*(U1*H^2 - X3) - S1*H^3
+	u1.SubAssign(newX)
+	u1.MulAssign(r)
+	s1.MulAssign(j)
+	// s1.DoubleAssign()
+	u1.SubAssign(s1)
+
+	// Z3 = H*Z1*Z2
+	newZ := h.Mul(g.z).Mul(other.z)
+
+	return NewG2Projective(newX, u1, newZ)
+}
+
 // AddAffine performs an EC Add operation with an affine point.
 func (g G2Projective) AddAffine(other *G2Affine) *G2Projective {
 	if g.IsZero() {
