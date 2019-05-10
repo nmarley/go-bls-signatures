@@ -395,6 +395,8 @@ func (g *G2Projective) Double() *G2Projective {
 //    return JacobianPoint(X_p, Y_p, Z_p, False, ec)
 
 // Add performs an EC Add operation with another point.
+// Jacobian elliptic curve point addition
+// http://www.hyperelliptic.org/EFD/oldefd/jacobian.html
 func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 	if g.IsZero() {
 		return other.Copy()
