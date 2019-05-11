@@ -184,25 +184,9 @@ func DeserializeSecretKey(b []byte) *SecretKey {
 }
 
 // Sign signs a message with a secret key.
-func Sign(message []byte, key *SecretKey, domain uint64) *Signature {
-	h := HashG2(message, domain).Mul(key.f.n)
-	return &Signature{s: h}
-}
-
-// XSign signs a message with a secret key.
-func XSign(message []byte, key *SecretKey) *Signature {
-	//fmt.Println("NGMgo (XSign) key =", key.f.n)
-	//r := XHashG2(message)
-	//fmt.Println("NGMgo (XSign) r =", r)
-
-	//rp := r.ToProjective()
-	//fmt.Println("NGMgo (XSign) rp =", rp)
-
+func Sign(message []byte, key *SecretKey) *Signature {
 	h := XHashG2(message)
-	h2 := h.Mul(key.f.n)
-	//fmt.Println("NGMgo (XSign) h2 =", h2)
-
-	return &Signature{s: h2}
+	return &Signature{s: h.Mul(key.f.n)}
 }
 
 // PrivToPub converts the private key into a public key.
@@ -236,11 +220,71 @@ func Verify(m []byte, pub *PublicKey, sig *Signature, domain uint64) bool {
 
 // Verify verifies a signature against a message and a public key.
 func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
-	h := XHashG2(m)
-	lhs := Pairing(G1ProjectiveOne, sig.s)
-	rhs := Pairing(pub.p, h)
-	return lhs.Equals(rhs)
+	h := Hash256(m)
+	agginfo := AggregationInfoFromMsgHash(pub, h)
+	fmt.Println(agginfo)
+
+	pks := agginfo.PublicKeys()
+	fmt.Println(pks)
+
+	// lhs := Pairing(G1ProjectiveOne, sig.s)
+	// rhs := Pairing(pub.p, h)
+	// return lhs.Equals(rhs)
+	return false
 }
+
+//def verify(self):
+
+//    """
+//    This implementation of verify has several steps. First, it
+//    reorganizes the pubkeys and messages into groups, where
+//    each group corresponds to a message. Then, it checks if the
+//    siganture has info on how it was aggregated. If so, we
+//    exponentiate each pk based on the exponent in the AggregationInfo.
+//    If not, we find public keys that share messages with others,
+//    and aggregate all of these securely (with exponents.).
+//    Finally, since each public key now corresponds to a unique
+//    message (since we grouped them), we can verify using the
+//    distinct verification procedure.
+//    """
+
+//    message_hashes = self.aggregation_info.message_hashes
+//    public_keys = self.aggregation_info.public_keys
+//    assert(len(message_hashes) == len(public_keys))
+
+//
+//    hash_to_public_keys = {}
+//    for i in range(len(message_hashes)):
+//        if message_hashes[i] in hash_to_public_keys:
+//            hash_to_public_keys[message_hashes[i]].append(public_keys[i])
+//        else:
+//            hash_to_public_keys[message_hashes[i]] = [public_keys[i]]
+//
+//    final_message_hashes = []
+//    final_public_keys = []
+//    ec = public_keys[0].value.ec
+//    for message_hash, mapped_keys in hash_to_public_keys.items():
+//        dedup = list(set(mapped_keys))
+//        public_key_sum = JacobianPoint(Fq.one(ec.q), Fq.one(ec.q),
+//                                       Fq.zero(ec.q), True, ec)
+//        for public_key in dedup:
+//            try:
+//                exponent = self.aggregation_info.tree[(message_hash,
+//                                                       public_key)]
+//                public_key_sum += (public_key.value * exponent)
+//            except KeyError:
+//                return False
+//        final_message_hashes.append(message_hash)
+//        final_public_keys.append(public_key_sum.to_affine())
+//
+//    mapped_hashes = [hash_to_point_prehashed_Fq2(mh)
+//                     for mh in final_message_hashes]
+//
+//    g1 = Fq(default_ec.n, -1) * generator_Fq()
+//    Ps = [g1] + final_public_keys
+//    Qs = [self.value.to_affine()] + mapped_hashes
+//    res = ate_pairing_multi(Ps, Qs, default_ec)
+//    return res == Fq12.one(default_ec.q)
 
 // AggregateSignatures adds up all of the signatures.
 func AggregateSignatures(s []*Signature) *Signature {
