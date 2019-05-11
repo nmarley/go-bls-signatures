@@ -121,16 +121,12 @@ func (p PublicKey) Equals(other PublicKey) bool {
 
 // DeserializePublicKey deserializes a public key from bytes.
 func DeserializePublicKey(b []byte) (*PublicKey, error) {
-	fmt.Println("NGMgo FUCKYOU")
-	fmt.Println("NGMgo len(b) =", len(b))
-	fmt.Println("NGMgo G1ElementSize=", G1ElementSize)
 	switch len(b) {
 	case G1ElementSize:
 		a, err := DecompressG1(new(big.Int).SetBytes(b))
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println("NGMgo a:", a)
 
 		return &PublicKey{p: a.ToProjective()}, nil
 

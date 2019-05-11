@@ -6,40 +6,46 @@ import (
 
 // AggregationInfo ...
 type AggregationInfo struct {
-	// probably ptr?
-	Tree XAggregationTree
-
-	// ptr?
-	Hashes [][]byte
-
-	// ptr?
-	PublicKeys []PublicKey
+	Tree       AggregationTree
+	Hashes     [][]byte
+	PublicKeys []*PublicKey
 }
 
-func NewAggregationInfo() *AggregationInfo {
+func NewAggregationInfo(pubKeys []*PublicKey, hashes [][]byte) *AggregationInfo {
 	return &AggregationInfo{
-		Tree: make(XAggregationTree),
+		PublicKeys: pubKeys,
+		Hashes:     hashes,
+		Tree:       make(AggregationTree),
 	}
 }
 
+// MapKeyLen ...
+const (
+	MessageHashSize = 32
+	MapKeyLen       = PublicKeySize + MessageHashSize
+)
+
+// MapKey ...
+type MapKey [MapKeyLen]byte
+
 func AggregationInfoFromMsgHash(pk *PublicKey, h []byte) *AggregationInfo {
-	// 32 bytes for the message hash (sha256 hash)
-	//buf := make([]byte, PublicKeySize+32)
+	// Public key length + 32 bytes for the message hash (sha256 hash)
+	var mk MapKey
 
-	//pubkeyBytes := pk.Serialize(true)
-	//copy(buf, pubkeyBytes)
-	//fmt.Println("NGMgo buf:", buf)
+	// Copy hash bytes to mapkey
+	copy(mk[:], h)
 
-	ai := NewAggregationInfo()
-	// ai.Tree[]
+	// Serialize public key to raw bytes
+	pubkeyBytes := pk.Serialize(true)
+
+	// Now copy serialized public key bytes into mapkey, located just after the message hash
+	copy(mk[MessageHashSize:], pubkeyBytes)
+
+	ai := NewAggregationInfo([]*PublicKey{pk}, [][]byte{h})
+	ai.Tree[mk] = bigOne
 
 	return ai
 }
 
 // AggregationTree ...
-type XAggregationTree map[uint8]*big.Int
-
-// probably just make this a custom map TBH...
-type AggregationTree struct {
-	// x map[uint8]*big.Int
-}
+type AggregationTree map[MapKey]*big.Int
