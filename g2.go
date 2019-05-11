@@ -902,7 +902,7 @@ func HashG2(msg []byte, domain uint64) *G2Projective {
 }
 
 // XHashG2 maps any string to a deterministic random point in G2.
-func XHashG2(msg []byte) *G2Affine {
+func XHashG2(msg []byte) *G2Projective {
 	// h <- hash256(m)
 	h := Hash256(msg)
 
@@ -992,10 +992,10 @@ func XHashG2(msg []byte) *G2Affine {
 
 	//rv = t2 - t3 + psi2P
 	rv := t2_.AddAffine(t3_.ToAffine().Neg()).AddAffine(psi2P)
-	fmt.Println("NGM(XHashG2) rv:", rv.ToAffine())
+	//fmt.Println("NGM(XHashG2) rv:", rv.ToAffine())
 
 	// Map to the r-torsion by raising to cofactor power
-	return rv.ToAffine()
+	return rv
 }
 
 // Untwist ...

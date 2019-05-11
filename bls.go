@@ -179,15 +179,16 @@ func Sign(message []byte, key *SecretKey, domain uint64) *Signature {
 
 // XSign signs a message with a secret key.
 func XSign(message []byte, key *SecretKey) *Signature {
-	fmt.Println("NGMgo (XSign) key =", key.f.n)
-	r := XHashG2(message)
-	fmt.Println("NGMgo (XSign) r =", r)
+	//fmt.Println("NGMgo (XSign) key =", key.f.n)
+	//r := XHashG2(message)
+	//fmt.Println("NGMgo (XSign) r =", r)
 
-	rp := r.ToProjective()
-	fmt.Println("NGMgo (XSign) rp =", rp)
+	//rp := r.ToProjective()
+	//fmt.Println("NGMgo (XSign) rp =", rp)
 
-	h2 := rp.Mul(key.f.n)
-	fmt.Println("NGMgo (XSign) h2 =", h2)
+	h := XHashG2(message)
+	h2 := h.Mul(key.f.n)
+	//fmt.Println("NGMgo (XSign) h2 =", h2)
 
 	return &Signature{s: h2}
 }
@@ -216,6 +217,14 @@ func KeyFromBig(i *big.Int) *SecretKey {
 // Verify verifies a signature against a message and a public key.
 func Verify(m []byte, pub *PublicKey, sig *Signature, domain uint64) bool {
 	h := HashG2(m, domain)
+	lhs := Pairing(G1ProjectiveOne, sig.s)
+	rhs := Pairing(pub.p, h)
+	return lhs.Equals(rhs)
+}
+
+// Verify verifies a signature against a message and a public key.
+func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
+	h := XHashG2(m)
 	lhs := Pairing(G1ProjectiveOne, sig.s)
 	rhs := Pairing(pub.p, h)
 	return lhs.Equals(rhs)

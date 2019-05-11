@@ -322,12 +322,13 @@ func TestKeygen(t *testing.T) {
 			is := is.New(st)
 
 			sk := bls.SecretKeyFromSeed(tt.seed)
-			fmt.Printf("%x\n", sk.Serialize())
+			//fmt.Printf("%x\n", sk.Serialize())
 			if len(tt.secretKey) > 0 {
 				is.Equal(sk.Serialize(), tt.secretKey)
 			}
 
 			pk := sk.PublicKey()
+			//fmt.Printf("pk: %x\n", pk.Serialize(true))
 			is.Equal(pk.Fingerprint(), tt.pkFingerprint)
 		})
 	}
@@ -335,6 +336,53 @@ func TestKeygen(t *testing.T) {
 
 // Implement test for test vector for Signatures#sign
 func TestVectorSignaturesSign(t *testing.T) {
+	// - [ ] sign([7,8,9], sk1)
+	// - [ ] sign([7,8,9], sk2)
+	tests := []struct {
+		payload     []byte
+		secretKey   []byte
+		expectedSig []byte
+	}{
+		{
+			payload:     []byte{7, 8, 9},
+			secretKey:   sk1,
+			expectedSig: sig1,
+		},
+		{
+			payload:     []byte{7, 8, 9},
+			secretKey:   sk2,
+			expectedSig: sig2,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
+			is := is.New(st)
+
+			key := bls.DeserializeSecretKey(tt.secretKey)
+			// is.Equal(key.Serialize(), tt.secretKey)
+
+			sig := bls.XSign(tt.payload, key)
+			//fmt.Printf("%x\n", sig.Serialize(true))
+
+			is.Equal(sig.Serialize(true), tt.expectedSig)
+		})
+	}
+}
+
+// Implement test for test vector for Signatures#verify
+func TestVectorSignaturesVerify(t *testing.T) {
+	// pk1 :=
+	//	bls.XVerify(payload, pk1, payload)
+	//func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
+	//bls.XVerify(
+	//sig1, Agg
+	// verify(sig1, AggregationInfo(pk1, [7,8,9]))
+	// true
+
+	// verify(sig2, AggregationInfo(pk2, [7,8,9]))
+	// true
+
 	// - [ ] sign([7,8,9], sk1)
 	// - [ ] sign([7,8,9], sk2)
 	tests := []struct {
@@ -411,6 +459,24 @@ var sig2 = []byte{
 	0xac, 0x2a, 0xec, 0x52, 0xfc, 0x7b, 0x46, 0xc0,
 	0x2c, 0x56, 0x99, 0xff, 0x7a, 0x10, 0xbe, 0xba,
 	0x24, 0xd3, 0xce, 0xd4, 0xe8, 0x9c, 0x82, 0x1e,
+}
+var payload = []byte{7, 8, 9}
+
+var pk1 = []byte{
+	0x02, 0xa8, 0xd2, 0xaa, 0xa6, 0xa5, 0xe2, 0xe0,
+	0x8d, 0x4b, 0x8d, 0x40, 0x6a, 0xaf, 0x01, 0x21,
+	0xa2, 0xfc, 0x20, 0x88, 0xed, 0x12, 0x43, 0x1e,
+	0x6b, 0x06, 0x63, 0x02, 0x8d, 0xa9, 0xac, 0x59,
+	0x22, 0xc9, 0xea, 0x91, 0xcd, 0xe7, 0xdd, 0x74,
+	0xb7, 0xd7, 0x95, 0x58, 0x0a, 0xcc, 0x7a, 0x61,
+}
+var pk2 = []byte{
+	0x83, 0xfb, 0xcb, 0xbf, 0xa6, 0xb7, 0xa5, 0xa0,
+	0xe7, 0x07, 0xef, 0xaa, 0x9e, 0x6d, 0xe2, 0x58,
+	0xa7, 0x9a, 0x59, 0x11, 0x6d, 0xd8, 0x89, 0xce,
+	0x74, 0xf1, 0xab, 0x7f, 0x54, 0xc9, 0xb7, 0xba,
+	0x15, 0x43, 0x9d, 0xcb, 0x4a, 0xcf, 0xbd, 0xd8,
+	0xbc, 0xff, 0xdd, 0x88, 0x25, 0x79, 0x5b, 0x90,
 }
 
 // Custom testing for debugging shit
