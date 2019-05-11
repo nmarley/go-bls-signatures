@@ -49,3 +49,13 @@ func AggregationInfoFromMsgHash(pk *PublicKey, h []byte) *AggregationInfo {
 
 // AggregationTree ...
 type AggregationTree map[MapKey]*big.Int
+
+// GetPublicKeys
+func (ai *AggregationInfo) GetPublicKeys() []*PublicKey {
+	return ai.PublicKeys
+}
+
+// GetMessageHashes
+func (ai *AggregationInfo) GetMessageHashes() [][]byte {
+	return ai.Hashes
+}
