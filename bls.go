@@ -16,6 +16,12 @@ const (
 	G2ElementSize = 96
 )
 
+// ...
+const (
+	PublicKeySize = G1ElementSize
+	SignatureSize = G2ElementSize
+)
+
 // Signature is a message signature.
 type Signature struct {
 	s *G2Projective
@@ -80,7 +86,7 @@ func (p PublicKey) String() string {
 }
 
 // Serialize serializes a public key to bytes.
-func (p PublicKey) Serialize(compressed bool) []byte {
+func (p *PublicKey) Serialize(compressed bool) []byte {
 	if compressed {
 		return CompressG1(p.p.ToAffine())
 	}
