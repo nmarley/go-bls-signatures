@@ -102,6 +102,12 @@ func (p *PublicKey) Serialize(compressed bool) []byte {
 	return affine.SerializeBytes()
 }
 
+// pubkey (48 bytes): 381 bit affine x coordinate, encoded into 48
+// big-endian bytes. Since we have 3 bits left over in the beginning, the
+// first bit is set to 1 iff y coordinate is the lexicographically largest
+// of the two valid ys. The public key fingerprint is the first 4 bytes of
+// hash256(serialize(pubkey)).
+
 // Fingerprint returns the the first 4 bytes of hash256(serialize(pubkey))
 func (p *PublicKey) Fingerprint() []byte {
 	buf := Hash256(p.Serialize(true))
@@ -115,12 +121,16 @@ func (p PublicKey) Equals(other PublicKey) bool {
 
 // DeserializePublicKey deserializes a public key from bytes.
 func DeserializePublicKey(b []byte) (*PublicKey, error) {
+	fmt.Println("NGMgo FUCKYOU")
+	fmt.Println("NGMgo len(b) =", len(b))
+	fmt.Println("NGMgo G1ElementSize=", G1ElementSize)
 	switch len(b) {
 	case G1ElementSize:
 		a, err := DecompressG1(new(big.Int).SetBytes(b))
 		if err != nil {
 			return nil, err
 		}
+		fmt.Println("NGMgo a:", a)
 
 		return &PublicKey{p: a.ToProjective()}, nil
 

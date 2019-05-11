@@ -101,26 +101,18 @@ func (g G1Affine) IsOnCurve() bool {
 	return y2.Equals(x3b)
 }
 
-// GetG1PointFromX attempts to reconstruct an affine point given
-// an x-coordinate. The point is not guaranteed to be in the subgroup.
-// If and only if `greatest` is set will the lexicographically
-// largest y-coordinate be selected.
-func GetG1PointFromX(x *FQ, greatest bool) *G1Affine {
-	x3b := x.Square().Mul(x).Add(NewFQ(BCoeff))
 
+// GetValidYCoordsForX solves y = sqrt(x^3 + ax + b) for both valid ys
+func GetValidYCoordsForX(x *FQ) []*FQ {
+	x3b := x.Square().Mul(x).Add(NewFQ(BCoeff))
 	y := x3b.Sqrt()
 
-	if y == nil {
-		return nil
-	}
-
-	negY := y.Neg()
-
-	yVal := negY
 	if (y.Cmp(negY) < 0) != greatest {
 		yVal = y
 	}
-	return NewG1Affine(x, yVal)
+
+
+	return []*FQ{y, y.Neg()}
 }
 
 var frChar, _ = new(big.Int).SetString("73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001", 16)
@@ -168,6 +160,7 @@ func (g *G1Affine) SetRawBytes(uncompressed []byte) {
 // DecompressG1 decompresses the big int into an affine point and checks
 // if it is in the correct prime group.
 func DecompressG1(b *big.Int) (*G1Affine, error) {
+	// fmt.Println("NGMgo DecompressG1, b=", b)
 	affine, err := DecompressG1Unchecked(b)
 	if err != nil {
 		return nil, err
@@ -184,25 +177,58 @@ func DecompressG1(b *big.Int) (*G1Affine, error) {
 func DecompressG1Unchecked(b *big.Int) (*G1Affine, error) {
 	copy := new(big.Int).Set(b)
 
+	// pubkey (48 bytes): 381 bit affine x coordinate, encoded into 48
+	// big-endian bytes. Since we have 3 bits left over in the beginning, the
+	// first bit is set to 1 iff y coordinate is the lexicographically largest
+	// of the two valid ys. The public key fingerprint is the first 4 bytes of
+	// hash256(serialize(pubkey)).
+
 	copyBytes := copy.Bytes()
+	// fmt.Println("NGMgo copyBytes =", copyBytes)
 
-	if len(copyBytes) == 0 || copyBytes[0]&(1<<7) == 0 {
-		return nil, errors.New("unexpected compression mode")
-	}
+	// Save bit1 for y coord later
+	bit1 := copyBytes[0] & 0x80
+	copyBytes[0] &= 0x1f
 
-	if copyBytes[0]&(1<<6) != 0 {
-		// this is the point at infinity
-		copyBytes[0] &= 0x3f
+	x := NewFQ(new(big.Int).SetBytes(copyBytes))
+	fmt.Println("NGMgo x =", x)
+	fmt.Println("NGMgo bit1 =", bit1)
 
-		for _, b := range copyBytes {
-			if b != 0 {
-				return nil, errors.New("unexpected information in compressed infinity")
-			}
-		}
+    //def from_bytes(buffer):
+    //    bit1 = buffer[0] & 0x80
+    //    buffer = bytes([buffer[0] & 0x1f]) + buffer[1:]
+    //    x = Fq(default_ec.q, int.from_bytes(buffer, "big"))
+    //    y_values = y_for_x(Fq(default_ec.q, x))
+    //    y_values.sort()
+    //    y = y_values[0]
+	//
+    //    if bit1:
+    //        y = y_values[1]
+	//
+    //    return PublicKey(AffinePoint(x, y, False, default_ec).to_jacobian())
 
-		return G1AffineZero.Copy(), nil
-	}
-	greatest := copyBytes[0]&(1<<5) != 0
+
+	// GetG1PointFromX(x *FQ, greatest bool)
+
+	// NGM
+	// (1<<7) == 0x80 == 128
+	//                        if 1st byte is < 128...
+	//if len(copyBytes) == 0 || copyBytes[0]&(1<<7) == 0 {
+	//	return nil, errors.New("unexpected compression mode")
+	//}
+	//if copyBytes[0]&(1<<6) != 0 {
+	//	// this is the point at infinity
+	//	copyBytes[0] &= 0x3f
+	//
+	//	for _, b := range copyBytes {
+	//		if b != 0 {
+	//			return nil, errors.New("unexpected information in compressed infinity")
+	//		}
+	//	}
+	//
+	//	return G1AffineZero.Copy(), nil
+	//}
+	//greatest := copyBytes[0]&(1<<5) != 0
 
 	copyBytes[0] &= 0x1f
 
@@ -211,21 +237,41 @@ func DecompressG1Unchecked(b *big.Int) (*G1Affine, error) {
 	return GetG1PointFromX(x, greatest), nil
 }
 
+//def y_for_x(x, ec=default_ec, FE=Fq):
+//    """
+//    Solves y = sqrt(x^3 + ax + b) for both valid ys
+//    """
+//    if not isinstance(x, FE):
+//        x = FE(ec.q, x)
+//
+//    u = x * x * x + ec.a * x + ec.b
+//
+//    y = u.modsqrt()
+//    if y == 0 or not AffinePoint(x, y, False, ec).is_on_curve():
+//        raise ValueError("No y for point x")
+//    return [y, ec.q - y]
+
+
+
+
+
 // CompressG1 compresses a G1 point into a byte slice.
 func CompressG1(affine *G1Affine) []byte {
-	res := [48]byte{}
-	out0 := affine.x.n.Bytes()
-
-	copy(res[48-len(out0):], out0)
+	res := affine.x.n.Bytes()
 
 	// Per the Chia spec, set the leftmost bit iff negative y. The other two
 	// are left as zeros.
-	negY := affine.y.Neg()
-	if affine.y.Cmp(negY) > 0 {
-		res[0] |= 1 << 7
+
+	// Right shift the Q bits once to get Half Q
+	halfQ := new(big.Int).Rsh(QFieldModulus, 1)
+
+	// If the y coordinate is the bigger one of the two, set the first
+	// bit to 1.
+	if affine.y.n.Cmp(halfQ) == 1 {
+		res[0] |= 0x80
 	}
 
-	return res[:]
+	return res[0:G1ElementSize]
 }
 
 // G1Projective is a projective point on the G1 curve.

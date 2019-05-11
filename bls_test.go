@@ -372,49 +372,19 @@ func TestVectorSignaturesSign(t *testing.T) {
 
 // Implement test for test vector for Signatures#verify
 func TestVectorSignaturesVerify(t *testing.T) {
-	// pk1 :=
-	//	bls.XVerify(payload, pk1, payload)
-	//func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
-	//bls.XVerify(
-	//sig1, Agg
+	//pubkey, _ := bls.DeserializePublicKey(pk1)
+	//sig, _ := bls.DeserializeSignature(sig1)
+	//val := bls.XVerify(payload, pubkey, sig)
+	//if !val {
+	//	t.Error("oops -- verify broken")
+	//}
+
 	// verify(sig1, AggregationInfo(pk1, [7,8,9]))
 	// true
 
 	// verify(sig2, AggregationInfo(pk2, [7,8,9]))
 	// true
 
-	// - [ ] sign([7,8,9], sk1)
-	// - [ ] sign([7,8,9], sk2)
-	tests := []struct {
-		payload     []byte
-		secretKey   []byte
-		expectedSig []byte
-	}{
-		{
-			payload:     []byte{7, 8, 9},
-			secretKey:   sk1,
-			expectedSig: sig1,
-		},
-		{
-			payload:     []byte{7, 8, 9},
-			secretKey:   sk2,
-			expectedSig: sig2,
-		},
-	}
-
-	for i, tt := range tests {
-		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
-			is := is.New(st)
-
-			key := bls.DeserializeSecretKey(tt.secretKey)
-			// is.Equal(key.Serialize(), tt.secretKey)
-
-			sig := bls.XSign(tt.payload, key)
-			fmt.Printf("%x\n", sig.Serialize(true))
-
-			is.Equal(sig.Serialize(true), tt.expectedSig)
-		})
-	}
 }
 
 // Values either defined in or derived from test vectors and re-used multiple
@@ -481,11 +451,11 @@ var pk2 = []byte{
 
 // Custom testing for debugging shit
 func TestCustomNGM(t *testing.T) {
-	makeFQ2 := func(c0Hex, c1Hex string) *bls.FQ2 {
-		c0, _ := new(big.Int).SetString(c0Hex, 16)
-		c1, _ := new(big.Int).SetString(c1Hex, 16)
-		return bls.NewFQ2(bls.NewFQ(c0), bls.NewFQ(c1))
-	}
+	//makeFQ2 := func(c0Hex, c1Hex string) *bls.FQ2 {
+	//	c0, _ := new(big.Int).SetString(c0Hex, 16)
+	//	c1, _ := new(big.Int).SetString(c1Hex, 16)
+	//	return bls.NewFQ2(bls.NewFQ(c0), bls.NewFQ(c1))
+	//}
 
 	//resJacobian := bls.NewG2Projective(
 	//	makeFQ2(
@@ -525,25 +495,41 @@ func TestCustomNGM(t *testing.T) {
 	//jul := resJacobian.OldAdd(addEndJacobian)
 	//fmt.Println("NGMgo jul:", jul)
 
-	rp := bls.NewG2Projective(
-		makeFQ2(
-			"09e35c2bcad146e49aa19e4df6699d08f9ccc12d1c7625788f2ada0bad3e5741dc736e2935fe3ebcb0fef6db1166786f",
-			"1245709e2a671d31cbdd537bb3cdcbde39e66511dd390a4a28a0ee0beea98782695d119e2d7ed66ef3f15e6c2a223bf9",
-		),
-		makeFQ2(
-			"1167ad422b392c865d7cbae6adc4f4827a090a6de6c3a9e28f93786e3fc7f516d7dcf8abdbe8df476dda27ba7adb2aad",
-			"0029180da059941e8194ce794161f2b77266d955d61f591dbb177591b6e6d6792454935b388fb769ac91d739491f7110",
-		),
-		bls.FQ2One,
-	)
-	fmt.Println("NGMgo rp:", rp)
+	//rp := bls.NewG2Projective(
+	//	makeFQ2(
+	//		"09e35c2bcad146e49aa19e4df6699d08f9ccc12d1c7625788f2ada0bad3e5741dc736e2935fe3ebcb0fef6db1166786f",
+	//		"1245709e2a671d31cbdd537bb3cdcbde39e66511dd390a4a28a0ee0beea98782695d119e2d7ed66ef3f15e6c2a223bf9",
+	//	),
+	//	makeFQ2(
+	//		"1167ad422b392c865d7cbae6adc4f4827a090a6de6c3a9e28f93786e3fc7f516d7dcf8abdbe8df476dda27ba7adb2aad",
+	//		"0029180da059941e8194ce794161f2b77266d955d61f591dbb177591b6e6d6792454935b388fb769ac91d739491f7110",
+	//	),
+	//	bls.FQ2One,
+	//)
+	//fmt.Println("NGMgo rp:", rp)
+	//
+	//sk, _ := new(big.Int).SetString("22fb42c08c12de3a6af053880199806532e79515f94e83461612101f9412f9e", 16)
+	//fmt.Println("NGMgo sk:", sk)
+	//
+	//// fu := rp.FuckyouMul(sk)
+	//// fmt.Println("NGMgo fu:", fu)
+	//
+	//res := rp.Mul(sk)
+	//fmt.Println("NGMgo res:", res)
 
-	sk, _ := new(big.Int).SetString("22fb42c08c12de3a6af053880199806532e79515f94e83461612101f9412f9e", 16)
-	fmt.Println("NGMgo sk:", sk)
+	// NGM
+	halfQ := new(big.Int).Rsh(bls.QFieldModulus, 1)
+	fmt.Println("Q =", bls.QFieldModulus)
+	fmt.Println("halfQ =", halfQ)
 
-	// fu := rp.FuckyouMul(sk)
-	// fmt.Println("NGMgo fu:", fu)
+	pubkey, err := bls.DeserializePublicKey(pk1)
+	if err != nil {
+		panic(err)
+	}
 
-	res := rp.Mul(sk)
-	fmt.Println("NGMgo res:", res)
+	h := bls.Hash256(payload)
+	fmt.Println("h =", h)
+
+	aggInfo := bls.AggregationInfoFromMsgHash(pubkey, h)
+	fmt.Println("aggInfo =", aggInfo)
 }
