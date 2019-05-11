@@ -102,19 +102,6 @@ func (g G1Affine) IsOnCurve() bool {
 }
 
 
-// GetValidYCoordsForX solves y = sqrt(x^3 + ax + b) for both valid ys
-func GetValidYCoordsForX(x *FQ) []*FQ {
-	x3b := x.Square().Mul(x).Add(NewFQ(BCoeff))
-	y := x3b.Sqrt()
-
-	if (y.Cmp(negY) < 0) != greatest {
-		yVal = y
-	}
-
-
-	return []*FQ{y, y.Neg()}
-}
-
 var frChar, _ = new(big.Int).SetString("73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001", 16)
 
 // IsInCorrectSubgroupAssumingOnCurve checks if the point multiplied by the
