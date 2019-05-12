@@ -28,6 +28,14 @@ const (
 // MapKey ...
 type MapKey [MapKeyLen]byte
 
+func NewMapKey(pk *PublicKey, mh MessageHash) MapKey {
+	var mk MapKey
+	copy(mk[:], mh[:])
+	pubkeyBytes := pk.Serialize(true)
+	copy(mk[MessageHashSize:], pubkeyBytes)
+	return mk
+}
+
 func AggregationInfoFromMsgHash(pk *PublicKey, h []byte) *AggregationInfo {
 	// Public key length + 32 bytes for the message hash (sha256 hash)
 	var mk MapKey

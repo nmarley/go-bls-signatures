@@ -81,11 +81,16 @@ type PublicKey struct {
 	p *G1Projective
 }
 
+// String ...
 func (p PublicKey) String() string {
 	return p.p.String()
 }
 
 // Serialize serializes a public key to bytes.
+//
+// TODO: Probably just disallow uncompressed altogether
+// Since Chia does not use this, it does not make sense to add complexity to
+// the codebase for no reason or keep it there "just because".
 func (p *PublicKey) Serialize(compressed bool) []byte {
 	if compressed {
 		return CompressG1(p.p.ToAffine())
@@ -93,12 +98,6 @@ func (p *PublicKey) Serialize(compressed bool) []byte {
 
 	// else serialize uncompressed
 	affine := p.p.ToAffine()
-	out := [G1ElementSize * 2]byte{}
-	if affine.infinity {
-		out[0] = (1 << 6)
-		return out[:]
-	}
-
 	return affine.SerializeBytes()
 }
 
@@ -218,68 +217,98 @@ func Verify(m []byte, pub *PublicKey, sig *Signature, domain uint64) bool {
 	return lhs.Equals(rhs)
 }
 
-// Verify verifies a signature against a message and a public key.
+// MessageHash represents ... and is required because ...
+type MessageHash [32]byte
+
+// XVerify verifies a signature against a message and a public key.
+//
+// This implementation of verify has several steps. First, it
+// reorganizes the pubkeys and messages into groups, where
+// each group corresponds to a message. Then, it checks if the
+// siganture has info on how it was aggregated. If so, we
+// exponentiate each pk based on the exponent in the AggregationInfo.
+// If not, we find public keys that share messages with others,
+// and aggregate all of these securely (with exponents.).
+// Finally, since each public key now corresponds to a unique
+// message (since we grouped them), we can verify using the
+// distinct verification procedure.
 func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 	h := Hash256(m)
 	agginfo := AggregationInfoFromMsgHash(pub, h)
-	fmt.Println(agginfo)
+	//fmt.Println(agginfo)
 
-	pks := agginfo.PublicKeys()
-	fmt.Println(pks)
+	publicKeys := agginfo.GetPublicKeys()
+	fmt.Println(publicKeys)
 
-	// lhs := Pairing(G1ProjectiveOne, sig.s)
-	// rhs := Pairing(pub.p, h)
-	// return lhs.Equals(rhs)
+	messageHashes := agginfo.GetMessageHashes()
+	fmt.Println(messageHashes)
+
+	if len(messageHashes) != len(publicKeys) {
+		return false
+	}
+
+	hashToPublicKeys := make(map[MessageHash][]*PublicKey)
+
+	// usedPKs is to keep track and prevent duplicate pubkeys
+	//usedPKs := make(map[*PublicKey]struct{})
+
+	// NGM: I honestly think this loop doesn't make sense... let's wait and see.
+	// Look thru each messageHash from agginfo
+	for i, hash := range messageHashes {
+		// Copy hash slice into MessageHash var
+		var mh MessageHash
+		copy(mh[:], hash)
+
+		// Convenience accessor for the public key
+		pk := publicKeys[i]
+
+		// Check if messageHash value exists in map
+		val, ok := hashToPublicKeys[mh]
+		if ok {
+			//_, ok = usedPKs[pk]
+			//if !ok {
+			hashToPublicKeys[mh] = append(val, pk)
+			//usedPKs[pk] = struct{}{}
+			//}
+		} else {
+			hashToPublicKeys[mh] = []*PublicKey{pk}
+			//usedPKs[pk] = struct{}{}
+		}
+	}
+
+	var finalMessageHashes []MessageHash
+	fmt.Print(finalMessageHashes)
+
+	var finalPublicKeys []*PublicKey
+	fmt.Print(finalPublicKeys)
+
+	var mappedHashes []*G2Projective
+
+	for mh, keys := range hashToPublicKeys {
+		publicKeySum := NewG1Projective(FQOne, FQOne, FQZero)
+
+		// TODO: de-dupes here
+
+		for _, k := range keys {
+			mk := NewMapKey(k, mh)
+			exponent := agginfo.Tree[mk]
+			sum := k.p.Mul(exponent)
+			publicKeySum = publicKeySum.Add(sum)
+		}
+		finalMessageHashes = append(finalMessageHashes, mh)
+		finalPublicKeys = append(finalPublicKeys, publicKeySum.ToAffine())
+		mappedHashes = append(mappedHashes, XHashG2PreHashed(mh))
+	}
+
+	//g1 :=
+	//NewFQ(RFieldModulus).Neg().Mul
+	//NewG1Affine(g1GeneratorX, g1GeneratorY).Mul()
+	//NewFQ().mul
+	// RFieldModulus.Neg().Mul(g1GeneratorX, g1GeneratorY)
+
 	return false
 }
 
-//def verify(self):
-
-//    """
-//    This implementation of verify has several steps. First, it
-//    reorganizes the pubkeys and messages into groups, where
-//    each group corresponds to a message. Then, it checks if the
-//    siganture has info on how it was aggregated. If so, we
-//    exponentiate each pk based on the exponent in the AggregationInfo.
-//    If not, we find public keys that share messages with others,
-//    and aggregate all of these securely (with exponents.).
-//    Finally, since each public key now corresponds to a unique
-//    message (since we grouped them), we can verify using the
-//    distinct verification procedure.
-//    """
-
-//    message_hashes = self.aggregation_info.message_hashes
-//    public_keys = self.aggregation_info.public_keys
-//    assert(len(message_hashes) == len(public_keys))
-
-//
-//    hash_to_public_keys = {}
-//    for i in range(len(message_hashes)):
-//        if message_hashes[i] in hash_to_public_keys:
-//            hash_to_public_keys[message_hashes[i]].append(public_keys[i])
-//        else:
-//            hash_to_public_keys[message_hashes[i]] = [public_keys[i]]
-//
-//    final_message_hashes = []
-//    final_public_keys = []
-//    ec = public_keys[0].value.ec
-//    for message_hash, mapped_keys in hash_to_public_keys.items():
-//        dedup = list(set(mapped_keys))
-//        public_key_sum = JacobianPoint(Fq.one(ec.q), Fq.one(ec.q),
-//                                       Fq.zero(ec.q), True, ec)
-//        for public_key in dedup:
-//            try:
-//                exponent = self.aggregation_info.tree[(message_hash,
-//                                                       public_key)]
-//                public_key_sum += (public_key.value * exponent)
-//            except KeyError:
-//                return False
-//        final_message_hashes.append(message_hash)
-//        final_public_keys.append(public_key_sum.to_affine())
-//
-//    mapped_hashes = [hash_to_point_prehashed_Fq2(mh)
-//                     for mh in final_message_hashes]
-//
 //    g1 = Fq(default_ec.n, -1) * generator_Fq()
 //    Ps = [g1] + final_public_keys
 //    Qs = [self.value.to_affine()] + mapped_hashes

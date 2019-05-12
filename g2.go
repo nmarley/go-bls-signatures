@@ -905,7 +905,11 @@ func HashG2(msg []byte, domain uint64) *G2Projective {
 func XHashG2(msg []byte) *G2Projective {
 	// h <- hash256(m)
 	h := Hash256(msg)
+	return XHashG2PreHashed(h)
+}
 
+// XHashG2PreHashed maps a prehashed message to a deterministic random point in G2.
+func XHashG2PreHashed(h []byte) *G2Projective {
 	//t00 <- hash512(h + b"G2_0_c0") % q
 	t00 := new(big.Int).Mod(
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_0_c0")...))),
