@@ -148,9 +148,74 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 	tBits := IntToBits(t)
 	fmt.Println("NGMgo(XMillerLoop) tBits:", tBits)
 
+	r := q.Copy()
+	//f := FQ12One.Copy()
+
+	for i := 1; i < len(tBits); i++ {
+		// Compute sloped line lrr
+		// lrr = double_line_eval(R, P, ec)
+		lrr := DoubleLineEval(r, p)
+		fmt.Println("NGMgo(XMillerLoop) lrr:", lrr)
+
+		// f = f * f * lrr
+		//
+
+	}
+
+	//return f
+
 	// TODO: Remove dummy return
 	return FQ12Zero
 }
+
+//        R = 2 * R
+//        if T_bits[i] == 1:
+//            # Compute sloped line lrq
+//            lrq = add_line_eval(R, Q, P, ec)
+//            f = f * lrq
+//
+//            R = R + Q
+//    return f
+
+// DoubleLineEval ...
+//
+// Creates an equation for a line tangent to R, and evaluates this at the point
+// P. f(x) = y - sv - v.  f(P).
+func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
+	// R12 = untwist(R)
+	r12 := r.ToAffine().Untwist()
+	fmt.Println("NGMgo(DoubleLineEval) r12:", r12)
+
+	// For now
+	fmt.Println("NGMgo(DoubleLineEval) r12.x:", r12.x)
+	fmt.Println("NGMgo(DoubleLineEval) r12.y:", r12.y)
+
+	// slope = (3 * pow(R12.x, 2) + ec.a) / (2 * R12.y)
+	// v = R12.y - slope * R12.x
+	// return P.y - P.x * slope - v
+
+	// TODO: Remove dummy return
+	return FQ12Zero
+}
+
+// AddLineEval...
+//
+// Creates an equation for a line between R and Q, and evaluates this at the
+// point P. f(x) = y - sv - v.  f(P).
+//func AddLineEval(R, Q, P) {
+//	// R12 = untwist(R)
+//	// Q12 = untwist(Q)
+//	//
+//	// # This is the case of a vertical line, where the denominator
+//	// # will be 0.
+//	// if R12 == Q12.negate():
+//	//     return P.x - R12.x
+//	//
+//	// slope = (Q12.y - R12.y) / (Q12.x - R12.x)
+//	// v = (Q12.y * R12.x - R12.y * Q12.x) / (R12.x - Q12.x)
+//
+//	// return P.y - P.x * slope - v
+//}
 
 // []big.Word
 // TODO: optimize this
@@ -179,21 +244,3 @@ func IntToBits(n *big.Int) []byte {
 
 	return newBits
 }
-
-//def miller_loop(T, P, Q, ec=default_ec):
-//    T_bits = int_to_bits(T)
-//    R = Q
-//    f = Fq12.one(ec.q)  # f is an element of Fq12
-//    for i in range(1, len(T_bits)):
-//        # Compute sloped line lrr
-//        lrr = double_line_eval(R, P, ec)
-//        f = f * f * lrr
-//
-//        R = 2 * R
-//        if T_bits[i] == 1:
-//            # Compute sloped line lrq
-//            lrq = add_line_eval(R, Q, P, ec)
-//            f = f * lrq
-//
-//            R = R + Q
-//    return f

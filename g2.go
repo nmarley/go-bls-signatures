@@ -1042,7 +1042,9 @@ func (g *G2Affine) Untwist() *Fq12Pair {
 // Psi ...
 func (g *G2Affine) Psi() *G2Affine {
 	ut := g.Untwist()
+
 	t := NewFq12Pair(ut.x.FrobeniusMap(1), ut.y.FrobeniusMap(1))
+
 	t2 := Twist(t)
 
 	return NewG2Affine(t2.x, t2.y)
@@ -1059,16 +1061,9 @@ func NewFq12Pair(x, y *FQ12) *Fq12Pair {
 	return &Fq12Pair{x, y}
 }
 
-//// Fq2Pair
-//// Not sure what to call this, it's a x/y pairing of FQ2 fields
-//// This is so that we avoid mixing g1/g2 with bls12-381 field implementation...
-//type Fq2Pair struct {
-//	x *FQ2
-//	y *FQ2
-//}
-//func NewFq2Pair(x, y *FQ2) *Fq2Pair {
-//	return &Fq2Pair{x, y}
-//}
+func (f Fq12Pair) String() string {
+	return fmt.Sprintf("Fq12Pair(x=%s, y=%s)", f.x, f.y)
+}
 
 // Twist ...
 //
