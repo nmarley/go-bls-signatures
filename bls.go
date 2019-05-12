@@ -235,13 +235,15 @@ type MessageHash [32]byte
 func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 	h := Hash256(m)
 	agginfo := AggregationInfoFromMsgHash(pub, h)
-	//fmt.Println(agginfo)
-
-	publicKeys := agginfo.GetPublicKeys()
-	fmt.Println(publicKeys)
 
 	messageHashes := agginfo.GetMessageHashes()
-	fmt.Println(messageHashes)
+	//fmt.Println("NGMgo XVerify messageHashes:", messageHashes)
+	//for _, mh2 := range messageHashes {
+	//	fmt.Printf("\tNGMgo XVerify mh2 %x\n", mh2)
+	//}
+
+	publicKeys := agginfo.GetPublicKeys()
+	//fmt.Println("NGMgo XVerify publickeys:", publicKeys)
 
 	if len(messageHashes) != len(publicKeys) {
 		return false
@@ -249,8 +251,8 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 
 	hashToPublicKeys := make(map[MessageHash][]*PublicKey)
 
-	// usedPKs is to keep track and prevent duplicate pubkeys
-	//usedPKs := make(map[*PublicKey]struct{})
+	// usedPKs is to keep track and prevent duplicate hash/pubkeys
+	usedPKs := make(map[MapKey]struct{})
 
 	// NGM: I honestly think this loop doesn't make sense... let's wait and see.
 	// Look thru each messageHash from agginfo
@@ -262,25 +264,25 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 		// Convenience accessor for the public key
 		pk := publicKeys[i]
 
+		mk := NewMapKey(pk, mh)
+
 		// Check if messageHash value exists in map
 		val, ok := hashToPublicKeys[mh]
 		if ok {
-			//_, ok = usedPKs[pk]
-			//if !ok {
-			hashToPublicKeys[mh] = append(val, pk)
-			//usedPKs[pk] = struct{}{}
-			//}
+			_, found := usedPKs[mk]
+			if !found {
+				hashToPublicKeys[mh] = append(val, pk)
+				usedPKs[mk] = struct{}{}
+			}
 		} else {
 			hashToPublicKeys[mh] = []*PublicKey{pk}
-			//usedPKs[pk] = struct{}{}
+			usedPKs[mk] = struct{}{}
 		}
 	}
 
 	var finalMessageHashes []MessageHash
-	fmt.Print(finalMessageHashes)
-
 	var finalPublicKeys []*PublicKey
-	fmt.Print(finalPublicKeys)
+	fmt.Println("NGMgo XVerify finalPublicKeys:", finalPublicKeys)
 
 	var mappedHashes []*G2Projective
 
@@ -288,17 +290,25 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 		publicKeySum := NewG1Projective(FQOne, FQOne, FQZero)
 
 		// TODO: de-dupes here
+		// wait: maybe not needed with usedPKs above...
 
 		for _, k := range keys {
 			mk := NewMapKey(k, mh)
 			exponent := agginfo.Tree[mk]
+			fmt.Println("NGMgo XVerify exponent:", exponent)
 			sum := k.p.Mul(exponent)
+			fmt.Println("NGMgo XVerify sum:", sum)
 			publicKeySum = publicKeySum.Add(sum)
+			fmt.Println("NGMgo XVerify publicKeySum:", publicKeySum)
+
+			// NGMpy res: JacobianPoint(x=Fq(0x2a8d2..c7a61), y=Fq(0x145bc..9e305)z=Fq(0x1), i=False)
+			//    NGMgo XVerify sum: G1(x=Fq(0x2a8d2..c7a61), y=Fq(0x145bc..9e305))
 		}
 		finalMessageHashes = append(finalMessageHashes, mh)
-		finalPublicKeys = append(finalPublicKeys, publicKeySum.ToAffine())
-		mappedHashes = append(mappedHashes, XHashG2PreHashed(mh))
+		// finalPublicKeys = append(finalPublicKeys, publicKeySum.ToAffine())
+		mappedHashes = append(mappedHashes, XHashG2PreHashed(mh[:]))
 	}
+	fmt.Println("NGMgo XVerify finalMessageHashes:", finalMessageHashes)
 
 	//g1 :=
 	//NewFQ(RFieldModulus).Neg().Mul
