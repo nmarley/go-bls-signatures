@@ -168,7 +168,7 @@ func DecompressG1Unchecked(b *big.Int) (*G1Affine, error) {
 
 	x := NewFQ(new(big.Int).SetBytes(buf))
 
-	return GetG1PointFromX(x, (bit1 == 1)), nil
+	return GetG1PointFromX(x, bit1 == 1), nil
 }
 
 // GetG1PointFromX attempts to reconstruct an affine point given
@@ -199,7 +199,7 @@ func GetG1PointFromX(x *FQ, greatest bool) *G1Affine {
 // bits are not used.
 func CompressG1(affine *G1Affine) []byte {
 	// Convert x-coord to byte slice
-	res := affine.x.n.Bytes()
+	buf := affine.x.n.Bytes()
 
 	// Right shift the Q bits once to get Half Q
 	halfQ := new(big.Int).Rsh(QFieldModulus, 1)
@@ -207,10 +207,10 @@ func CompressG1(affine *G1Affine) []byte {
 	// If the y coordinate is the bigger one of the two, set the first
 	// bit to 1.
 	if affine.y.n.Cmp(halfQ) == 1 {
-		res[0] |= 0x80
+		buf[0] |= 0x80
 	}
 
-	return res[0:G1ElementSize]
+	return buf[0:G1ElementSize]
 }
 
 // G1Projective is a projective point on the G1 curve.

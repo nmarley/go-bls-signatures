@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"fmt"
 	"math/big"
 )
 
@@ -30,7 +31,6 @@ func MillerLoop(items []MillerLoopItem) *FQ12 {
 	}
 
 	ell := func(f *FQ12, coeffs [3]*FQ2, p *G1Affine) *FQ12 {
-
 		c0 := coeffs[0]
 		c1 := coeffs[1]
 
@@ -131,7 +131,69 @@ func FinalExponentiation(r *FQ12) *FQ12 {
 
 // Pairing performs a pairing given the G1 and G2 elements.
 func Pairing(p *G1Projective, q *G2Projective) *FQ12 {
-	return FinalExponentiation(MillerLoop([]MillerLoopItem{
-		{p.ToAffine(), G2AffineToPrepared(q.ToAffine())},
-	}))
+	return FinalExponentiation(
+		MillerLoop(
+			[]MillerLoopItem{
+				{p.ToAffine(), G2AffineToPrepared(q.ToAffine())},
+			},
+		),
+	)
 }
+
+// XMillerLoop ...
+//
+// Performs a double and add algorithm for the ate pairing. This algorithm
+// is taken from Craig Costello's "Pairing for Beginners".
+func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
+	tBits := IntToBits(t)
+	fmt.Println("NGMgo(XMillerLoop) tBits:", tBits)
+
+	// TODO: Remove dummy return
+	return FQ12Zero
+}
+
+// []big.Word
+// TODO: optimize this
+func IntToBits(n *big.Int) []byte {
+	n.Bits()
+
+	if n.Cmp(bigOne) == -1 {
+		return []byte{0}
+	}
+
+	var bits []byte
+	for n.Cmp(bigZero) == 1 {
+		// this will be one or zero
+		bit := new(big.Int).Mod(n, bigTwo).Bit(0)
+		bits = append(bits, byte(bit))
+
+		// Halve n by right shifting bits
+		n = new(big.Int).Rsh(n, 1)
+	}
+
+	// reverse bits
+	newBits := make([]byte, len(bits))
+	for i, j := len(bits), 0; i > 0; i, j = i-1, j+1 {
+		newBits[j] = bits[i-1]
+	}
+
+	return newBits
+}
+
+//def miller_loop(T, P, Q, ec=default_ec):
+//    T_bits = int_to_bits(T)
+//    R = Q
+//    f = Fq12.one(ec.q)  # f is an element of Fq12
+//    for i in range(1, len(T_bits)):
+//        # Compute sloped line lrr
+//        lrr = double_line_eval(R, P, ec)
+//        f = f * f * lrr
+//
+//        R = 2 * R
+//        if T_bits[i] == 1:
+//            # Compute sloped line lrq
+//            lrq = add_line_eval(R, Q, P, ec)
+//            f = f * lrq
+//
+//            R = R + Q
+//    return f

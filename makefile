@@ -4,10 +4,10 @@ SHELL = bash
 COVERAGE_FILE ?= coverage.txt
 
 something:
-	go test -run TestVectorSignaturesVerify
+	#go test -run TestVectorSignaturesVerify
 	#go test -run TestVectorSignaturesSign
 	#go test -run TestVectorSignaturesSign | grep NGM
-	#go test -run TestCustomNGM
+	go test -run TestCustomNGM
 
 
 #.PHONY: default

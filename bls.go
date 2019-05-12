@@ -57,10 +57,6 @@ func DeserializeSignature(b []byte) (*Signature, error) {
 
 	case G2ElementSize * 2:
 		a := G2Affine{}
-		if b[0] == (1 << 6) {
-			a.infinity = true
-			return &Signature{s: a.ToProjective()}, nil
-		}
 
 		// Set points given raw bytes for coordinates
 		a.SetRawBytes(b)
@@ -131,10 +127,6 @@ func DeserializePublicKey(b []byte) (*PublicKey, error) {
 
 	case G1ElementSize * 2:
 		g := G1Affine{}
-		if b[0] == (1 << 6) {
-			g.infinity = true
-			return &PublicKey{p: g.ToProjective()}, nil
-		}
 
 		// Set points given raw bytes for coordinates
 		g.SetRawBytes(b)
@@ -233,6 +225,12 @@ type MessageHash [32]byte
 // message (since we grouped them), we can verify using the
 // distinct verification procedure.
 func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
+	//fmt.Println("NGMgo XVerify sig:", sig.s)
+	//fmt.Println("NGMgo XVerify sig:", sig.s.ToAffine())
+	fmt.Printf("NGMgo XVerify sig : %x\n", sig.Serialize(true))
+	fmt.Printf("NGMgo XVerify sig : %x\n", sig.s.ToAffine().SerializeBytes())
+	// NGMpy IN TEST sig1: JacobianPoint(x=Fq2(Fq(0x20e42..fbde5), Fq(0xfc757..201bd)), y=Fq2(Fq(0x14a63..6f337), Fq(0x1a5a1..8449f)), z=Fq2(Fq(0x6d46b..fb497), Fq(0x8431b..e7419)), i=False)
+
 	h := Hash256(m)
 	agginfo := AggregationInfoFromMsgHash(pub, h)
 
@@ -311,17 +309,74 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 	fmt.Println("NGMgo XVerify finalMessageHashes:", finalMessageHashes)
 
 	fq := NewFQ(new(big.Int).Sub(RFieldModulus, bigOne))
-	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n).ToAffine()
+	// g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n).ToAffine()
+	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n)
 	//fmt.Println("NGMgo XVerify g1:", g1)
 
-	return false
+	//Ps = [g1] + finalPublicKeys
+	ps := []*G1Projective{g1}
+	ps = append(ps, finalPublicKeys...)
+	//fmt.Println("NGMgo XVerify ps:", ps)
+
+	qs := []*G2Projective{sig.s}
+	qs = append(qs, mappedHashes...)
+	// [self.value.to_affine()] + mapped_hashes
+	//fmt.Println("NGMgo XVerify qs:", qs)
+	//for i, coord := range qs {
+	//	fmt.Printf("\nNGMgo XVerify coord qs[%d]: %v\n", i, coord.ToAffine())
+	//}
+
+	res := AtePairingMulti(ps, qs)
+	fmt.Println("NGMgo(XVerify) res:", res)
+
+	return FQ12One.Equals(res)
 }
 
-//    g1 = Fq(default_ec.n, -1) * generator_Fq()
-//    Ps = [g1] + final_public_keys
-//    Qs = [self.value.to_affine()] + mapped_hashes
-//    res = ate_pairing_multi(Ps, Qs, default_ec)
-//    return res == Fq12.one(default_ec.q)
+// AtePairingMulti ...
+//
+// Computes multiple pairings at once. This is more efficient, since we can
+// multiply all the results of the miller loops, and perform just one final
+// exponentiation.
+func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
+	negX := new(big.Int).Neg(blsX)
+	t := new(big.Int).Add(negX, bigOne)
+	fmt.Println("NGMgo(AtePairingMulti) t:", t)
+
+	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
+	fmt.Println("NGMgo(AtePairingMulti) bigT:", bigT)
+
+	// t = default_ec.x + 1
+	// T = abs(t - 1)
+
+	prod := FQ12One.Copy()
+	fmt.Println("NGMgo(AtePairingMulti) prod:", prod)
+
+	for i, q := range qs {
+		p := ps[i]
+		xml := XMillerLoop(bigT, p, q)
+		fmt.Println("\tNGMgo(AtePairingMulti) xml:", xml)
+
+		pair := Pairing(p, q)
+		fmt.Println("\tNGMgo(AtePairingMulti) pair:", pair)
+		prod = prod.Mul(pair)
+		fmt.Println("\tNGMgo(AtePairingMulti) prod:", prod)
+	}
+
+	//for i in range(len(Qs)):
+	//     prod *= miller_loop(T, Ps[i], Qs[i], ec)
+	// return final_exponentiation(prod, ec)
+
+	// TODO: Remove dummy return
+	return FQ12Zero
+}
+
+//def ate_pairing_multi(Ps, Qs, ec=default_ec):
+//    t = default_ec.x + 1
+//    T = abs(t - 1)
+//    prod = Fq12.one(ec.q)
+//    for i in range(len(Qs)):
+//        prod *= miller_loop(T, Ps[i], Qs[i], ec)
+//    return final_exponentiation(prod, ec)
 
 // AggregateSignatures adds up all of the signatures.
 func AggregateSignatures(s []*Signature) *Signature {

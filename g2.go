@@ -211,17 +211,21 @@ func DecompressG2Unchecked(b *big.Int) (*G2Affine, error) {
 }
 
 // CompressG2 compresses a G2 point into a byte slice.
+//
+// Per the Chia spec, set the leftmost bit iff negative y. The other two unused
+// bits are not used.
 func CompressG2(affine *G2Affine) []byte {
-	res := make([]byte, G2ElementSize)
+	// Create a byte slice big enough to hold both 381-bit points
+	buf := make([]byte, G2ElementSize)
 
-	out0 := affine.x.c0.n.Bytes()
-	out1 := affine.x.c1.n.Bytes()
+	// Convert x-coord to byte slice
+	x_C0 := affine.x.c0.n.Bytes()
+	x_C1 := affine.x.c1.n.Bytes()
 
-	//fmt.Println("res:", res)
-	copy(res[0:G1ElementSize], out0)
-	//fmt.Println("res:", res)
-	copy(res[G1ElementSize:G2ElementSize], out1)
-	//fmt.Println("res:", res)
+	// Copy c0 value into byte buffer
+	copy(buf[0:G1ElementSize], x_C0)
+	// Copy c1 value into byte buffer
+	copy(buf[G1ElementSize:G2ElementSize], x_C1)
 
 	// Right shift the Q bits once to get Half Q
 	halfQ := new(big.Int).Rsh(QFieldModulus, 1)
@@ -229,10 +233,10 @@ func CompressG2(affine *G2Affine) []byte {
 	// If the y coordinate is the bigger one of the two, set the first
 	// bit to 1.
 	if affine.y.c1.n.Cmp(halfQ) == 1 {
-		res[0] |= 0x80
+		buf[0] |= 0x80
 	}
 
-	return res[0:G2ElementSize]
+	return buf[0:G2ElementSize]
 }
 
 // IsInCorrectSubgroupAssumingOnCurve checks if the point multiplied by the

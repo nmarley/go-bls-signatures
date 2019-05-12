@@ -2,6 +2,7 @@ package bls_test
 
 import (
 	"fmt"
+	"math/big"
 	"testing"
 
 	"github.com/matryer/is"
@@ -449,17 +450,26 @@ func TestCustomNGM(t *testing.T) {
 	//}
 
 	// NGM
+	//
+	//fmt.Println(pk1)
+	//
+	//pubkey, err := bls.DeserializePublicKey(pk1)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//h := bls.Hash256(payload)
+	//fmt.Println("h =", h)
+	//
+	//aggInfo := bls.AggregationInfoFromMsgHash(pubkey, h)
+	//fmt.Println("aggInfo =", aggInfo)
 
-	fmt.Println(pk1)
+	big7 := big.NewInt(7)
+	big8 := big.NewInt(8)
 
-	pubkey, err := bls.DeserializePublicKey(pk1)
-	if err != nil {
-		panic(err)
-	}
+	seven := bls.IntToBits(big7)
+	eight := bls.IntToBits(big8)
 
-	h := bls.Hash256(payload)
-	fmt.Println("h =", h)
-
-	aggInfo := bls.AggregationInfoFromMsgHash(pubkey, h)
-	fmt.Println("aggInfo =", aggInfo)
+	fmt.Println("seven:", seven)
+	fmt.Println("eight:", eight)
 }
