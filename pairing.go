@@ -186,14 +186,20 @@ func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 	r12 := r.ToAffine().Untwist()
 	fmt.Println("NGMgo(DoubleLineEval) r12:", r12)
 
-	// For now
-	fmt.Println("NGMgo(DoubleLineEval) r12.x:", r12.x)
-	fmt.Println("NGMgo(DoubleLineEval) r12.y:", r12.y)
-
 	// slope = (3 * pow(R12.x, 2) + ec.a) / (2 * R12.y)
-	// v = R12.y - slope * R12.x
-	// return P.y - P.x * slope - v
 
+	r12_sq := r12.x.Mul(r12.x)
+	r12_sq_3x := r12_sq.Add(r12_sq).Add(r12_sq)
+	// r12_sq_3x.Add(FQZero)
+	r12_y_2 := r12.y.Add(r12.y)
+	slope := r12_sq_3x.Mul(r12_y_2.Inverse())
+	fmt.Println("NGMgo(DoubleLineEval) slope:", slope)
+
+	// v = R12.y - slope * R12.x
+	v := r12.y.Sub(slope.Mul(r12.x))
+	fmt.Println("NGMgo(DoubleLineEval) v:", v)
+
+	// return P.y - P.x * slope - v
 	// TODO: Remove dummy return
 	return FQ12Zero
 }
