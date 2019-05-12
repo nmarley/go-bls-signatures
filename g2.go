@@ -187,52 +187,52 @@ func DecompressG2(b *big.Int) (*G2Affine, error) {
 
 // DecompressG2Unchecked decompresses a G2 point from a big int.
 func DecompressG2Unchecked(b *big.Int) (*G2Affine, error) {
-	copy := b.Bytes()
+	// Get a byte buffer from the passed integer
+	buf := b.Bytes()
 
-	if copy[0]&(1<<7) == 0 {
-		return nil, errors.New("unexpected compression mode")
-	}
+	// Save bit1 for determining y coord later
+	bit1 := (buf[0] & 0x80) > 0
 
-	if copy[0]&(1<<6) != 0 {
-		copy[0] &= 0x3f
+	// Mask away (set to zero) the 3 most significant bits, since only 381 out
+	// of 384 will be used for the x-coordinate, leaving the remaining 3.
+	buf[0] &= 0x1f
 
-		for _, b := range copy {
-			if b != 0 {
-				return nil, errors.New("unexpected information in infinity point on G2")
-			}
-		}
-		return G2AffineZero.Copy(), nil
-	}
-	greatest := copy[0]&(1<<5) != 0
+	// The first G1ElementSize bytes are the C0 part of the FQ2
+	xC0 := NewFQ(new(big.Int).SetBytes(buf[0:G1ElementSize]))
 
-	copy[0] &= 0x1f
+	// The second G1ElementSize bytes are the C1 part of the FQ2
+	xC1 := NewFQ(new(big.Int).SetBytes(buf[G1ElementSize:G2ElementSize]))
 
-	xC0 := NewFQ(new(big.Int).SetBytes(copy[:48]))
-
-	xC1 := NewFQ(new(big.Int).SetBytes(copy[48:]))
-
+	// Now create the full FQ2 with both parts
 	x := NewFQ2(xC0, xC1)
 
-	return GetG2PointFromX(x, greatest), nil
+	// Attempt to recover the Y coordinate and return the G2Affine point.
+	return GetG2PointFromX(x, bit1), nil
 }
 
 // CompressG2 compresses a G2 point into a byte slice.
 func CompressG2(affine *G2Affine) []byte {
-	res := [96]byte{}
-	out0 := new(big.Int).Set(affine.x.c0.n).Bytes()
-	out1 := new(big.Int).Set(affine.x.c1.n).Bytes()
-	copy(res[48-len(out0):48], out0)
-	copy(res[96-len(out1):], out1)
+	res := make([]byte, G2ElementSize)
 
-	negY := affine.y.Neg()
+	out0 := affine.x.c0.n.Bytes()
+	out1 := affine.x.c1.n.Bytes()
 
-	// Per the Chia spec, set the leftmost bit iff negative y. The other two
-	// are left as zeros.
-	if affine.y.Cmp(negY) > 0 {
-		res[0] |= 1 << 7
+	//fmt.Println("res:", res)
+	copy(res[0:G1ElementSize], out0)
+	//fmt.Println("res:", res)
+	copy(res[G1ElementSize:G2ElementSize], out1)
+	//fmt.Println("res:", res)
+
+	// Right shift the Q bits once to get Half Q
+	halfQ := new(big.Int).Rsh(QFieldModulus, 1)
+
+	// If the y coordinate is the bigger one of the two, set the first
+	// bit to 1.
+	if affine.y.c1.n.Cmp(halfQ) == 1 {
+		res[0] |= 0x80
 	}
 
-	return res[:]
+	return res[0:G2ElementSize]
 }
 
 // IsInCorrectSubgroupAssumingOnCurve checks if the point multiplied by the
