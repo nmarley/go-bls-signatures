@@ -38,7 +38,7 @@ func (g G1Affine) String() string {
 	if g.infinity {
 		return fmt.Sprintf("G1(infinity)")
 	}
-	return fmt.Sprintf("G1(x=%s, y=%s)", g.x, g.y)
+	return fmt.Sprintf("G1Affine(x=%s, y=%s)", g.x, g.y)
 }
 
 // Copy returns a copy of the G1Affine point.
@@ -233,9 +233,9 @@ var G1ProjectiveOne = G1AffineOne.ToProjective()
 
 func (g G1Projective) String() string {
 	if g.IsZero() {
-		return "G1: Infinity"
+		return "G1(Infinity)"
 	}
-	return g.ToAffine().String()
+	return fmt.Sprintf("G1Projective(x=%s, y=%s, z=%s)", g.x, g.y, g.z)
 }
 
 // Copy returns a copy of the G1Projective point.
