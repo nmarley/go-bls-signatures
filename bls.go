@@ -281,7 +281,7 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 	}
 
 	var finalMessageHashes []MessageHash
-	var finalPublicKeys []*PublicKey
+	var finalPublicKeys []*G1Projective
 	fmt.Println("NGMgo XVerify finalPublicKeys:", finalPublicKeys)
 
 	var mappedHashes []*G2Projective
@@ -302,19 +302,17 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 			fmt.Println("NGMgo XVerify publicKeySum:", publicKeySum)
 
 			// NGMpy res: JacobianPoint(x=Fq(0x2a8d2..c7a61), y=Fq(0x145bc..9e305)z=Fq(0x1), i=False)
-			//    NGMgo XVerify sum: G1(x=Fq(0x2a8d2..c7a61), y=Fq(0x145bc..9e305))
+			// NGMgo XVerify sum: G1Projective(x=Fq(0x2a8d2..c7a61), y=Fq(0x145bc..9e305), z=Fq(0x1))
 		}
 		finalMessageHashes = append(finalMessageHashes, mh)
-		// finalPublicKeys = append(finalPublicKeys, publicKeySum.ToAffine())
+		finalPublicKeys = append(finalPublicKeys, publicKeySum)
 		mappedHashes = append(mappedHashes, XHashG2PreHashed(mh[:]))
 	}
 	fmt.Println("NGMgo XVerify finalMessageHashes:", finalMessageHashes)
 
-	//g1 :=
-	//NewFQ(RFieldModulus).Neg().Mul
-	//NewG1Affine(g1GeneratorX, g1GeneratorY).Mul()
-	//NewFQ().mul
-	// RFieldModulus.Neg().Mul(g1GeneratorX, g1GeneratorY)
+	fq := NewFQ(new(big.Int).Sub(RFieldModulus, bigOne))
+	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n).ToAffine()
+	//fmt.Println("NGMgo XVerify g1:", g1)
 
 	return false
 }
