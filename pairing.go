@@ -199,6 +199,16 @@ func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 	v := r12.y.Sub(slope.Mul(r12.x))
 	fmt.Println("NGMgo(DoubleLineEval) v:", v)
 
+	//p.x
+	//slope.mul(fq)
+	//xSlope := p.x.Mul(slope)
+
+	slope.Mul(p.x)
+
+	// FQ12:
+	//def __sub__(self, other):
+	//    return self + (-other)
+
 	// return P.y - P.x * slope - v
 	// TODO: Remove dummy return
 	return FQ12Zero
