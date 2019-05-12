@@ -1084,12 +1084,8 @@ func Twist(pair *Fq12Pair) *G2Affine {
 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
 
-	newX := pair.x.Copy()
-	newX.MulAssign(wsq)
+	newX := wsq.Mul(pair.x)
+	newY := wcu.Mul(pair.y)
 
-	newY := pair.y.Copy()
-	newY.MulAssign(wcu)
-
-	// return []*FQ2{newX.c0.c0, newY.c0.c0}
 	return NewG2Affine(newX.c0.c0, newY.c0.c0)
 }
