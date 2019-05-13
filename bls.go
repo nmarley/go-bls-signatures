@@ -18,6 +18,7 @@ const (
 
 // ...
 const (
+	SecretKeySize = 32
 	PublicKeySize = G1ElementSize
 	SignatureSize = G2ElementSize
 )
