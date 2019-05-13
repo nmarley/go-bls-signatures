@@ -357,12 +357,16 @@ func TestVectorSignaturesSign(t *testing.T) {
 			key := bls.DeserializeSecretKey(tt.secretKey)
 			sig := bls.Sign(tt.payload, key)
 			is.Equal(sig.Serialize(true), tt.expectedSig)
+
 		})
 	}
 }
 
 // Implement test for test vector for Signatures#verify
 func TestVectorSignaturesVerify(t *testing.T) {
+
+	// TODO: table-driven test ...
+
 	pubkey, _ := bls.DeserializePublicKey(pk1)
 	sig, _ := bls.DeserializeSignature(sig1)
 	val := bls.XVerify(payload, pubkey, sig)
