@@ -215,17 +215,18 @@ func DecompressG2Unchecked(b *big.Int) (*G2Affine, error) {
 // Per the Chia spec, set the leftmost bit iff negative y. The other two unused
 // bits are not used.
 func CompressG2(affine *G2Affine) []byte {
-	// Create a byte slice big enough to hold both 381-bit points
-	buf := make([]byte, G2ElementSize)
+	// Create a byte array big enough to hold both 381-bit points
+	buf := [G2ElementSize]byte{}
 
 	// Convert x-coord to byte slice
 	x_C0 := affine.x.c0.n.Bytes()
 	x_C1 := affine.x.c1.n.Bytes()
 
 	// Copy c0 value into byte buffer
-	copy(buf[0:G1ElementSize], x_C0)
+	// There is a more detailed explanation in CompressG1
+	copy(buf[G1ElementSize-len(x_C0):], x_C0)
 	// Copy c1 value into byte buffer
-	copy(buf[G1ElementSize:G2ElementSize], x_C1)
+	copy(buf[G2ElementSize-len(x_C1):], x_C1)
 
 	// Right shift the Q bits once to get Half Q
 	halfQ := new(big.Int).Rsh(QFieldModulus, 1)
