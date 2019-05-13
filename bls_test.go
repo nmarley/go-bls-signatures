@@ -84,39 +84,39 @@ func TestVectorSignaturesSign(t *testing.T) {
 
 // Implement test for test vector for Signatures#verify
 func TestVectorSignaturesVerify(t *testing.T) {
-	//tests := []struct {
-	//	payload   []byte
-	//	publicKey []byte
-	//	signature []byte
-	//}{
-	//	{
-	//		payload:   payload,
-	//		publicKey: pk1,
-	//		signature: sig1,
-	//	},
-	//	{
-	//		payload:   payload,
-	//		publicKey: pk2,
-	//		signature: sig2,
-	//	},
-	//}
-	//for i, tt := range tests {
-	//	t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
-	//		is := is.New(st)
-	//		pk, _ := bls.DeserializePublicKey(tt.publicKey)
-	//		sig, _ := bls.DeserializeSignature(tt.signature)
-	//		is.True(bls.XVerify(tt.payload, pk, sig))
-	//	})
-	//}
+	tests := []struct {
+		payload   []byte
+		publicKey []byte
+		signature []byte
+	}{
+		{
+			payload:   payload,
+			publicKey: pk1,
+			signature: sig1,
+		},
+		{
+			payload:   payload,
+			publicKey: pk2,
+			signature: sig2,
+		},
+	}
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
+			is := is.New(st)
+			pk, _ := bls.DeserializePublicKey(tt.publicKey)
+			sig, _ := bls.DeserializeSignature(tt.signature)
+			is.True(bls.XVerify(tt.payload, pk, sig))
+		})
+	}
 
 	// ============================================================================
 
-	pubkey, _ := bls.DeserializePublicKey(pk2)
-	fmt.Println("pubkey:", pubkey.Debug())
-
-	sig, _ := bls.DeserializeSignature(sig2)
-	fmt.Println("sig:", sig.Debug())
-
+	//pubkey, _ := bls.DeserializePublicKey(pk2)
+	//fmt.Println("pubkey:", pubkey.Debug())
+	//
+	//sig, _ := bls.DeserializeSignature(sig2)
+	//fmt.Println("sig:", sig.Debug())
+	//
 	//val := bls.XVerify(payload, pubkey, sig)
 	//if !val {
 	//	t.Error("oops -- verify broken")

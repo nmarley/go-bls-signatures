@@ -1,7 +1,6 @@
 package bls
 
 import (
-	"fmt"
 	"math/big"
 )
 
@@ -29,11 +28,14 @@ const (
 // MapKey ...
 type MapKey [MapKeyLen]byte
 
+// MessageHash represents ... and is required because ...
+type MessageHash [MessageHashSize]byte
+
 func NewMapKey(pk *PublicKey, mh MessageHash) MapKey {
 	var mk MapKey
 	copy(mk[:], mh[:])
 	pubkeyBytes := pk.Serialize(true)
-	copy(mk[MessageHashSize:], pubkeyBytes)
+	copy(mk[MapKeyLen-len(pubkeyBytes):], pubkeyBytes)
 	return mk
 }
 
@@ -42,15 +44,13 @@ func AggregationInfoFromMsgHash(pk *PublicKey, h []byte) *AggregationInfo {
 	var mk MapKey
 
 	// Copy hash bytes to mapkey
-	copy(mk[MapKeyLen-len(h):], h)
-
-	fmt.Println("NGMgo(AggregationInfoFromMsgHash) pub: ", pk.p.ToAffine().PP())
+	copy(mk[MessageHashSize-len(h):], h)
 
 	// Serialize public key to raw bytes
 	pubkeyBytes := pk.Serialize(true)
 
 	// Now copy serialized public key bytes into mapkey, located just after the message hash
-	copy(mk[MessageHashSize-len(pubkeyBytes):], pubkeyBytes)
+	copy(mk[MapKeyLen-len(pubkeyBytes):], pubkeyBytes)
 
 	ai := NewAggregationInfo([]*PublicKey{pk}, [][]byte{h})
 	ai.Tree[mk] = bigOne

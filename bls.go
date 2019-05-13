@@ -219,9 +219,6 @@ func Verify(m []byte, pub *PublicKey, sig *Signature, domain uint64) bool {
 	return lhs.Equals(rhs)
 }
 
-// MessageHash represents ... and is required because ...
-type MessageHash [32]byte
-
 // XVerify verifies a signature against a message and a public key.
 //
 // This implementation of verify has several steps. First, it reorganizes the
@@ -233,11 +230,10 @@ type MessageHash [32]byte
 // corresponds to a unique message (since we grouped them), we can verify using
 // the distinct verification procedure.
 func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
-	fmt.Println("NGMgo(XVerify) sig: ", sig.s.ToAffine().PP())
-
 	h := Hash256(m)
-	fmt.Printf("NGMgo(XVerify) h: %x\n", h)
 
+	// TODO/NGM: consider forcing [32]byte for all hashes, to prevent further
+	// copy bugs...
 	agginfo := AggregationInfoFromMsgHash(pub, h)
 	messageHashes := agginfo.GetMessageHashes()
 	publicKeys := agginfo.GetPublicKeys()

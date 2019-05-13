@@ -188,7 +188,11 @@ func DecompressG2(b *big.Int) (*G2Affine, error) {
 // DecompressG2Unchecked decompresses a G2 point from a big int.
 func DecompressG2Unchecked(b *big.Int) (*G2Affine, error) {
 	// Get a byte buffer from the passed integer
-	buf := b.Bytes()
+	buf := [G2ElementSize]byte{}
+	copyBytes := b.Bytes()
+
+	// TODO BLAH, fix this shit...
+	copy(buf[G2ElementSize-len(copyBytes):], copyBytes)
 
 	// Save bit1 for determining y coord later
 	bit1 := (buf[0] & 0x80) > 0

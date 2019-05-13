@@ -160,15 +160,19 @@ func DecompressG1(b *big.Int) (*G1Affine, error) {
 // DecompressG1Unchecked decompresses the big int into an affine point without
 // checking if it's in the correct prime group.
 func DecompressG1Unchecked(b *big.Int) (*G1Affine, error) {
-	buf := new(big.Int).Set(b).Bytes()
+	buf := [G1ElementSize]byte{}
+	copyBytes := new(big.Int).Set(b).Bytes()
+
+	// Copy bytes...
+	copy(buf[G1ElementSize-len(copyBytes):], copyBytes)
 
 	// Save bit1 for y coord later
-	bit1 := buf[0] & 0x80
+	bit1 := (buf[0] & 0x80) > 0
 	buf[0] &= 0x1f
 
-	x := NewFQ(new(big.Int).SetBytes(buf))
+	x := NewFQ(new(big.Int).SetBytes(buf[:]))
 
-	return GetG1PointFromX(x, bit1 == 1), nil
+	return GetG1PointFromX(x, bit1), nil
 }
 
 // GetG1PointFromX attempts to reconstruct an affine point given
