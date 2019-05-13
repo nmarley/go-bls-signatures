@@ -4,7 +4,9 @@ SHELL = bash
 COVERAGE_FILE ?= coverage.txt
 
 something:
-	go test -run TestVectorSignaturesVerify
+	#go test
+	go test -run TestVector
+	#go test -run TestDashCoreBLSCompatibility
 	#go test -run TestVectorSignaturesSign
 	#go test -run TestVectorSignaturesSign | grep NGM
 	#go test -run TestCustomNGM
