@@ -46,7 +46,7 @@ func TestKeygen(t *testing.T) {
 			}
 
 			pk := sk.PublicKey()
-			//fmt.Printf("pk: %x\n", pk.Serialize(true))
+			fmt.Printf("pk: %x\n", pk.Serialize(true))
 			is.Equal(pk.Fingerprint(), tt.pkFingerprint)
 		})
 	}
@@ -84,15 +84,39 @@ func TestVectorSignaturesSign(t *testing.T) {
 
 // Implement test for test vector for Signatures#verify
 func TestVectorSignaturesVerify(t *testing.T) {
-
-	// TODO: table-driven tests ...
-
-	pubkey, _ := bls.DeserializePublicKey(pk1)
-	sig, _ := bls.DeserializeSignature(sig1)
-	val := bls.XVerify(payload, pubkey, sig)
-	if !val {
-		t.Error("oops -- verify broken")
+	tests := []struct {
+		payload   []byte
+		publicKey []byte
+		signature []byte
+	}{
+		{
+			payload:   payload,
+			publicKey: pk1,
+			signature: sig1,
+		},
+		{
+			payload:   payload,
+			publicKey: pk2,
+			signature: sig2,
+		},
 	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
+			is := is.New(st)
+			pk, _ := bls.DeserializePublicKey(tt.publicKey)
+			sig, _ := bls.DeserializeSignature(tt.signature)
+			is.True(bls.XVerify(tt.payload, pk, sig))
+		})
+	}
+
+	// bls.XVerify()
+	//pubkey, _ := bls.DeserializePublicKey(pk1)
+	//sig, _ := bls.DeserializeSignature(sig1)
+	//val := bls.XVerify(payload, pubkey, sig)
+	//if !val {
+	//	t.Error("oops -- verify broken")
+	//}
 
 	// verify(sig1, AggregationInfo(pk1, [7,8,9]))
 	// true
@@ -162,58 +186,4 @@ var pk2 = []byte{
 	0x74, 0xf1, 0xab, 0x7f, 0x54, 0xc9, 0xb7, 0xba,
 	0x15, 0x43, 0x9d, 0xcb, 0x4a, 0xcf, 0xbd, 0xd8,
 	0xbc, 0xff, 0xdd, 0x88, 0x25, 0x79, 0x5b, 0x90,
-}
-
-// Custom testing for debugging shit
-func TestCustomNGM(t *testing.T) {
-	//makeFQ2 := func(c0Hex, c1Hex string) *bls.FQ2 {
-	//	c0, _ := new(big.Int).SetString(c0Hex, 16)
-	//	c1, _ := new(big.Int).SetString(c1Hex, 16)
-	//	return bls.NewFQ2(bls.NewFQ(c0), bls.NewFQ(c1))
-	//}
-
-	// NGM
-	//
-	//fmt.Println(pk1)
-	//
-	//pubkey, err := bls.DeserializePublicKey(pk1)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//h := bls.Hash256(payload)
-	//fmt.Println("h =", h)
-	//
-	//aggInfo := bls.AggregationInfoFromMsgHash(pubkey, h)
-	//fmt.Println("aggInfo =", aggInfo)
-
-	// big7 := big.NewInt(7)
-	// big8 := big.NewInt(8)
-
-	// seven := bls.IntToBits(big7)
-	// eight := bls.IntToBits(big8)
-
-	// fmt.Println("seven:", seven)
-	// fmt.Println("eight:", eight)
-
-	//makeFQ2 := func(c0Hex, c1Hex string) *bls.FQ2 {
-	//	c0, _ := new(big.Int).SetString(c0Hex, 16)
-	//	c1, _ := new(big.Int).SetString(c1Hex, 16)
-	//	return bls.NewFQ2(bls.NewFQ(c0), bls.NewFQ(c1))
-	//}
-
-	//makeFQ := func(c0Hex string) *bls.FQ {
-	//	c0, _ := new(big.Int).SetString(c0Hex, 16)
-	//	return bls.NewFQ(c0)
-	//}
-	//
-	//x := makeFQ("02a8d2aaa6a5e2e08d4b8d406aaf0121a2fc2088ed12431e6b0663028da9ac5922c9ea91cde7dd74b7d795580acc7a61")
-	//y := makeFQ("0145bcfef3c097722ea4994dc043be38a47ca15cf0f7622286ba6f85c4b5ddd412c43042938ab6a2eafcaae38119e305")
-	//z := bls.FQOne.Copy()
-	//g1p := bls.NewG1Projective(x, y, z)
-	//fmt.Println("NGMgo g1p: ", g1p)
-	//
-	//dbl := g1p.Double()
-	//fmt.Println("NGMgo dbl: ", dbl)
-
 }
