@@ -169,17 +169,20 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 			lrq := AddLineEval(r, q, p)
 			fmt.Println("NGMgo(XMillerLoop) lrq:", lrq.PP())
 			// f = f * lrq
-			//f = f.Add(lrq)
-			//fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
+			f = f.Add(lrq)
+			fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
 
 			// R = R + Q
-			//r = r.Add(q)
-			//fmt.Println("NGMgo(XMillerLoop) r:", r.PP())
+			r = r.Add(q)
+			fmt.Println("NGMgo(XMillerLoop) r:", r.PP())
 		}
 	}
 
 	return f
 }
+
+//func XFinalExponentiation(...) {
+//}
 
 // DoubleLineEval ...
 //
