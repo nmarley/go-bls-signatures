@@ -43,9 +43,9 @@
   - [ ] verify(quotient2)
 
 - [ ] HD keys
-  - [ ] esk = ExtendedPrivateKey([1, 50, 6, 244, 24, 199, 1, 25])
-  - [ ] esk.publicKeyFigerprint
-  - [ ] esk.chainCode
+  - [x] esk = ExtendedPrivateKey([1, 50, 6, 244, 24, 199, 1, 25])
+  - [x] esk.publicKeyFigerprint
+  - [x] esk.chainCode
   - [ ] esk77 = esk.privateChild(77 + 2^31)
   - [ ] esk77.publicKeyFingerprint
   - [ ] esk77.chainCode

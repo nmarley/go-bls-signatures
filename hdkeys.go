@@ -57,9 +57,14 @@ func ExtendedSecretKeyFromSeed(seed []byte) *ExtendedSecretKey {
 	}
 }
 
-// PublicKey ...
-func (k *ExtendedSecretKey) PublicKey() *PublicKey {
+// GetPublicKey ...
+func (k *ExtendedSecretKey) GetPublicKey() *PublicKey {
 	return k.SecretKey.PublicKey()
+}
+
+// GetChainCode ...
+func (k *ExtendedSecretKey) GetChainCode() *big.Int {
+	return k.ChainCode
 }
 
 // HD keys

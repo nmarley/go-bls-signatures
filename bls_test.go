@@ -2,6 +2,7 @@ package bls_test
 
 import (
 	"fmt"
+	"math/big"
 	"testing"
 
 	"github.com/matryer/is"
@@ -115,18 +116,27 @@ func TestVectorHDKeys(t *testing.T) {
 	tests := []struct {
 		seed          []byte
 		pkFingerprint uint32
+		chainCode     string
 	}{
 		{
 			seed:          []byte{1, 50, 6, 244, 24, 199, 1, 25},
 			pkFingerprint: 0xa4700b27,
+			chainCode:     "d8b12555b4cc5578951e4a7c80031e22019cc0dce168b3ed88115311b8feb1e3",
 		},
+	}
+
+	hexToInt := func(h string) *big.Int {
+		n, _ := new(big.Int).SetString(h, 16)
+		return n
 	}
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
 			is := is.New(st)
 			xpriv := bls.ExtendedSecretKeyFromSeed(tt.seed)
-			is.Equal(xpriv.PublicKey().Fingerprint(), tt.pkFingerprint)
+			is.Equal(xpriv.GetPublicKey().Fingerprint(), tt.pkFingerprint)
+			cc := hexToInt(tt.chainCode)
+			is.Equal(xpriv.GetChainCode(), cc)
 		})
 	}
 }
