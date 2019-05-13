@@ -1,7 +1,6 @@
 package bls
 
 import (
-	"fmt"
 	"math/big"
 )
 
@@ -142,11 +141,10 @@ func Pairing(p *G1Projective, q *G2Projective) *FQ12 {
 
 // XMillerLoop ...
 //
-// Performs a double and add algorithm for the ate pairing. This algorithm
-// is taken from Craig Costello's "Pairing for Beginners".
+// Performs a double and add algorithm for the ate pairing. This algorithm is
+// taken from Craig Costello's "Pairing for Beginners".
 func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 	tBits := IntToBits(t)
-	//fmt.Println("NGMgo(XMillerLoop) tBits:", tBits)
 
 	r := q.Copy()
 	f := FQ12One.Copy()
@@ -154,27 +152,21 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 	for i := 1; i < len(tBits); i++ {
 		// Compute sloped line lrr
 		lrr := DoubleLineEval(r, p)
-		//fmt.Println("NGMgo(XMillerLoop) lrr:", lrr.PP())
 
 		f = f.Mul(f).Mul(lrr)
-		//fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
 
 		// R = 2 * R
 		r = r.Double()
-		//fmt.Println("NGMgo(XMillerLoop) r:", r.ToAffine().PP())
 
 		if tBits[i] == 1 {
 			// Compute sloped line lrq
-			// lrq = add_line_eval(R, Q, P, ec)
 			lrq := AddLineEval(r, q, p)
-			//fmt.Println("NGMgo(XMillerLoop) lrq:", lrq.PP())
+
 			// f = f * lrq
 			f = f.Mul(lrq)
-			//fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
 
 			// R = R + Q
 			r = r.Add(q)
-			//fmt.Println("NGMgo(XMillerLoop) r:", r.ToAffine().PP())
 		}
 	}
 
@@ -192,27 +184,13 @@ func XFinalExponentiation(r *FQ12) *FQ12 {
 	innerExp := new(big.Int).Sub(inner1, inner2)
 	innerExp.Add(innerExp, bigOne)
 	innerExp.Div(innerExp, RFieldModulus)
-
 	ans := r.Exp(innerExp)
-	fmt.Println("NGMgo(XFinalExponentiation) ans1:", ans.PP())
 
 	// ans = ans.qi_power(2) * ans
 	ans = ans.FrobeniusMap(2).Mul(ans)
-	fmt.Println("NGMgo(XFinalExponentiation) ans2:", ans.PP())
 
 	//ans = ans.qi_power(6) / ans
 	ans = ans.FrobeniusMap(6).Mul(ans.Inverse())
-	fmt.Println("NGMgo(XFinalExponentiation) ans3:", ans.PP())
-
-	//return ans
-
-	// if ec.k == 12:
-	//     ans = pow(element, (pow(ec.q,4) - pow(ec.q,2) + 1) // ec.n)
-	//     ans = ans.qi_power(2) * ans
-	//     ans = ans.qi_power(6) / ans
-	//     return ans
-	// else:
-	//     return pow(element, (pow(ec.q, ec.k) - 1) // ec.n)
 
 	return ans
 }
