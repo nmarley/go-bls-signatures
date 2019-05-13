@@ -40,13 +40,13 @@ func TestKeygen(t *testing.T) {
 			is := is.New(st)
 
 			sk := bls.SecretKeyFromSeed(tt.seed)
-			fmt.Printf("sk%d: %x\n", i+1, sk.Serialize())
+			//fmt.Printf("sk%d: %x\n", i+1, sk.Serialize())
 			if len(tt.secretKey) > 0 {
 				is.Equal(sk.Serialize(), tt.secretKey)
 			}
 
 			pk := sk.PublicKey()
-			fmt.Printf("pk%d: %x\n", i+1, pk.Serialize(true))
+			//fmt.Printf("pk%d: %x\n", i+1, pk.Serialize(true))
 			is.Equal(pk.Fingerprint(), tt.pkFingerprint)
 		})
 	}
@@ -76,7 +76,7 @@ func TestVectorSignaturesSign(t *testing.T) {
 			is := is.New(st)
 			key := bls.DeserializeSecretKey(tt.secretKey)
 			sig := bls.Sign(tt.payload, key)
-			fmt.Printf("sig%d: %x\n", i+1, sig.Serialize(true))
+			//fmt.Printf("sig%d: %x\n", i+1, sig.Serialize(true))
 			is.Equal(sig.Serialize(true), tt.expectedSig)
 		})
 	}
@@ -111,12 +111,16 @@ func TestVectorSignaturesVerify(t *testing.T) {
 
 	// ============================================================================
 
-	pubkey, _ := bls.DeserializePublicKey(pk1)
-	sig, _ := bls.DeserializeSignature(sig1)
-	val := bls.XVerify(payload, pubkey, sig)
-	if !val {
-		t.Error("oops -- verify broken")
-	}
+	pubkey, _ := bls.DeserializePublicKey(pk2)
+	fmt.Println("pubkey:", pubkey.Debug())
+
+	sig, _ := bls.DeserializeSignature(sig2)
+	fmt.Println("sig:", sig.Debug())
+
+	//val := bls.XVerify(payload, pubkey, sig)
+	//if !val {
+	//	t.Error("oops -- verify broken")
+	//}
 
 	// verify(sig1, AggregationInfo(pk1, [7,8,9]))
 	// true

@@ -635,3 +635,21 @@ func XHashG1(msg []byte) *G1Projective {
 	// return p ^ h
 	return res.ToAffine().ScaleByCofactor()
 }
+
+// PP ...
+func (g G1Projective) PP() string {
+	if g.IsZero() {
+		return g.String()
+	}
+
+	return fmt.Sprintf("G1Projective(\nx=%s, y=%s, z=%s\n)", g.x.PP(4), g.y.PP(4), g.z.PP(4))
+}
+
+// PP ...
+func (g G1Affine) PP() string {
+	if g.IsZero() {
+		return g.String()
+	}
+
+	return fmt.Sprintf("G1Affine(x=%s, y=%s)", g.x, g.y)
+}

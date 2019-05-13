@@ -1119,5 +1119,5 @@ func (g G2Affine) PP() string {
 		return g.String()
 	}
 
-	return fmt.Sprintf("G2Affine(\nx=%s, y=%s\n)", g.x.PP(4), g.y.PP(4))
+	return fmt.Sprintf("G2Affine(x=%s, y=%s)", g.x, g.y)
 }

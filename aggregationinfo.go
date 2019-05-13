@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"fmt"
 	"math/big"
 )
 
@@ -41,13 +42,15 @@ func AggregationInfoFromMsgHash(pk *PublicKey, h []byte) *AggregationInfo {
 	var mk MapKey
 
 	// Copy hash bytes to mapkey
-	copy(mk[:], h)
+	copy(mk[MapKeyLen-len(h):], h)
+
+	fmt.Println("NGMgo(AggregationInfoFromMsgHash) pub: ", pk.p.ToAffine().PP())
 
 	// Serialize public key to raw bytes
 	pubkeyBytes := pk.Serialize(true)
 
 	// Now copy serialized public key bytes into mapkey, located just after the message hash
-	copy(mk[MessageHashSize:], pubkeyBytes)
+	copy(mk[MessageHashSize-len(pubkeyBytes):], pubkeyBytes)
 
 	ai := NewAggregationInfo([]*PublicKey{pk}, [][]byte{h})
 	ai.Tree[mk] = bigOne

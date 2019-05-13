@@ -27,6 +27,11 @@ type Signature struct {
 	s *G2Projective
 }
 
+// Debug ...
+func (s *Signature) Debug() string {
+	return s.s.ToAffine().PP()
+}
+
 // Serialize serializes a signature.
 func (s *Signature) Serialize(compressed bool) []byte {
 	if compressed {
@@ -80,6 +85,11 @@ type PublicKey struct {
 // String ...
 func (p PublicKey) String() string {
 	return p.p.String()
+}
+
+// Debug ...
+func (p *PublicKey) Debug() string {
+	return p.p.ToAffine().PP()
 }
 
 // Serialize serializes a public key to bytes.
@@ -223,7 +233,11 @@ type MessageHash [32]byte
 // corresponds to a unique message (since we grouped them), we can verify using
 // the distinct verification procedure.
 func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
+	fmt.Println("NGMgo(XVerify) sig: ", sig.s.ToAffine().PP())
+
 	h := Hash256(m)
+	fmt.Printf("NGMgo(XVerify) h: %x\n", h)
+
 	agginfo := AggregationInfoFromMsgHash(pub, h)
 	messageHashes := agginfo.GetMessageHashes()
 	publicKeys := agginfo.GetPublicKeys()
