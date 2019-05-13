@@ -188,8 +188,8 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 	// R12 = untwist(R)
 	r12 := r.ToAffine().Untwist()
-	//fmt.Println("NGMgo(DoubleLineEval) r12:", r12)
 
+	// slope = (3 * pow(R12.x, 2) + ec.a) / (2 * R12.y)
 	r12_sq := r12.x.Mul(r12.x)
 	r12_sq_3x := r12_sq.Add(r12_sq).Add(r12_sq)
 	r12_y_2 := r12.y.Add(r12.y)
@@ -197,13 +197,9 @@ func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 
 	// v = R12.y - slope * R12.x
 	v := r12.y.Sub(slope.Mul(r12.x))
-	//fmt.Println("NGMgo(DoubleLineEval) v:", v)
-
 	xSlope := slope.MulFQ(p.ToAffine().x)
-	//fmt.Println("NGMgo(DoubleLineEval) xSlope:", xSlope)
 
-	//fmt.Println("NGMgo(DoubleLineEval) rv:", rv.PP())
-	//rv := xSlope.Neg().AddFQ(p.ToAffine().y).Sub(v)
+	// return P.y - P.x * slope - v
 	return xSlope.Neg().AddFQ(p.ToAffine().y).Sub(v)
 }
 
@@ -213,45 +209,28 @@ func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 // point P. f(x) = y - sv - v.  f(P).
 func AddLineEval(r, q *G2Projective, p *G1Projective) *FQ12 {
 	// R12 = untwist(R)
-	r12 := r.ToAffine().Untwist()
-	fmt.Println("NGMgo(AddLineEval) r12:", r12.PP())
-
 	// Q12 = untwist(Q)
+	r12 := r.ToAffine().Untwist()
 	q12 := q.ToAffine().Untwist()
-	fmt.Println("NGMgo(AddLineEval) q12:", q12.PP())
 
 	// This is the case of a vertical line, where the denominator
 	// will be 0.
-	q12Neg := q12.Conjugate()
-	fmt.Println("NGMgo(AddLineEval) q12Neg:", q12Neg.PP())
-
 	// if R12 == Q12.negate():
+	//     return P.x - R12.x
 	if r12.Equal(q12.Conjugate()) {
-		// return P.x - R12.x
-		return r12.x.Neg().AddFQ(p.x)
+		return r12.x.Neg().AddFQ(p.ToAffine().x)
 	}
 
 	// slope = (Q12.y - R12.y) / (Q12.x - R12.x)
-	//q12.y.Sub(r12.y) / q12.x.Sub(r12.x)
-
-	p1 := q12.y.Sub(r12.y)
-	fmt.Println("NGMgo(AddLineEval) p1:", p1.PP())
-	p2 := q12.x.Sub(r12.x)
-	fmt.Println("NGMgo(AddLineEval) p2:", p2.PP())
-
-	p2Inv := p2.Inverse()
-	fmt.Println("NGMgo(AddLineEval) p2Inv:", p2Inv.PP())
-
-	s1 := p1.Mul(p2.Inverse())
-	fmt.Println("NGMgo(AddLineEval) s1:", s1.PP())
-
 	slope := q12.y.Sub(r12.y).Mul(q12.x.Sub(r12.x).Inverse())
 	fmt.Println("NGMgo(AddLineEval) slope:", slope.PP())
 
 	// v = (Q12.y * R12.x - R12.y * Q12.x) / (R12.x - Q12.x)
+	v := q12.y.Mul(r12.x).Sub(r12.y.Mul(q12.x)).Mul(r12.x.Sub(q12.x).Inverse())
+	fmt.Println("NGMgo(AddLineEval) v:", v.PP())
 
 	// return P.y - P.x * slope - v
-	return FQ12Zero
+	return slope.MulFQ(p.ToAffine().x).Neg().AddFQ(p.ToAffine().y).Sub(v)
 }
 
 // []big.Word
