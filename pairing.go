@@ -1,7 +1,6 @@
 package bls
 
 import (
-	"fmt"
 	"math/big"
 )
 
@@ -146,7 +145,7 @@ func Pairing(p *G1Projective, q *G2Projective) *FQ12 {
 // is taken from Craig Costello's "Pairing for Beginners".
 func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 	tBits := IntToBits(t)
-	fmt.Println("NGMgo(XMillerLoop) tBits:", tBits)
+	//fmt.Println("NGMgo(XMillerLoop) tBits:", tBits)
 
 	r := q.Copy()
 	f := FQ12One.Copy()
@@ -157,32 +156,44 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 		//fmt.Println("NGMgo(XMillerLoop) lrr:", lrr.PP())
 
 		f = f.Mul(f).Mul(lrr)
-		fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
+		//fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
 
 		// R = 2 * R
 		r = r.Double()
-		fmt.Println("NGMgo(XMillerLoop) r:", r.ToAffine().PP())
+		//fmt.Println("NGMgo(XMillerLoop) r:", r.ToAffine().PP())
 
 		if tBits[i] == 1 {
 			// Compute sloped line lrq
 			// lrq = add_line_eval(R, Q, P, ec)
 			lrq := AddLineEval(r, q, p)
-			fmt.Println("NGMgo(XMillerLoop) lrq:", lrq.PP())
+			//fmt.Println("NGMgo(XMillerLoop) lrq:", lrq.PP())
 			// f = f * lrq
-			f = f.Add(lrq)
-			fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
+			f = f.Mul(lrq)
+			//fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
 
 			// R = R + Q
 			r = r.Add(q)
-			fmt.Println("NGMgo(XMillerLoop) r:", r.PP())
+			//fmt.Println("NGMgo(XMillerLoop) r:", r.ToAffine().PP())
 		}
 	}
 
 	return f
 }
 
-//func XFinalExponentiation(...) {
-//}
+// XFinalExponentiation ...
+//
+// Performs a final exponentiation to map the result of the miller loop to a
+// unique element of Fq12.
+func XFinalExponentiation(r *FQ12) *FQ12 {
+	// if ec.k == 12:
+	//     ans = pow(element, (pow(ec.q,4) - pow(ec.q,2) + 1) // ec.n)
+	//     ans = ans.qi_power(2) * ans
+	//     ans = ans.qi_power(6) / ans
+	//     return ans
+	// else:
+	//     return pow(element, (pow(ec.q, ec.k) - 1) // ec.n)
+	return FQ12Zero
+}
 
 // DoubleLineEval ...
 //
@@ -226,11 +237,9 @@ func AddLineEval(r, q *G2Projective, p *G1Projective) *FQ12 {
 
 	// slope = (Q12.y - R12.y) / (Q12.x - R12.x)
 	slope := q12.y.Sub(r12.y).Mul(q12.x.Sub(r12.x).Inverse())
-	fmt.Println("NGMgo(AddLineEval) slope:", slope.PP())
 
 	// v = (Q12.y * R12.x - R12.y * Q12.x) / (R12.x - Q12.x)
 	v := q12.y.Mul(r12.x).Sub(r12.y.Mul(q12.x)).Mul(r12.x.Sub(q12.x).Inverse())
-	fmt.Println("NGMgo(AddLineEval) v:", v.PP())
 
 	// return P.y - P.x * slope - v
 	return slope.MulFQ(p.ToAffine().x).Neg().AddFQ(p.ToAffine().y).Sub(v)

@@ -340,26 +340,24 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 	negX := new(big.Int).Neg(blsX)
 	t := new(big.Int).Add(negX, bigOne)
-	fmt.Println("NGMgo(AtePairingMulti) t:", t)
+	//fmt.Println("NGMgo(AtePairingMulti) t:", t)
 
 	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
-	fmt.Println("NGMgo(AtePairingMulti) bigT:", bigT)
+	//fmt.Println("NGMgo(AtePairingMulti) bigT:", bigT)
 
 	// t = default_ec.x + 1
 	// T = abs(t - 1)
 
 	prod := FQ12One.Copy()
-	fmt.Println("NGMgo(AtePairingMulti) prod:", prod)
+	//fmt.Println("NGMgo(AtePairingMulti) prod:", prod)
 
 	for i, q := range qs {
 		p := ps[i]
 		xml := XMillerLoop(bigT, p, q)
-		fmt.Println("\tNGMgo(AtePairingMulti) xml:", xml)
+		fmt.Println("NGMgo(AtePairingMulti) xml:", xml.PP())
 
-		pair := Pairing(p, q)
-		fmt.Println("\tNGMgo(AtePairingMulti) pair:", pair)
-		prod = prod.Mul(pair)
-		fmt.Println("\tNGMgo(AtePairingMulti) prod:", prod)
+		prod = prod.Mul(xml)
+		fmt.Println("NGMgo(AtePairingMulti) prod:", prod.PP())
 	}
 
 	//for i in range(len(Qs)):
