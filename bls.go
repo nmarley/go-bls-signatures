@@ -2,6 +2,7 @@ package bls
 
 import (
 	"bytes"
+	"encoding/binary"
 	"fmt"
 	"io"
 	"log"
@@ -108,16 +109,10 @@ func (p *PublicKey) Serialize(compressed bool) []byte {
 	return affine.SerializeBytes()
 }
 
-// pubkey (48 bytes): 381 bit affine x coordinate, encoded into 48
-// big-endian bytes. Since we have 3 bits left over in the beginning, the
-// first bit is set to 1 iff y coordinate is the lexicographically largest
-// of the two valid ys. The public key fingerprint is the first 4 bytes of
-// hash256(serialize(pubkey)).
-
 // Fingerprint returns the the first 4 bytes of hash256(serialize(pubkey))
-func (p *PublicKey) Fingerprint() []byte {
+func (p *PublicKey) Fingerprint() uint32 {
 	buf := Hash256(p.Serialize(true))
-	return buf[:4]
+	return binary.BigEndian.Uint32(buf[:4])
 }
 
 // Equals checks if two public keys are equal

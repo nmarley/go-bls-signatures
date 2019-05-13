@@ -15,7 +15,7 @@ func TestKeygen(t *testing.T) {
 	tests := []struct {
 		seed          []byte
 		secretKey     []byte
-		pkFingerprint []byte
+		pkFingerprint uint32
 	}{
 		// keygen([1,2,3,4,5])
 		// sk1: 0x022fb42c08c12de3a6af053880199806532e79515f94e83461612101f9412f9e
@@ -26,12 +26,12 @@ func TestKeygen(t *testing.T) {
 		{
 			seed:          []byte{1, 2, 3, 4, 5},
 			secretKey:     sk1,
-			pkFingerprint: []byte{0x26, 0xd5, 0x32, 0x47},
+			pkFingerprint: 0x26d53247,
 		},
 		{
 			seed:          []byte{1, 2, 3, 4, 5, 6},
 			secretKey:     []byte{},
-			pkFingerprint: []byte{0x28, 0x9b, 0xb5, 0x6e},
+			pkFingerprint: 0x289bb56e,
 		},
 	}
 
