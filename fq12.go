@@ -262,6 +262,13 @@ func (f *FQ12) MulFQ(fq *FQ) *FQ12 {
 	return NewFQ12(c0, c1)
 }
 
+// AddFQ adds an FQ element to the FQ12 and returns the result
+func (f *FQ12) AddFQ(fq *FQ) *FQ12 {
+	tempFQ12 := FQ12Zero.Copy()
+	tempFQ12.c0 = tempFQ12.c0.AddFQ(fq)
+	return f.Add(tempFQ12)
+}
+
 func (f FQ12) PP() string {
 	return fmt.Sprintf("\nFq12(\n%s,\n%s\n)", f.c0.PP(4), f.c1.PP(4))
 }

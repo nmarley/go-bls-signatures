@@ -416,6 +416,14 @@ func (f *FQ6) MulFQ(fq *FQ) *FQ6 {
 	return NewFQ6(c0, c1, c2)
 }
 
+// AddFQ adds an FQ element to the FQ6 and returns the result
+func (f *FQ6) AddFQ(fq *FQ) *FQ6 {
+	tempFQ6 := FQ6Zero.Copy()
+	tempFQ6.c0 = tempFQ6.c0.AddFQ(fq)
+	return f.Add(tempFQ6)
+}
+
+// PP ...
 func (f FQ6) PP(indent int) string {
 	spc := bytes.Repeat([]byte{' '}, indent)
 	return fmt.Sprintf(
