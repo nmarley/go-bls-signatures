@@ -197,16 +197,40 @@ func GetG1PointFromX(x *FQ, greatest bool) *G1Affine {
 //
 // Per the Chia spec, set the leftmost bit iff negative y. The other two unused
 // bits are not used.
-func CompressG1(affine *G1Affine) []byte {
+func CompressG1(g *G1Affine) []byte {
 	// Convert x-coord to byte slice
-	buf := affine.x.n.Bytes()
+
+	// Create a byte arry of exactly G1ElementSize bytes
+	buf := [G1ElementSize]byte{}
+
+	// Copy x-coord bytes into the byte array, but make sure and align them to
+	// the right of the array. Meaning, if the integer backing the x-coord is
+	// small, then there should be 0s at the front.
+	//
+	// Using an example with smaller numbers, let's say our x-coord is 7, but
+	// we have a 2-byte array to hold it:
+	//
+	// n := 7
+	// buf := [2]byte{}
+	// copy(buf[:], n)  // <-- BUG!! This results in an array like [2]byte{0x7, 0x0}
+	//                  //           What we *actually* want is:   [2]byte{0x0, 0x7}
+	//
+	// We want the starting index for copy destination to be the max array size
+	// minus the length of the buffer we are copying. In this case, 2-len(n):
+	//
+	// copy(buf[2-len(n):], n)
+	//
+	// This results in what we want:  [2]byte{0x0, 0x7}
+	//
+	copyBytes := g.x.n.Bytes()
+	copy(buf[G1ElementSize-len(copyBytes):], copyBytes)
 
 	// Right shift the Q bits once to get Half Q
 	halfQ := new(big.Int).Rsh(QFieldModulus, 1)
 
 	// If the y coordinate is the bigger one of the two, set the first
 	// bit to 1.
-	if affine.y.n.Cmp(halfQ) == 1 {
+	if g.y.n.Cmp(halfQ) == 1 {
 		buf[0] |= 0x80
 	}
 
