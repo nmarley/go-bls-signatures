@@ -40,13 +40,13 @@ func TestKeygen(t *testing.T) {
 			is := is.New(st)
 
 			sk := bls.SecretKeyFromSeed(tt.seed)
-			//fmt.Printf("%x\n", sk.Serialize())
+			fmt.Printf("sk%d: %x\n", i+1, sk.Serialize())
 			if len(tt.secretKey) > 0 {
 				is.Equal(sk.Serialize(), tt.secretKey)
 			}
 
 			pk := sk.PublicKey()
-			fmt.Printf("pk: %x\n", pk.Serialize(true))
+			fmt.Printf("pk%d: %x\n", i+1, pk.Serialize(true))
 			is.Equal(pk.Fingerprint(), tt.pkFingerprint)
 		})
 	}
@@ -76,47 +76,47 @@ func TestVectorSignaturesSign(t *testing.T) {
 			is := is.New(st)
 			key := bls.DeserializeSecretKey(tt.secretKey)
 			sig := bls.Sign(tt.payload, key)
+			fmt.Printf("sig%d: %x\n", i+1, sig.Serialize(true))
 			is.Equal(sig.Serialize(true), tt.expectedSig)
-
 		})
 	}
 }
 
 // Implement test for test vector for Signatures#verify
 func TestVectorSignaturesVerify(t *testing.T) {
-	tests := []struct {
-		payload   []byte
-		publicKey []byte
-		signature []byte
-	}{
-		{
-			payload:   payload,
-			publicKey: pk1,
-			signature: sig1,
-		},
-		{
-			payload:   payload,
-			publicKey: pk2,
-			signature: sig2,
-		},
-	}
-
-	for i, tt := range tests {
-		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
-			is := is.New(st)
-			pk, _ := bls.DeserializePublicKey(tt.publicKey)
-			sig, _ := bls.DeserializeSignature(tt.signature)
-			is.True(bls.XVerify(tt.payload, pk, sig))
-		})
-	}
-
-	// bls.XVerify()
-	//pubkey, _ := bls.DeserializePublicKey(pk1)
-	//sig, _ := bls.DeserializeSignature(sig1)
-	//val := bls.XVerify(payload, pubkey, sig)
-	//if !val {
-	//	t.Error("oops -- verify broken")
+	//tests := []struct {
+	//	payload   []byte
+	//	publicKey []byte
+	//	signature []byte
+	//}{
+	//	{
+	//		payload:   payload,
+	//		publicKey: pk1,
+	//		signature: sig1,
+	//	},
+	//	{
+	//		payload:   payload,
+	//		publicKey: pk2,
+	//		signature: sig2,
+	//	},
 	//}
+	//for i, tt := range tests {
+	//	t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
+	//		is := is.New(st)
+	//		pk, _ := bls.DeserializePublicKey(tt.publicKey)
+	//		sig, _ := bls.DeserializeSignature(tt.signature)
+	//		is.True(bls.XVerify(tt.payload, pk, sig))
+	//	})
+	//}
+
+	// ============================================================================
+
+	pubkey, _ := bls.DeserializePublicKey(pk1)
+	sig, _ := bls.DeserializeSignature(sig1)
+	val := bls.XVerify(payload, pubkey, sig)
+	if !val {
+		t.Error("oops -- verify broken")
+	}
 
 	// verify(sig1, AggregationInfo(pk1, [7,8,9]))
 	// true
