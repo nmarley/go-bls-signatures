@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"fmt"
 	"math/big"
 )
 
@@ -185,6 +186,26 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 // Performs a final exponentiation to map the result of the miller loop to a
 // unique element of Fq12.
 func XFinalExponentiation(r *FQ12) *FQ12 {
+	// ans = pow(element, (pow(ec.q,4) - pow(ec.q,2) + 1) // ec.n)
+	inner1 := new(big.Int).Exp(QFieldModulus, bigFour, nil)
+	inner2 := new(big.Int).Exp(QFieldModulus, bigTwo, nil)
+	innerExp := new(big.Int).Sub(inner1, inner2)
+	innerExp.Add(innerExp, bigOne)
+	innerExp.Div(innerExp, RFieldModulus)
+
+	ans := r.Exp(innerExp)
+	fmt.Println("NGMgo(XFinalExponentiation) ans1:", ans.PP())
+
+	// ans = ans.qi_power(2) * ans
+	ans = ans.FrobeniusMap(2).Mul(ans)
+	fmt.Println("NGMgo(XFinalExponentiation) ans2:", ans.PP())
+
+	//ans = ans.qi_power(6) / ans
+	ans = ans.FrobeniusMap(6).Mul(ans.Inverse())
+	fmt.Println("NGMgo(XFinalExponentiation) ans3:", ans.PP())
+
+	//return ans
+
 	// if ec.k == 12:
 	//     ans = pow(element, (pow(ec.q,4) - pow(ec.q,2) + 1) // ec.n)
 	//     ans = ans.qi_power(2) * ans
@@ -192,7 +213,8 @@ func XFinalExponentiation(r *FQ12) *FQ12 {
 	//     return ans
 	// else:
 	//     return pow(element, (pow(ec.q, ec.k) - 1) // ec.n)
-	return FQ12Zero
+
+	return ans
 }
 
 // DoubleLineEval ...

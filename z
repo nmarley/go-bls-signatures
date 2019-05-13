@@ -58,11 +58,61 @@ Fq12(
         Fq2(Fq(0xc5dfb..84f11), Fq(0x4e977..78ff5)),
     )
 )
-
-NGMgo(XVerify) res: Fq12(Fq6(Fq2(Fq(0x0) + Fq(0x0) * u) + Fq2(Fq(0x0) + Fq(0x0) * u)*v + Fq2(Fq(0x0) + Fq(0x0) * u)*v^2) + Fq6(Fq2(Fq(0x0) + Fq(0x0) * u) + Fq2(Fq(0x0) + Fq(0x0) * u)*v + Fq2(Fq(0x0) + Fq(0x0) * u)*v^2) * w)
-
---- FAIL: TestVectorSignaturesVerify (0.14s)
-    bls_test.go:370: oops -- verify broken
-FAIL
-exit status 1
-FAIL	gitlab.com/nmarley/go-bls-signatures	0.284s
+NGMgo(XFinalExponentiation) ans1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x13dd3..0f2e8), Fq(0xa0961..431d9)),
+        Fq2(Fq(0x11976..1cdf0), Fq(0x22a97..06bc9)),
+        Fq2(Fq(0x2821b..de60b), Fq(0xaa16c..d8ca9)),
+    ),
+    Fq6(
+        Fq2(Fq(0x6ff81..aa068), Fq(0x1f435..6dd09)),
+        Fq2(Fq(0xec509..641e9), Fq(0xeb802..b6b94)),
+        Fq2(Fq(0x17453..ef1f0), Fq(0x67df3..c643a)),
+    )
+)
+NGMgo(XFinalExponentiation) ans2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x7d166..f9a7c), Fq(0x12712..bcae8)),
+        Fq2(Fq(0x53db1..35f35), Fq(0x48389..9f9dd)),
+        Fq2(Fq(0xa04ad..81bcb), Fq(0x2f93c..a4958)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(XFinalExponentiation) ans3: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x1), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AtePairingMulti) final: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x1), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(XVerify) res: Fq12(Fq6(Fq2(Fq(0x1) + Fq(0x0) * u) + Fq2(Fq(0x0) + Fq(0x0) * u)*v + Fq2(Fq(0x0) + Fq(0x0) * u)*v^2) + Fq6(Fq2(Fq(0x0) + Fq(0x0) * u) + Fq2(Fq(0x0) + Fq(0x0) * u)*v + Fq2(Fq(0x0) + Fq(0x0) * u)*v^2) * w)
+PASS
+ok  	gitlab.com/nmarley/go-bls-signatures	0.423s
+#go test -run TestVectorSignaturesSign
+#go test -run TestVectorSignaturesSign | grep NGM
+#go test -run TestCustomNGM

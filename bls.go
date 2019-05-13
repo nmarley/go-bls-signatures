@@ -351,6 +351,8 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 	prod := FQ12One.Copy()
 	//fmt.Println("NGMgo(AtePairingMulti) prod:", prod)
 
+	//for i in range(len(Qs)):
+	//     prod *= miller_loop(T, Ps[i], Qs[i], ec)
 	for i, q := range qs {
 		p := ps[i]
 		xml := XMillerLoop(bigT, p, q)
@@ -360,12 +362,11 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 		fmt.Println("NGMgo(AtePairingMulti) prod:", prod.PP())
 	}
 
-	//for i in range(len(Qs)):
-	//     prod *= miller_loop(T, Ps[i], Qs[i], ec)
-	// return final_exponentiation(prod, ec)
+	final := XFinalExponentiation(prod)
+	fmt.Println("NGMgo(AtePairingMulti) final:", final.PP())
 
-	// TODO: Remove dummy return
-	return FQ12Zero
+	// return final_exponentiation(prod, ec)
+	return final
 }
 
 //def ate_pairing_multi(Ps, Qs, ec=default_ec):
