@@ -298,44 +298,28 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 // multiply all the results of the miller loops, and perform just one final
 // exponentiation.
 func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
-	negX := new(big.Int).Neg(blsX)
-	t := new(big.Int).Add(negX, bigOne)
-	//fmt.Println("NGMgo(AtePairingMulti) t:", t)
-
-	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
-	//fmt.Println("NGMgo(AtePairingMulti) bigT:", bigT)
-
 	// t = default_ec.x + 1
 	// T = abs(t - 1)
+	negX := new(big.Int).Neg(blsX)
+	t := new(big.Int).Add(negX, bigOne)
+	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
 
+	// prod = Fq12.one(ec.q)
 	prod := FQ12One.Copy()
-	//fmt.Println("NGMgo(AtePairingMulti) prod:", prod)
 
 	//for i in range(len(Qs)):
 	//     prod *= miller_loop(T, Ps[i], Qs[i], ec)
 	for i, q := range qs {
 		p := ps[i]
+		// TODO/NGM: Just inline this once finished w/debugging
 		xml := XMillerLoop(bigT, p, q)
-		fmt.Println("NGMgo(AtePairingMulti) xml:", xml.PP())
-
 		prod = prod.Mul(xml)
-		fmt.Println("NGMgo(AtePairingMulti) prod:", prod.PP())
 	}
 
+	// TODO/NGM: Inline this when done debugging
 	final := XFinalExponentiation(prod)
-	fmt.Println("NGMgo(AtePairingMulti) final:", final.PP())
-
-	// return final_exponentiation(prod, ec)
 	return final
 }
-
-//def ate_pairing_multi(Ps, Qs, ec=default_ec):
-//    t = default_ec.x + 1
-//    T = abs(t - 1)
-//    prod = Fq12.one(ec.q)
-//    for i in range(len(Qs)):
-//        prod *= miller_loop(T, Ps[i], Qs[i], ec)
-//    return final_exponentiation(prod, ec)
 
 // AggregateSignatures adds up all of the signatures.
 func AggregateSignatures(s []*Signature) *Signature {
