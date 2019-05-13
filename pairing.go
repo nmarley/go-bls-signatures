@@ -149,33 +149,32 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 	fmt.Println("NGMgo(XMillerLoop) tBits:", tBits)
 
 	r := q.Copy()
-	//f := FQ12One.Copy()
+	f := FQ12One.Copy()
 
 	for i := 1; i < len(tBits); i++ {
 		// Compute sloped line lrr
-		// lrr = double_line_eval(R, P, ec)
 		lrr := DoubleLineEval(r, p)
-		fmt.Println("NGMgo(XMillerLoop) lrr:", lrr)
+		//fmt.Println("NGMgo(XMillerLoop) lrr:", lrr.PP())
 
-		// f = f * f * lrr
-		//
+		f = f.Mul(f).Mul(lrr)
+		fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
 
+		// R = 2 * R
+		r = r.Double()
+		fmt.Println("NGMgo(XMillerLoop) r:", r.ToAffine().PP())
+
+		if tBits[i] == 1 {
+			// Compute sloped line lrq
+			// lrq = add_line_eval(R, Q, P, ec)
+			lrq := AddL
+			// f = f * lrq
+			// R = R + Q
+
+		}
 	}
 
-	//return f
-
-	// TODO: Remove dummy return
-	return FQ12Zero
+	return f
 }
-
-//        R = 2 * R
-//        if T_bits[i] == 1:
-//            # Compute sloped line lrq
-//            lrq = add_line_eval(R, Q, P, ec)
-//            f = f * lrq
-//
-//            R = R + Q
-//    return f
 
 // DoubleLineEval ...
 //
@@ -184,73 +183,53 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 	// R12 = untwist(R)
 	r12 := r.ToAffine().Untwist()
-	fmt.Println("NGMgo(DoubleLineEval) r12:", r12)
-
-	// slope = (3 * pow(R12.x, 2) + ec.a) / (2 * R12.y)
+	//fmt.Println("NGMgo(DoubleLineEval) r12:", r12)
 
 	r12_sq := r12.x.Mul(r12.x)
 	r12_sq_3x := r12_sq.Add(r12_sq).Add(r12_sq)
-	// r12_sq_3x.Add(FQZero)
 	r12_y_2 := r12.y.Add(r12.y)
 	slope := r12_sq_3x.Mul(r12_y_2.Inverse())
-	fmt.Println("NGMgo(DoubleLineEval) slope:", slope)
-	fmt.Println("NGMgo(DoubleLineEval) p.x:", p.x)
-
-	xSlope := slope.MulFQ(p.ToAffine().x)
-	fmt.Println("NGMgo(DoubleLineEval) xSlope:", xSlope)
 
 	// v = R12.y - slope * R12.x
 	v := r12.y.Sub(slope.Mul(r12.x))
-	fmt.Println("NGMgo(DoubleLineEval) v:", v)
+	//fmt.Println("NGMgo(DoubleLineEval) v:", v)
 
-	fin := xSlope.Sub(v)
-	//fmt.Println("NGMgo(DoubleLineEval) fin:", fin)
-	fmt.Println("NGMgo(DoubleLineEval) fin:", fin.PP())
+	xSlope := slope.MulFQ(p.ToAffine().x)
+	//fmt.Println("NGMgo(DoubleLineEval) xSlope:", xSlope)
 
-	// p.ToAffine().y.Sub(fin)
-
-	// FQ12:
-	//def __rsub__(self, other):
-	//    return (-self) + other
-
-	// this should be the end result
-	// fin.Neg().AddFQ(p.ToAffine().y)
-	// fin.Neg().c0.c0.c0.Add(p.ToAffine().y)
-
-	negFin := fin.Neg()
-	//c0 := negFin.c0.c0.c0
-	//newc0 := c0.Add(p.ToAffine().y)
-	//res := negFin.Copy()
-	//res.c0.c0.c0 = newc0
-
-	rv2 := negFin.AddFQ(p.ToAffine().y)
-	fmt.Println("NGMgo(DoubleLineEval) rv2:", rv2.PP())
-
-	//fmt.Println("NGMgo(DoubleLineEval) rv:", res.PP())
-
-	// return P.y - P.x * slope - v
-	// TODO: Remove dummy return
-	return FQ12Zero
+	//fmt.Println("NGMgo(DoubleLineEval) rv:", rv.PP())
+	//rv := xSlope.Neg().AddFQ(p.ToAffine().y).Sub(v)
+	return xSlope.Neg().AddFQ(p.ToAffine().y).Sub(v)
 }
 
 // AddLineEval...
 //
 // Creates an equation for a line between R and Q, and evaluates this at the
 // point P. f(x) = y - sv - v.  f(P).
-//func AddLineEval(R, Q, P) {
-//	// R12 = untwist(R)
-//	// Q12 = untwist(Q)
-//	//
-//	// # This is the case of a vertical line, where the denominator
-//	// # will be 0.
-//	// if R12 == Q12.negate():
-//	//     return P.x - R12.x
-//	//
-//	// slope = (Q12.y - R12.y) / (Q12.x - R12.x)
-//	// v = (Q12.y * R12.x - R12.y * Q12.x) / (R12.x - Q12.x)
-//
-//	// return P.y - P.x * slope - v
-//}
+func AddLineEval(r, q *G2Projective, p *G1Projective) *FQ12 {
+	// R12 = untwist(R)
+	r12 := r.ToAffine().Untwist()
+	fmt.Println("NGMgo(AddLineEval) r12:", r12)
+
+	// Q12 = untwist(Q)
+	q12 := q.ToAffine().Untwist()
+	fmt.Println("NGMgo(AddLineEval) q12:", q12)
+
+	//q12.x, q12.y.Neg()
+	//q12Neg := NewFq12Pair(q.ne)
+
+	// This is the case of a vertical line, where the denominator
+	// will be 0.
+	//if r12.x
+	// if R12 == Q12.negate():
+	//     return P.x - R12.x
+	//
+	// slope = (Q12.y - R12.y) / (Q12.x - R12.x)
+	// v = (Q12.y * R12.x - R12.y * Q12.x) / (R12.x - Q12.x)
+
+	// return P.y - P.x * slope - v
+	return FQ12Zero
+}
 
 // []big.Word
 // TODO: optimize this

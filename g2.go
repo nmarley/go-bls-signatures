@@ -1084,3 +1084,21 @@ func Twist(pair *Fq12Pair) *G2Affine {
 
 	return NewG2Affine(newX.c0.c0, newY.c0.c0)
 }
+
+// PP ...
+func (g G2Projective) PP() string {
+	if g.IsZero() {
+		return g.String()
+	}
+
+	return fmt.Sprintf("G2Projective(\nx=%s, y=%s, z=%s\n)", g.x.PP(4), g.y.PP(4), g.z.PP(4))
+}
+
+// PP ...
+func (g G2Affine) PP() string {
+	if g.IsZero() {
+		return g.String()
+	}
+
+	return fmt.Sprintf("G2Affine(\nx=%s, y=%s\n)", g.x.PP(4), g.y.PP(4))
+}
