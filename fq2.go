@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"bytes"
 	"fmt"
 	"hash"
 	"io"
@@ -401,4 +402,29 @@ func HashFQ2(hasher hash.Hash) *FQ2 {
 	digest := hasher.Sum(nil)
 	newB := new(big.Int).SetBytes(digest)
 	return FQ2One.MulBits(newB)
+}
+
+// MulFQ multiplies the FQ2 by a FQ element
+func (f *FQ2) MulFQ(fq *FQ) *FQ2 {
+	c0 := FQZero.Copy()
+	c1 := FQZero.Copy()
+
+	if !f.c0.IsZero() {
+		c0 = f.c0.Mul(fq)
+	}
+	if !f.c1.IsZero() {
+		c1 = f.c1.Mul(fq)
+	}
+
+	return NewFQ2(c0, c1)
+}
+
+func (f FQ2) PP(indent int) string {
+	spc := bytes.Repeat([]byte{' '}, indent)
+	return fmt.Sprintf(
+		"%sFq2(%s, %s)",
+		spc,
+		f.c0,
+		f.c1,
+	)
 }

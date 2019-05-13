@@ -249,10 +249,19 @@ func (f FQ12) Inverse() *FQ12 {
 
 // MulFQ multiplies the FQ12 by a FQ element
 func (f *FQ12) MulFQ(fq *FQ) *FQ12 {
-	res := FQ12Zero.Copy()
+	c0 := FQ6Zero.Copy()
+	c1 := FQ6Zero.Copy()
 
-	c0 := res.c0.MulFQ(fq)
-	c1 := res.c1.MulFQ(fq)
+	if !f.c0.IsZero() {
+		c0 = f.c0.MulFQ(fq)
+	}
+	if !f.c1.IsZero() {
+		c1 = f.c1.MulFQ(fq)
+	}
 
 	return NewFQ12(c0, c1)
+}
+
+func (f FQ12) PP() string {
+	return fmt.Sprintf("\nFq12(\n%s,\n%s\n)", f.c0.PP(4), f.c1.PP(4))
 }

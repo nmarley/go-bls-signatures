@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"bytes"
 	"crypto/rand"
 	"fmt"
 	"hash"
@@ -330,3 +331,9 @@ var FQZero = NewFQ(bigZero)
 
 // FQOne is the FQ at 1.
 var FQOne = NewFQ(bigOne)
+
+// PP
+func (f FQ) PP(indent int) string {
+	spc := bytes.Repeat([]byte{' '}, indent)
+	return fmt.Sprintf("%s%s\n", spc, f.String())
+}

@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"math/big"
@@ -394,4 +395,35 @@ func RandFQ6(reader io.Reader) (*FQ6, error) {
 		return nil, err
 	}
 	return NewFQ6(c0, c1, c2), nil
+}
+
+// MulFQ multiplies the FQ6 by a FQ element
+func (f *FQ6) MulFQ(fq *FQ) *FQ6 {
+	c0 := FQ2Zero.Copy()
+	c1 := FQ2Zero.Copy()
+	c2 := FQ2Zero.Copy()
+
+	if !f.c0.IsZero() {
+		c0 = f.c0.MulFQ(fq)
+	}
+	if !f.c1.IsZero() {
+		c1 = f.c1.MulFQ(fq)
+	}
+	if !f.c2.IsZero() {
+		c2 = f.c2.MulFQ(fq)
+	}
+
+	return NewFQ6(c0, c1, c2)
+}
+
+func (f FQ6) PP(indent int) string {
+	spc := bytes.Repeat([]byte{' '}, indent)
+	return fmt.Sprintf(
+		"%sFq6(\n%s,\n%s,\n%s,\n%s)",
+		spc,
+		f.c0.PP(indent+4),
+		f.c1.PP(indent+4),
+		f.c2.PP(indent+4),
+		spc,
+	)
 }

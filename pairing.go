@@ -194,20 +194,27 @@ func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 	r12_y_2 := r12.y.Add(r12.y)
 	slope := r12_sq_3x.Mul(r12_y_2.Inverse())
 	fmt.Println("NGMgo(DoubleLineEval) slope:", slope)
+	fmt.Println("NGMgo(DoubleLineEval) p.x:", p.x)
+
+	xSlope := slope.MulFQ(p.ToAffine().x)
+	fmt.Println("NGMgo(DoubleLineEval) xSlope:", xSlope)
 
 	// v = R12.y - slope * R12.x
 	v := r12.y.Sub(slope.Mul(r12.x))
 	fmt.Println("NGMgo(DoubleLineEval) v:", v)
 
-	//p.x
-	//slope.mul(fq)
-	//xSlope := p.x.Mul(slope)
+	fin := xSlope.Sub(v)
+	fmt.Println("NGMgo(DoubleLineEval) fin:", fin)
+	fmt.Println("NGMgo(DoubleLineEval) fin:", fin.PP())
 
-	slope.Mul(p.x)
+	// p.ToAffine().y.Sub(fin)
 
 	// FQ12:
-	//def __sub__(self, other):
-	//    return self + (-other)
+	//def __rsub__(self, other):
+	//    return (-self) + other
+
+	// this should be the end result
+	// fin.Neg().SubFQ(p.ToAffine().y)
 
 	// return P.y - P.x * slope - v
 	// TODO: Remove dummy return
