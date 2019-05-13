@@ -1,20 +1,20 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
+
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 func main() {
-	n := []byte{7}
-	buf := [2]byte{}
-	copy(buf[:], n) // <-- BUG!! This results in an array like [2]byte{0x7, 0x0}
-	fmt.Println("buf =", buf)
-	// buf = [7 0]
+	skHex := "2ac124c0aa1808e590ff1f94d67a53970ae982aa30bbe261ff1cb2ad15b7452a"
+	skBytes, _ := hex.DecodeString(skHex)
 
-	// Reset buffer
-	buf = [2]byte{}
-
-	copy(buf[2-len(n):], n) // <-- What we really want is this
-	fmt.Println("buf =", buf)
-	// buf = [0 7]
+	secretKey := bls.DeserializeSecretKey(skBytes)
+	publicKey := secretKey.PublicKey()
+	fmt.Printf("public: %x\n", publicKey.Serialize(true))
 }
+
+// secret: "2ac124c0aa1808e590ff1f94d67a53970ae982aa30bbe261ff1cb2ad15b7452a",
+// public: "816782edc8f6815af5e256899d028c2dd2b6b243629262ea98da8df4b5755b24f85f78f5b124f2629b3fbdd2691cfb43",
