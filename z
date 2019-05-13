@@ -26,6 +26,165 @@ Fq12(
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0x113ea..e8289), Fq(0x11beb..d08f5)), y=    Fq2(Fq(0x12edc..5b793), Fq(0x18851..fc9dc))
 )
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x117eb..dc5bf), Fq(0x40071..f4336)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x8b8e2..2eb62), Fq(0xfcc31..cde7a)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3c935..47608), Fq(0x1186f..d424e)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1637d..b34a3), Fq(0x87a15..2685d)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x15116..13551), Fq(0x1bacb..063d4)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x12401..c099b), Fq(0xf9399..6f880)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xa8365..a1c05), Fq(0xadac1..c5cd9)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x77fb6..dd676), Fq(0x7c0af..0b08b)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x77fb6..dd676), Fq(0x7c0af..0b08b)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
 NGMgo(XMillerLoop) f: 
 Fq12(
     Fq6(
@@ -57,6 +216,165 @@ Fq12(
 )
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0x130c5..6ca4b), Fq(0xcf904..5f8a1)), y=    Fq2(Fq(0x118bc..1c0ab), Fq(0x14bc7..8c101))
+)
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1002a..e6176), Fq(0x16f76..741d6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x13242..540d6), Fq(0x1985e..3802b)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3c935..47608), Fq(0x1186f..d424e)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1637d..b34a3), Fq(0x87a15..2685d)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xaa626..edfdd), Fq(0xfee9e..9c223)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x13bc2..b6de4), Fq(0x12dd4..ea48b)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xff38d..6841a), Fq(0x10649..dc27a)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe7874..f1524), Fq(0x17e2b..0fdf8)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe7874..f1524), Fq(0x17e2b..0fdf8)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
 )
 NGMgo(XMillerLoop) f: 
 Fq12(
@@ -105,6 +423,165 @@ Fq12(
 )
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0x9bfc5..c0eb4), Fq(0x8bd8d..dcb20)), y=    Fq2(Fq(0x11a78..9c2d4), Fq(0x666b3..398b9))
+)
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x93ea9..cecea), Fq(0x197ff..088e1)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1907a..6831c), Fq(0x7601f..cc048)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3c935..47608), Fq(0x1186f..d424e)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1637d..b34a3), Fq(0x87a15..2685d)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x4c2a1..d9d97), Fq(0xa26dc..08206)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x7f12c..d37c5), Fq(0x1054b..55d80)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x54af4..38611), Fq(0x4e84f..9cfc5)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x53784..a9a30), Fq(0x17e66..aa020)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x53784..a9a30), Fq(0x17e66..aa020)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
 )
 NGMgo(XMillerLoop) f: 
 Fq12(
@@ -249,6 +726,165 @@ Fq12(
 )
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0x38004..7cac6), Fq(0xf7cd5..09c3a)), y=    Fq2(Fq(0x14a46..4c0b7), Fq(0x11972..21021))
+)
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x97e6c..c3380), Fq(0x5fe68..468ba)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x131dc..3686c), Fq(0x187a7..e5260)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3c935..47608), Fq(0x1186f..d424e)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1637d..b34a3), Fq(0x87a15..2685d)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xaac7f..0b847), Fq(0x130d9..e9a99)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3f4f9..df12f), Fq(0x9d537..1d2fc)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x15028..df587), Fq(0xc87b3..be6d6)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x159cb..0e61d), Fq(0x1556a..032c8)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x159cb..0e61d), Fq(0x1556a..032c8)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
 )
 NGMgo(XMillerLoop) f: 
 Fq12(
@@ -762,6 +1398,165 @@ Fq12(
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0x9f4e8..9bb12), Fq(0xd55b0..28c1d)), y=    Fq2(Fq(0x7eea9..a1fd0), Fq(0x18dfa..a7d1e))
 )
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x18a5d..df8ed), Fq(0xeb0ec..43ddb)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x10672..a4e77), Fq(0x8787e..02ea7)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3c935..47608), Fq(0x1186f..d424e)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9bdbc..a24af), Fq(0xfd3a0..63bb6)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1637d..b34a3), Fq(0x87a15..2685d)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xd6320..9d23c), Fq(0x90e7e..d13a7)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xb18f9..bd66d), Fq(0x122b3..1fddb)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x52648..d23a6), Fq(0x187e7..94420)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3bd83..bf6fe), Fq(0x6fb68..18b52)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3bd83..bf6fe), Fq(0x6fb68..18b52)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
 NGMgo(XMillerLoop) f: 
 Fq12(
     Fq6(
@@ -1038,6 +1833,165 @@ Fq12(
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0x1135c..28f42), Fq(0x65b00..dc790)), y=    Fq2(Fq(0x11988..a416e), Fq(0x1545a..4390e))
 )
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xbc861..82b69), Fq(0x1493b..546d2)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x136f1..f3d3e), Fq(0x1d694..4fbd0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x15c8e..d2334), Fq(0x4613e..1f887)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x43826..28777), Fq(0x159fd..db224)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x259d7..de5f6), Fq(0x28aaa..cfcb7)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x24c05..c2ecb), Fq(0x99e6a..8459e)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x12d99..71f79), Fq(0x12c82..03be9)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x17fa5..cc01f), Fq(0x141a4..31563)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x17fa5..cc01f), Fq(0x141a4..31563)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
 NGMgo(XMillerLoop) f: 
 Fq12(
     Fq6(
@@ -1069,6 +2023,165 @@ Fq12(
 )
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0xb1493..49513), Fq(0x668ec..dd404)), y=    Fq2(Fq(0x6aa63..3d598), Fq(0x17b4f..95147))
+)
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x12be1..909e1), Fq(0x7a986..474ce)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x22f23..6be1a), Fq(0x1585d..2932d)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x15c8e..d2334), Fq(0x4613e..1f887)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x43826..28777), Fq(0x159fd..db224)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1399c..6651a), Fq(0x8dc7e..f1005)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x15575..afafe), Fq(0x16889..917a2)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x16dc5..d56b3), Fq(0x12c1a..582ad)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x5ec09..87e45), Fq(0x1779c..e7ac5)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x5ec09..87e45), Fq(0x1779c..e7ac5)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
 )
 NGMgo(XMillerLoop) f: 
 Fq12(
@@ -1117,6 +2230,165 @@ Fq12(
 )
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0xd9df9..d4f13), Fq(0xa3b9e..ad792)), y=    Fq2(Fq(0x51c07..ae377), Fq(0x136ad..04ca1))
+)
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x18ed5..3e8a8), Fq(0xb4f5b..69995)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xc4370..d980c), Fq(0x72769..2b495)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x15c8e..d2334), Fq(0x4613e..1f887)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x43826..28777), Fq(0x159fd..db224)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9857a..f8b28), Fq(0x173ae..eee9d)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xf2823..01c37), Fq(0x12e2c..6f2db)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x13169..dd88f), Fq(0xe2a78..40a1b)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xca5bd..1f7d5), Fq(0x16c29..acd00)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xca5bd..1f7d5), Fq(0x16c29..acd00)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
 )
 NGMgo(XMillerLoop) f: 
 Fq12(
@@ -1261,6 +2533,165 @@ Fq12(
 )
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0xbbc99..25454), Fq(0x14029..f794a)), y=    Fq2(Fq(0x10e47..8d9a4), Fq(0x10202..94d6b))
+)
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xfdf98..0e6cf), Fq(0x422fe..e927b)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x381c8..93e32), Fq(0xc9e5c..00f39)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x15c8e..d2334), Fq(0x4613e..1f887)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x43826..28777), Fq(0x159fd..db224)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x12472..3e502), Fq(0x11c3f..193f9)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1835e..31e10), Fq(0xe0b86..f4f4a)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x3e9c1..1a685), Fq(0x13274..7049b)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9f1ff..6b7b9), Fq(0xef533..e48a7)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x9f1ff..6b7b9), Fq(0xef533..e48a7)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
 )
 NGMgo(XMillerLoop) f: 
 Fq12(
@@ -1774,6 +3205,165 @@ Fq12(
 NGMgo(XMillerLoop) r: G2Affine(
 x=    Fq2(Fq(0x15018..33761), Fq(0xffdd3..a1eeb)), y=    Fq2(Fq(0xe07ef..e0cd4), Fq(0x1699b..a6d7f))
 )
+NGMgo(AddLineEval) r12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x127fa..eab26), Fq(0x177f3..b1e70)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x5504c..c67d4), Fq(0x11496..e05ab)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x15c8e..d2334), Fq(0x4613e..1f887)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) q12Neg: Fq12Pair(
+x=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xe1466..45a34), Fq(0x4310a..de1c5)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+), y=
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x43826..28777), Fq(0x159fd..db224)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+)
+NGMgo(AddLineEval) p1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x10789..0bb60), Fq(0xd18e1..39d87)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x1595c..559b9), Fq(0x6b2e0..26e00)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) p2Inv: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0xc4d76..81d32), Fq(0x125c5..60b94)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
+NGMgo(AddLineEval) s1: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x2c105..f19fd), Fq(0xfa6e5..a7d92)),
+    )
+)
+NGMgo(AddLineEval) slope: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x2c105..f19fd), Fq(0xfa6e5..a7d92)),
+    )
+)
+NGMgo(XMillerLoop) lrq: 
+Fq12(
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    ),
+    Fq6(
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+        Fq2(Fq(0x0), Fq(0x0)),
+    )
+)
 NGMgo(XMillerLoop) f: 
 Fq12(
     Fq6(
@@ -2034,8 +3624,8 @@ x=    Fq2(Fq(0x15287..b9998), Fq(0x1870a..1dd2d)), y=    Fq2(Fq(0x80c79..da4e4),
 	NGMgo(AtePairingMulti) pair: Fq12(Fq6(Fq2(Fq(0x19daf..e2553) + Fq(0x58645..39f0f) * u) + Fq2(Fq(0x187ab..b0dcc) + Fq(0x8919a..61049) * u)*v + Fq2(Fq(0x23e0f..14d03) + Fq(0x12fa3..732a6) * u)*v^2) + Fq6(Fq2(Fq(0x15e10..b026f) + Fq(0x7bb08..90ae4) * u) + Fq2(Fq(0x13706..2dc53) + Fq(0x530b6..06b86) * u)*v + Fq2(Fq(0x19155..42e53) + Fq(0x11734..407dc) * u)*v^2) * w)
 	NGMgo(AtePairingMulti) prod: Fq12(Fq6(Fq2(Fq(0x1) + Fq(0x0) * u) + Fq2(Fq(0x0) + Fq(0x0) * u)*v + Fq2(Fq(0x0) + Fq(0x0) * u)*v^2) + Fq6(Fq2(Fq(0x0) + Fq(0x0) * u) + Fq2(Fq(0x0) + Fq(0x0) * u)*v + Fq2(Fq(0x0) + Fq(0x0) * u)*v^2) * w)
 NGMgo(XVerify) res: Fq12(Fq6(Fq2(Fq(0x0) + Fq(0x0) * u) + Fq2(Fq(0x0) + Fq(0x0) * u)*v + Fq2(Fq(0x0) + Fq(0x0) * u)*v^2) + Fq6(Fq2(Fq(0x0) + Fq(0x0) * u) + Fq2(Fq(0x0) + Fq(0x0) * u)*v + Fq2(Fq(0x0) + Fq(0x0) * u)*v^2) * w)
---- FAIL: TestVectorSignaturesVerify (0.23s)
+--- FAIL: TestVectorSignaturesVerify (0.24s)
     bls_test.go:370: oops -- verify broken
 FAIL
 exit status 1
-FAIL	gitlab.com/nmarley/go-bls-signatures	0.377s
+FAIL	gitlab.com/nmarley/go-bls-signatures	0.396s

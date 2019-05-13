@@ -166,10 +166,15 @@ func XMillerLoop(t *big.Int, p *G1Projective, q *G2Projective) *FQ12 {
 		if tBits[i] == 1 {
 			// Compute sloped line lrq
 			// lrq = add_line_eval(R, Q, P, ec)
-			lrq := AddL
+			lrq := AddLineEval(r, q, p)
+			fmt.Println("NGMgo(XMillerLoop) lrq:", lrq.PP())
 			// f = f * lrq
-			// R = R + Q
+			//f = f.Add(lrq)
+			//fmt.Println("NGMgo(XMillerLoop) f:", f.PP())
 
+			// R = R + Q
+			//r = r.Add(q)
+			//fmt.Println("NGMgo(XMillerLoop) r:", r.PP())
 		}
 	}
 
@@ -209,22 +214,40 @@ func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 func AddLineEval(r, q *G2Projective, p *G1Projective) *FQ12 {
 	// R12 = untwist(R)
 	r12 := r.ToAffine().Untwist()
-	fmt.Println("NGMgo(AddLineEval) r12:", r12)
+	fmt.Println("NGMgo(AddLineEval) r12:", r12.PP())
 
 	// Q12 = untwist(Q)
 	q12 := q.ToAffine().Untwist()
-	fmt.Println("NGMgo(AddLineEval) q12:", q12)
-
-	//q12.x, q12.y.Neg()
-	//q12Neg := NewFq12Pair(q.ne)
+	fmt.Println("NGMgo(AddLineEval) q12:", q12.PP())
 
 	// This is the case of a vertical line, where the denominator
 	// will be 0.
-	//if r12.x
+	q12Neg := q12.Conjugate()
+	fmt.Println("NGMgo(AddLineEval) q12Neg:", q12Neg.PP())
+
 	// if R12 == Q12.negate():
-	//     return P.x - R12.x
-	//
+	if r12.Equal(q12.Conjugate()) {
+		// return P.x - R12.x
+		return r12.x.Neg().AddFQ(p.x)
+	}
+
 	// slope = (Q12.y - R12.y) / (Q12.x - R12.x)
+	//q12.y.Sub(r12.y) / q12.x.Sub(r12.x)
+
+	p1 := q12.y.Sub(r12.y)
+	fmt.Println("NGMgo(AddLineEval) p1:", p1.PP())
+	p2 := q12.x.Sub(r12.x)
+	fmt.Println("NGMgo(AddLineEval) p2:", p2.PP())
+
+	p2Inv := p2.Inverse()
+	fmt.Println("NGMgo(AddLineEval) p2Inv:", p2Inv.PP())
+
+	s1 := p1.Mul(p2.Inverse())
+	fmt.Println("NGMgo(AddLineEval) s1:", s1.PP())
+
+	slope := q12.y.Sub(r12.y).Mul(q12.x.Sub(r12.x).Inverse())
+	fmt.Println("NGMgo(AddLineEval) slope:", slope.PP())
+
 	// v = (Q12.y * R12.x - R12.y * Q12.x) / (R12.x - Q12.x)
 
 	// return P.y - P.x * slope - v

@@ -1050,6 +1050,8 @@ func (g *G2Affine) Psi() *G2Affine {
 	return NewG2Affine(t2.x, t2.y)
 }
 
+// TODO: Move to FQ12 ?
+
 // Fq12Pair
 // Not sure what to call this, it's a x/y pairing of FQ12 fields
 type Fq12Pair struct {
@@ -1064,6 +1066,22 @@ func NewFq12Pair(x, y *FQ12) *Fq12Pair {
 func (f Fq12Pair) String() string {
 	return fmt.Sprintf("Fq12Pair(x=%s, y=%s)", f.x, f.y)
 }
+
+func (f Fq12Pair) PP() string {
+	return fmt.Sprintf("Fq12Pair(\nx=%s, y=%s\n)", f.x.PP(), f.y.PP())
+}
+
+// Conjugate returns the conjugate of the Fq12Pair
+func (f *Fq12Pair) Conjugate() *Fq12Pair {
+	return NewFq12Pair(f.x, f.y.Neg())
+}
+
+// Equal returns whether the Fq12Pair is equal
+func (f *Fq12Pair) Equal(other *Fq12Pair) bool {
+	return f.x.Equals(other.x) && f.y.Equals(other.y)
+}
+
+// End Fq12Pair
 
 // Twist ...
 //
