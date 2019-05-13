@@ -214,35 +214,19 @@ type MessageHash [32]byte
 
 // XVerify verifies a signature against a message and a public key.
 //
-// This implementation of verify has several steps. First, it
-// reorganizes the pubkeys and messages into groups, where
-// each group corresponds to a message. Then, it checks if the
-// siganture has info on how it was aggregated. If so, we
-// exponentiate each pk based on the exponent in the AggregationInfo.
-// If not, we find public keys that share messages with others,
-// and aggregate all of these securely (with exponents.).
-// Finally, since each public key now corresponds to a unique
-// message (since we grouped them), we can verify using the
-// distinct verification procedure.
+// This implementation of verify has several steps. First, it reorganizes the
+// pubkeys and messages into groups, where each group corresponds to a message.
+// Then, it checks if the siganture has info on how it was aggregated. If so,
+// we exponentiate each pk based on the exponent in the AggregationInfo.  If
+// not, we find public keys that share messages with others, and aggregate all
+// of these securely (with exponents.).  Finally, since each public key now
+// corresponds to a unique message (since we grouped them), we can verify using
+// the distinct verification procedure.
 func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
-	//fmt.Println("NGMgo XVerify sig:", sig.s)
-	//fmt.Println("NGMgo XVerify sig:", sig.s.ToAffine())
-	fmt.Printf("NGMgo XVerify sig : %x\n", sig.Serialize(true))
-	fmt.Printf("NGMgo XVerify sig : %x\n", sig.s.ToAffine().SerializeBytes())
-	// NGMpy IN TEST sig1: JacobianPoint(x=Fq2(Fq(0x20e42..fbde5), Fq(0xfc757..201bd)), y=Fq2(Fq(0x14a63..6f337), Fq(0x1a5a1..8449f)), z=Fq2(Fq(0x6d46b..fb497), Fq(0x8431b..e7419)), i=False)
-
 	h := Hash256(m)
 	agginfo := AggregationInfoFromMsgHash(pub, h)
-
 	messageHashes := agginfo.GetMessageHashes()
-	//fmt.Println("NGMgo XVerify messageHashes:", messageHashes)
-	//for _, mh2 := range messageHashes {
-	//	fmt.Printf("\tNGMgo XVerify mh2 %x\n", mh2)
-	//}
-
 	publicKeys := agginfo.GetPublicKeys()
-	//fmt.Println("NGMgo XVerify publickeys:", publicKeys)
-
 	if len(messageHashes) != len(publicKeys) {
 		return false
 	}
@@ -261,7 +245,6 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 
 		// Convenience accessor for the public key
 		pk := publicKeys[i]
-
 		mk := NewMapKey(pk, mh)
 
 		// Check if messageHash value exists in map
@@ -280,54 +263,31 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 
 	var finalMessageHashes []MessageHash
 	var finalPublicKeys []*G1Projective
-	fmt.Println("NGMgo XVerify finalPublicKeys:", finalPublicKeys)
-
 	var mappedHashes []*G2Projective
 
 	for mh, keys := range hashToPublicKeys {
 		publicKeySum := NewG1Projective(FQOne, FQOne, FQZero)
-
-		// TODO: de-dupes here
-		// wait: maybe not needed with usedPKs above...
-
 		for _, k := range keys {
 			mk := NewMapKey(k, mh)
 			exponent := agginfo.Tree[mk]
-			fmt.Println("NGMgo XVerify exponent:", exponent)
 			sum := k.p.Mul(exponent)
-			fmt.Println("NGMgo XVerify sum:", sum)
 			publicKeySum = publicKeySum.Add(sum)
-			fmt.Println("NGMgo XVerify publicKeySum:", publicKeySum)
-
-			// NGMpy res: JacobianPoint(x=Fq(0x2a8d2..c7a61), y=Fq(0x145bc..9e305)z=Fq(0x1), i=False)
-			// NGMgo XVerify sum: G1Projective(x=Fq(0x2a8d2..c7a61), y=Fq(0x145bc..9e305), z=Fq(0x1))
 		}
 		finalMessageHashes = append(finalMessageHashes, mh)
 		finalPublicKeys = append(finalPublicKeys, publicKeySum)
 		mappedHashes = append(mappedHashes, XHashG2PreHashed(mh[:]))
 	}
-	fmt.Println("NGMgo XVerify finalMessageHashes:", finalMessageHashes)
 
 	fq := NewFQ(new(big.Int).Sub(RFieldModulus, bigOne))
-	// g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n).ToAffine()
 	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n)
-	//fmt.Println("NGMgo XVerify g1:", g1)
 
-	//Ps = [g1] + finalPublicKeys
+	// Gather a list of p's and q's to send to AtePairingMulti
 	ps := []*G1Projective{g1}
 	ps = append(ps, finalPublicKeys...)
-	//fmt.Println("NGMgo XVerify ps:", ps)
-
 	qs := []*G2Projective{sig.s}
 	qs = append(qs, mappedHashes...)
-	// [self.value.to_affine()] + mapped_hashes
-	//fmt.Println("NGMgo XVerify qs:", qs)
-	//for i, coord := range qs {
-	//	fmt.Printf("\nNGMgo XVerify coord qs[%d]: %v\n", i, coord.ToAffine())
-	//}
 
 	res := AtePairingMulti(ps, qs)
-	fmt.Println("NGMgo(XVerify) res:", res)
 
 	return FQ12One.Equals(res)
 }
