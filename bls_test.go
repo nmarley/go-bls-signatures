@@ -108,26 +108,27 @@ func TestVectorSignaturesVerify(t *testing.T) {
 			is.True(bls.XVerify(tt.payload, pk, sig))
 		})
 	}
+}
 
-	// ============================================================================
+// Implement test for test vector for HDKeys
+func TestVectorHDKeys(t *testing.T) {
+	tests := []struct {
+		seed          []byte
+		pkFingerprint uint32
+	}{
+		{
+			seed:          []byte{1, 50, 6, 244, 24, 199, 1, 25},
+			pkFingerprint: 0xa4700b27,
+		},
+	}
 
-	//pubkey, _ := bls.DeserializePublicKey(pk2)
-	//fmt.Println("pubkey:", pubkey.Debug())
-	//
-	//sig, _ := bls.DeserializeSignature(sig2)
-	//fmt.Println("sig:", sig.Debug())
-	//
-	//val := bls.XVerify(payload, pubkey, sig)
-	//if !val {
-	//	t.Error("oops -- verify broken")
-	//}
-
-	// verify(sig1, AggregationInfo(pk1, [7,8,9]))
-	// true
-
-	// verify(sig2, AggregationInfo(pk2, [7,8,9]))
-	// true
-
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
+			is := is.New(st)
+			xpriv := bls.ExtendedSecretKeyFromSeed(tt.seed)
+			is.Equal(xpriv.PublicKey().Fingerprint(), tt.pkFingerprint)
+		})
+	}
 }
 
 // Values either defined in or derived from test vectors and re-used multiple

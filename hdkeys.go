@@ -10,7 +10,7 @@ type ExtendedSecretKey struct {
 	Depth             uint8
 	ParentFingerprint uint32
 	ChildNumber       uint32
-	Sk                *SecretKey
+	SecretKey         *SecretKey
 	ChainCode         *big.Int
 }
 
@@ -27,8 +27,8 @@ func ExtendedSecretKeyFromSeed(seed []byte) *ExtendedSecretKey {
 	hmacKey := []byte("BLS HD seed")
 
 	// TODO: Comment me later
-	iLeft := Hmac256(seed, append([]byte{0}, hmacKey...))
-	iRight := Hmac256(seed, append([]byte{1}, hmacKey...))
+	iLeft := Hmac256(append(seed, []byte{0}...), hmacKey)
+	iRight := Hmac256(append(seed, []byte{1}...), hmacKey)
 
 	// TODO: Comment me later
 	skInt := new(big.Int).SetBytes(iLeft)
@@ -47,16 +47,19 @@ func ExtendedSecretKeyFromSeed(seed []byte) *ExtendedSecretKey {
 	// TODO: Comment me later
 	sk := DeserializeSecretKey(skInt.Bytes())
 
-	//return ExtendedPrivateKey(ExtendedPrivateKey.version, 0, 0, 0, i_right, sk)
-	// version, depth, parent_fingerprint, child_number, chain_code, private_key):
 	return &ExtendedSecretKey{
 		Version:           ExtendedSecretKeyVersion,
 		Depth:             0,
 		ParentFingerprint: 0,
 		ChildNumber:       0,
 		ChainCode:         new(big.Int).SetBytes(iRight),
-		Sk:                sk,
+		SecretKey:         sk,
 	}
+}
+
+// PublicKey ...
+func (k *ExtendedSecretKey) PublicKey() *PublicKey {
+	return k.SecretKey.PublicKey()
 }
 
 // HD keys
