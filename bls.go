@@ -401,24 +401,6 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	return signatures[0]
 }
 
-// TODO: Maybe sth like this as syntactic sugar?
-type MessageSet map[MessageHash]struct{}
-
-func NewMessageSet() *MessageSet {
-	ms := make(MessageSet)
-	return &ms
-}
-func (ms *MessageSet) AddMsg(msg *MessageHash) {
-	(*ms)[*msg] = struct{}{}
-}
-func (ms *MessageSet) HasMsg(msg *MessageHash) bool {
-	_, found := (*ms)[*msg]
-	return found
-}
-func (ms *MessageSet) Len() int {
-	return len(*ms)
-}
-
 //def aggregate(signatures):
 
 //    # There are groups that share messages, therefore we need
@@ -586,3 +568,21 @@ func sortByteArrays(src [][]byte) [][]byte {
 //	}
 //	return lhs.Equals(rhs)
 //}
+
+// MessageSet and associate funcs are a syntactic sugar wrapper around a map
+type MessageSet map[MessageHash]struct{}
+
+func NewMessageSet() *MessageSet {
+	ms := make(MessageSet)
+	return &ms
+}
+func (ms *MessageSet) AddMsg(msg *MessageHash) {
+	(*ms)[*msg] = struct{}{}
+}
+func (ms *MessageSet) HasMsg(msg *MessageHash) bool {
+	_, found := (*ms)[*msg]
+	return found
+}
+func (ms *MessageSet) Len() int {
+	return len(*ms)
+}
