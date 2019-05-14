@@ -206,10 +206,8 @@ func (k *ExtendedPublicKey) PublicChild(i uint32) *ExtendedPublicKey {
 	var hmacInput [PublicKeySize + 4]byte
 	pkBytes := k.PublicKey.Serialize(true)
 	copy(hmacInput[:], pkBytes)
-	//fmt.Printf("NGMgo(epk/pubchild) hmacInput1: %x\n", hmacInput)
 
 	binary.BigEndian.PutUint32(hmacInput[PublicKeySize:], i)
-	//fmt.Printf("NGMgo(epk/pubchild) hmacInput2: %x\n", hmacInput)
 
 	// Chain code is used as hmac key
 	cc := [32]byte{}
