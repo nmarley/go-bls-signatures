@@ -358,30 +358,30 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	// func (ms *MessageSet) HasMsg(msg) { _, found := ms[msg]; return found }
 
 	// Find colliding vectors, save colliding messages
-	messagesSet := make(map[MessageHash]struct{})
-	collidingMessagesSet := make(map[MessageHash]struct{})
+	messagesSet := NewMessageSet()
+	collidingMessagesSet := NewMessageSet()
 
 	for _, hashList := range messageHashes {
 		//fmt.Println("NGMgo outer for, hashList:", hashList)
-		messagesSetLocal := make(map[MessageHash]struct{})
+		messagesSetLocal := NewMessageSet()
 
 		for _, msg := range hashList {
-			_, foundGlobal := messagesSet[*msg]
-			_, foundLocal := messagesSetLocal[*msg]
+			foundGlobal := messagesSet.HasMsg(msg)
+			foundLocal := messagesSetLocal.HasMsg(msg)
 
 			//fmt.Printf("NGMgo inner for, foundGlobal, foundLocal = %v, %v\n", foundGlobal, foundLocal)
 			if foundGlobal && !foundLocal {
-				collidingMessagesSet[*msg] = struct{}{}
+				collidingMessagesSet.AddMsg(msg)
 			}
-			messagesSet[*msg] = struct{}{}
-			messagesSetLocal[*msg] = struct{}{}
+			messagesSet.AddMsg(msg)
+			messagesSetLocal.AddMsg(msg)
 		}
 		//fmt.Println("NGMgo outer for, messagesSet:", messagesSet)
 	}
 
 	//fmt.Println("NGMgo(AggregateSignatures) collidingMessagesSet:", collidingMessagesSet)
 
-	if len(collidingMessagesSet) == 0 {
+	if collidingMessagesSet.Len() == 0 {
 		// There are no colliding messages between the groups, so we
 		// will just aggregate them all simply. Note that we assume
 		// that every group is a valid aggregate signature. If an invalid
@@ -408,12 +408,15 @@ func NewMessageSet() *MessageSet {
 	ms := make(MessageSet)
 	return &ms
 }
-func (ms *MessageSet) AddMsg(msg MessageHash) {
-	(*ms)[msg] = struct{}{}
+func (ms *MessageSet) AddMsg(msg *MessageHash) {
+	(*ms)[*msg] = struct{}{}
 }
-func (ms *MessageSet) HasMsg(msg MessageHash) bool {
-	_, found := (*ms)[msg]
+func (ms *MessageSet) HasMsg(msg *MessageHash) bool {
+	_, found := (*ms)[*msg]
 	return found
+}
+func (ms *MessageSet) Len() int {
+	return len(*ms)
 }
 
 //def aggregate(signatures):
