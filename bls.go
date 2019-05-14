@@ -342,6 +342,11 @@ func (s *Signature) Aggregate(other *Signature) {
 	s.s = newS
 }
 
+// String implements the Stringer interface
+func (s Signature) String() string {
+	return fmt.Sprintf("%096x", s.Serialize(true))
+}
+
 // AggregatePublicKeys adds public keys together.
 func AggregatePublicKeys(p []*PublicKey) *PublicKey {
 	newPub := &PublicKey{p: G1ProjectiveZero.Copy()}
