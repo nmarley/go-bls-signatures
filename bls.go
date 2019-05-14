@@ -307,46 +307,46 @@ func AggregateSignatures(s []*Signature) *Signature {
 	return s[0]
 }
 
-// Aggregate adds one signature to another
-func (s *Signature) Aggregate(other *Signature) {
-	newS := s.s.Add(other.s)
-	s.s = newS
-}
+//// Aggregate adds one signature to another
+//func (s *Signature) Aggregate(other *Signature) {
+//	newS := s.s.Add(other.s)
+//	s.s = newS
+//}
 
 // String implements the Stringer interface
 func (s Signature) String() string {
 	return fmt.Sprintf("%096x", s.Serialize())
 }
 
-// AggregatePublicKeys adds public keys together.
-func AggregatePublicKeys(p []*PublicKey) *PublicKey {
-	newPub := &PublicKey{p: G1ProjectiveZero.Copy()}
-	for _, pub := range p {
-		newPub.Aggregate(pub)
-	}
-	return newPub
-}
+//// AggregatePublicKeys adds public keys together.
+//func AggregatePublicKeys(p []*PublicKey) *PublicKey {
+//	newPub := &PublicKey{p: G1ProjectiveZero.Copy()}
+//	for _, pub := range p {
+//		newPub.Aggregate(pub)
+//	}
+//	return newPub
+//}
 
-// Aggregate adds two public keys together.
-func (p *PublicKey) Aggregate(other *PublicKey) {
-	newP := p.p.Add(other.p)
-	p.p = newP
-}
+//// Aggregate adds two public keys together.
+//func (p *PublicKey) Aggregate(other *PublicKey) {
+//	newP := p.p.Add(other.p)
+//	p.p = newP
+//}
 
 // Copy copies the public key and returns it.
 func (p *PublicKey) Copy() *PublicKey {
 	return &PublicKey{p: p.p.Copy()}
 }
 
-// NewAggregateSignature creates a blank aggregate signature.
-func NewAggregateSignature() *Signature {
-	return &Signature{s: G2ProjectiveZero.Copy()}
-}
-
-// NewAggregatePubkey creates a blank public key.
-func NewAggregatePubkey() *PublicKey {
-	return &PublicKey{p: G1ProjectiveZero.Copy()}
-}
+//// NewAggregateSignature creates a blank aggregate signature.
+//func NewAggregateSignature() *Signature {
+//	return &Signature{s: G2ProjectiveZero.Copy()}
+//}
+//
+//// NewAggregatePubkey creates a blank public key.
+//func NewAggregatePubkey() *PublicKey {
+//	return &PublicKey{p: G1ProjectiveZero.Copy()}
+//}
 
 // implement `Interface` in sort package.
 type sortableByteArray [][]byte
@@ -379,41 +379,41 @@ func sortByteArrays(src [][]byte) [][]byte {
 }
 
 // VerifyAggregate verifies each public key against each message.
-func (s *Signature) VerifyAggregate(pubKeys []*PublicKey, msgs [][]byte, domain uint64) bool {
-	if len(pubKeys) != len(msgs) {
-		return false
-	}
-
-	// messages must be distinct
-	msgsSorted := sortByteArrays(msgs)
-	lastMsg := []byte(nil)
-
-	// check for duplicates
-	for _, m := range msgsSorted {
-		if bytes.Equal(m, lastMsg) {
-			return false
-		}
-		lastMsg = m
-	}
-
-	lhs := Pairing(G1ProjectiveOne, s.s)
-	rhs := FQ12One.Copy()
-	for i := range pubKeys {
-		h := HashG2(msgs[i], domain)
-		rhs.MulAssign(Pairing(pubKeys[i].p, h))
-	}
-	return lhs.Equals(rhs)
-}
+//func (s *Signature) VerifyAggregate(pubKeys []*PublicKey, msgs [][]byte, domain uint64) bool {
+//	if len(pubKeys) != len(msgs) {
+//		return false
+//	}
+//
+//	// messages must be distinct
+//	msgsSorted := sortByteArrays(msgs)
+//	lastMsg := []byte(nil)
+//
+//	// check for duplicates
+//	for _, m := range msgsSorted {
+//		if bytes.Equal(m, lastMsg) {
+//			return false
+//		}
+//		lastMsg = m
+//	}
+//
+//	lhs := Pairing(G1ProjectiveOne, s.s)
+//	rhs := FQ12One.Copy()
+//	for i := range pubKeys {
+//		h := HashG2(msgs[i], domain)
+//		rhs.MulAssign(Pairing(pubKeys[i].p, h))
+//	}
+//	return lhs.Equals(rhs)
+//}
 
 // VerifyAggregateCommon verifies each public key against a message.
 // This is vulnerable to rogue public-key attack. Each user must
 // provide a proof-of-knowledge of the public key.
-func (s *Signature) VerifyAggregateCommon(pubKeys []*PublicKey, msg []byte, domain uint64) bool {
-	h := HashG2(msg, domain)
-	lhs := Pairing(G1ProjectiveOne, s.s)
-	rhs := FQ12One.Copy()
-	for _, p := range pubKeys {
-		rhs.MulAssign(Pairing(p.p, h))
-	}
-	return lhs.Equals(rhs)
-}
+//func (s *Signature) VerifyAggregateCommon(pubKeys []*PublicKey, msg []byte, domain uint64) bool {
+//	h := HashG2(msg, domain)
+//	lhs := Pairing(G1ProjectiveOne, s.s)
+//	rhs := FQ12One.Copy()
+//	for _, p := range pubKeys {
+//		rhs.MulAssign(Pairing(p.p, h))
+//	}
+//	return lhs.Equals(rhs)
+//}
