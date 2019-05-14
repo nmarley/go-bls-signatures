@@ -380,14 +380,18 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		// or insecure signature is given, and invalid signature will
 		// be created. We don't verify for performance reasons.
 
-		// final_sig = Signature.aggregate_sigs_simple(signatures)
 		finalSig := AggregateSignaturesSimple(signatures)
 		fmt.Println("NGMgo(AggregateSignatures) finalSig:", finalSig)
 
-		//        aggregation_infos = [sig.aggregation_info for sig in signatures]
-		//        final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
-		//        final_sig.set_aggregation_info(final_agg_info)
-		//        return final_sig
+		// TODO: Finish this!!! Test it!!
+		var aggInfos []*AggregationInfo
+		for _, sig := range signatures {
+			aggInfos = append(aggInfos, sig.ai)
+		}
+		// TODO: All we really need is MergeAggregationInfos to be implemented...
+		//finalAggInfo := MergeAggregationInfos(aggInfos)
+		//finalSig.SetAggregationInfo(finalAggInfo)
+		return finalSig
 	}
 
 	// There are groups that share messages, therefore we need
@@ -418,27 +422,29 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		}
 	}
 
-	// # Arrange all signatures, sorted by their aggregation info
-	// colliding_sigs.sort(key=lambda s: s.aggregation_info)
-	collidingSigs
+	// Sort signatures by their aggregation info
+	sort.Sort(SigsByAI(collidingSigs))
+
+	//sortKeysSorted := []
+	// Arrange all public keys in sorted order, by (m, pk)
+	// sort_keys_sorted = []
+	// for i in range(len(colliding_public_keys)):
+	for i := 0; i < len(collidingPublicKeys); i++ {
+		for j := 0; j < len(collidingPublicKeys[i]); j++ {
+			// sort_keys_sorted.append((colliding_message_hashes[i][j], colliding_public_keys[i][j]))
+		}
+	}
 
 	return signatures[0]
 }
 
-// SigsByAI ... sort
-//type SigsByAI []*Signature
-//func (s SigsByAI) Len() int { return len(s) }
-//func (s SigsByAI) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
-//func (s SigsByAI) Less(i, j int) bool { return s[i].ai < s[j].ai }
+// SigsByAI implements sort.Interface for []*Signature, and sorts by
+// AggregationInfo
+type SigsByAI []*Signature
 
-//def aggregate(signatures):
-
-//    # Arrange all public keys in sorted order, by (m, pk)
-//    sort_keys_sorted = []
-//    for i in range(len(colliding_public_keys)):
-//        for j in range(len(colliding_public_keys[i])):
-//            sort_keys_sorted.append((colliding_message_hashes[i][j],
-//                                     colliding_public_keys[i][j]))
+func (s SigsByAI) Len() int           { return len(s) }
+func (s SigsByAI) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s SigsByAI) Less(i, j int) bool { return s[i].ai.Less(s[j].ai) }
 
 //    sort_keys_sorted.sort()
 //    sorted_public_keys = [pk for (mh, pk) in sort_keys_sorted]
