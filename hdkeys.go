@@ -84,7 +84,7 @@ func (k *ExtendedSecretKey) PrivateChild(i uint32) *ExtendedSecretKey {
 	if hardened {
 		hmacInput = k.SecretKey.Serialize()
 	} else {
-		hmacInput = k.GetPublicKey().Serialize(true)
+		hmacInput = k.GetPublicKey().Serialize()
 	}
 
 	// Now append i as 4 bytes to hmacInput (big endian)
@@ -138,7 +138,7 @@ func (k *ExtendedSecretKey) GetExtendedPublicKey() *ExtendedPublicKey {
 	// copy ChainCode bytes into buffer
 	copy(buf[13:45], ccBuf[:])
 
-	pkBytes := k.SecretKey.PublicKey().Serialize(true)
+	pkBytes := k.SecretKey.PublicKey().Serialize()
 	copy(buf[45:], pkBytes)
 
 	return ExtendedPublicKeyFromBytes(buf[:])
@@ -204,7 +204,7 @@ func (k *ExtendedPublicKey) PublicChild(i uint32) *ExtendedPublicKey {
 	}
 
 	var hmacInput [PublicKeySize + 4]byte
-	pkBytes := k.PublicKey.Serialize(true)
+	pkBytes := k.PublicKey.Serialize()
 	copy(hmacInput[:], pkBytes)
 
 	binary.BigEndian.PutUint32(hmacInput[PublicKeySize:], i)

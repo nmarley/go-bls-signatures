@@ -26,29 +26,21 @@ const (
 
 // Signature is a message signature.
 type Signature struct {
-	s *G2Projective
+	s  *G2Projective
+	ai *AggregationInfo
 }
+
+// NewSignature ...
+// func NewSignature() *Signature { return &Signature{} }
 
 // Debug ...
 func (s *Signature) Debug() string {
 	return s.s.ToAffine().PP()
 }
 
-// Serialize serializes a signature.
-func (s *Signature) Serialize(compressed bool) []byte {
-	if compressed {
-		return CompressG2(s.s.ToAffine())
-	}
-
-	// else serialize uncompressed
-	affine := s.s.ToAffine()
-	out := [G2ElementSize * 2]byte{}
-	if affine.infinity {
-		out[0] = (1 << 6)
-		return out[:]
-	}
-
-	return affine.SerializeBytes()
+// Serialize serializes a signature to a byte slice
+func (s *Signature) Serialize() []byte {
+	return CompressG2(s.s.ToAffine())
 }
 
 // DeserializeSignature deserializes a signature from bytes.
@@ -60,6 +52,7 @@ func DeserializeSignature(b []byte) (*Signature, error) {
 			return nil, err
 		}
 
+		// TODO: NewSignature
 		return &Signature{s: a.ToProjective()}, nil
 
 	case G2ElementSize * 2:
@@ -68,15 +61,11 @@ func DeserializeSignature(b []byte) (*Signature, error) {
 		// Set points given raw bytes for coordinates
 		a.SetRawBytes(b)
 
+		// TODO: NewSignature
 		return &Signature{s: a.ToProjective()}, nil
 	}
 
 	return nil, fmt.Errorf("invalid signature bytes")
-}
-
-// Copy returns a copy of the signature.
-func (s *Signature) Copy() *Signature {
-	return &Signature{s.s.Copy()}
 }
 
 // PublicKey is a public key.
@@ -94,24 +83,14 @@ func (p *PublicKey) Debug() string {
 	return p.p.ToAffine().PP()
 }
 
-// Serialize serializes a public key to bytes.
-//
-// TODO: Probably just disallow uncompressed altogether
-// Since Chia does not use this, it does not make sense to add complexity to
-// the codebase for no reason or keep it there "just because".
-func (p *PublicKey) Serialize(compressed bool) []byte {
-	if compressed {
-		return CompressG1(p.p.ToAffine())
-	}
-
-	// else serialize uncompressed
-	affine := p.p.ToAffine()
-	return affine.SerializeBytes()
+// Serialize serializes a public key to a byte slice
+func (p *PublicKey) Serialize() []byte {
+	return CompressG1(p.p.ToAffine())
 }
 
 // Fingerprint returns the the first 4 bytes of hash256(serialize(pubkey))
 func (p *PublicKey) Fingerprint() uint32 {
-	buf := Hash256(p.Serialize(true))
+	buf := Hash256(p.Serialize())
 	return binary.BigEndian.Uint32(buf[:4])
 }
 
@@ -228,27 +207,22 @@ func Verify(m []byte, pub *PublicKey, sig *Signature, domain uint64) bool {
 func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 	h := Hash256(m)
 
-	// TODO/NGM: consider forcing [32]byte for all hashes, to prevent further
-	// copy bugs...
-	agginfo := AggregationInfoFromMsgHash(pub, h)
+	mh := NewMessageHashFromBytes(h)
+	agginfo := AggregationInfoFromMsgHash(pub, mh)
 	messageHashes := agginfo.GetMessageHashes()
 	publicKeys := agginfo.GetPublicKeys()
 	if len(messageHashes) != len(publicKeys) {
 		return false
 	}
 
-	hashToPublicKeys := make(map[MessageHash][]*PublicKey)
+	hashToPublicKeys := make(map[*MessageHash][]*PublicKey)
 
 	// usedPKs is to keep track and prevent duplicate hash/pubkeys
 	usedPKs := make(map[MapKey]struct{})
 
 	// NGM: I honestly think this loop doesn't make sense... let's wait and see.
 	// Look thru each messageHash from agginfo
-	for i, hash := range messageHashes {
-		// Copy hash slice into MessageHash var
-		var mh MessageHash
-		copy(mh[:], hash)
-
+	for i, mh := range messageHashes {
 		// Convenience accessor for the public key
 		pk := publicKeys[i]
 		mk := NewMapKey(pk, mh)
@@ -267,7 +241,9 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 		}
 	}
 
-	var finalMessageHashes []MessageHash
+	// TODO: Only once all Chia test vectors passing, review this and see if
+	// finalMessageHashes / mappedhashes is really needed.
+	var finalMessageHashes []*MessageHash
 	var finalPublicKeys []*G1Projective
 	var mappedHashes []*G2Projective
 
@@ -328,12 +304,15 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 }
 
 // AggregateSignatures adds up all of the signatures.
+//
+// TODO/NGM comments:
+//Aggregates many (aggregate) signatures, using a combination of simple
+//and secure aggregation. Signatures are grouped based on which ones
+//share common messages, and these are all merged securely.
 func AggregateSignatures(s []*Signature) *Signature {
-	newSig := &Signature{s: G2ProjectiveZero.Copy()}
-	for _, sig := range s {
-		newSig.Aggregate(sig)
-	}
-	return newSig
+	//fmt.Println("NGMgo s:", s)
+
+	return s[0]
 }
 
 // Aggregate adds one signature to another
@@ -344,7 +323,7 @@ func (s *Signature) Aggregate(other *Signature) {
 
 // String implements the Stringer interface
 func (s Signature) String() string {
-	return fmt.Sprintf("%096x", s.Serialize(true))
+	return fmt.Sprintf("%096x", s.Serialize())
 }
 
 // AggregatePublicKeys adds public keys together.

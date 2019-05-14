@@ -435,7 +435,7 @@ func TestDashCoreBLSCompatibility(t *testing.T) {
 			is.NoErr(err)
 
 			pk := sk.PublicKey()
-			is.Equal(pk.Serialize(true), pkExpected)
+			is.Equal(pk.Serialize(), pkExpected)
 		})
 	}
 }

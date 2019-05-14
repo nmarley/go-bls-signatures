@@ -13,7 +13,7 @@ func main() {
 
 	secretKey := bls.DeserializeSecretKey(skBytes)
 	publicKey := secretKey.PublicKey()
-	fmt.Printf("public: %x\n", publicKey.Serialize(true))
+	fmt.Printf("public: %x\n", publicKey.Serialize())
 }
 
 // secret: "2ac124c0aa1808e590ff1f94d67a53970ae982aa30bbe261ff1cb2ad15b7452a",

@@ -4,14 +4,15 @@ import (
 	"math/big"
 )
 
-// AggregationInfo ...
+// AggregationInfo ... TODO
 type AggregationInfo struct {
 	Tree       AggregationTree
-	Hashes     [][]byte
+	Hashes     []*MessageHash
 	PublicKeys []*PublicKey
 }
 
-func NewAggregationInfo(pubKeys []*PublicKey, hashes [][]byte) *AggregationInfo {
+// NewAggregationInfo ... TODO
+func NewAggregationInfo(pubKeys []*PublicKey, hashes []*MessageHash) *AggregationInfo {
 	return &AggregationInfo{
 		PublicKeys: pubKeys,
 		Hashes:     hashes,
@@ -31,28 +32,36 @@ type MapKey [MapKeyLen]byte
 // MessageHash represents ... and is required because ...
 type MessageHash [MessageHashSize]byte
 
-func NewMapKey(pk *PublicKey, mh MessageHash) MapKey {
+// NewMessageHash initializes a new message hash from a byte slice
+func NewMessageHashFromBytes(b []byte) *MessageHash {
+	mh := &MessageHash{}
+	copy(mh[MessageHashSize-len(b):], b)
+	return mh
+}
+
+// NewMapKey ... TODO
+func NewMapKey(pk *PublicKey, mh *MessageHash) MapKey {
 	var mk MapKey
 	copy(mk[:], mh[:])
-	pubkeyBytes := pk.Serialize(true)
+	pubkeyBytes := pk.Serialize()
 	copy(mk[MapKeyLen-len(pubkeyBytes):], pubkeyBytes)
 	return mk
 }
 
-func AggregationInfoFromMsgHash(pk *PublicKey, h []byte) *AggregationInfo {
-	// Public key length + 32 bytes for the message hash (sha256 hash)
+func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo {
+	// Public key len + Message hash len (sha256 hash = 32 bytes)
 	var mk MapKey
 
 	// Copy hash bytes to mapkey
-	copy(mk[MessageHashSize-len(h):], h)
+	copy(mk[MessageHashSize-len(mh):], mh[:])
 
 	// Serialize public key to raw bytes
-	pubkeyBytes := pk.Serialize(true)
+	pubkeyBytes := pk.Serialize()
 
 	// Now copy serialized public key bytes into mapkey, located just after the message hash
 	copy(mk[MapKeyLen-len(pubkeyBytes):], pubkeyBytes)
 
-	ai := NewAggregationInfo([]*PublicKey{pk}, [][]byte{h})
+	ai := NewAggregationInfo([]*PublicKey{pk}, []*MessageHash{mh})
 	ai.Tree[mk] = bigOne
 
 	return ai
@@ -67,6 +76,6 @@ func (ai *AggregationInfo) GetPublicKeys() []*PublicKey {
 }
 
 // GetMessageHashes
-func (ai *AggregationInfo) GetMessageHashes() [][]byte {
+func (ai *AggregationInfo) GetMessageHashes() []*MessageHash {
 	return ai.Hashes
 }

@@ -47,7 +47,7 @@ func TestKeygen(t *testing.T) {
 			}
 
 			pk := sk.PublicKey()
-			//fmt.Printf("pk%d: %x\n", i+1, pk.Serialize(true))
+			//fmt.Printf("pk%d: %x\n", i+1, pk.Serialize())
 			is.Equal(pk.Fingerprint(), tt.pkFingerprint)
 		})
 	}
@@ -77,8 +77,8 @@ func TestVectorSignaturesSign(t *testing.T) {
 			is := is.New(st)
 			key := bls.DeserializeSecretKey(tt.secretKey)
 			sig := bls.Sign(tt.payload, key)
-			//fmt.Printf("sig%d: %x\n", i+1, sig.Serialize(true))
-			is.Equal(sig.Serialize(true), tt.expectedSig)
+			//fmt.Printf("sig%d: %x\n", i+1, sig.Serialize())
+			is.Equal(sig.Serialize(), tt.expectedSig)
 		})
 	}
 }

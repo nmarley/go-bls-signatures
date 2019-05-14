@@ -27,7 +27,7 @@ func TestVectorAggregation(t *testing.T) {
 			}
 			//fmt.Println("sigs:", sigs)
 			aggSig := bls.AggregateSignatures(sigs)
-			fmt.Printf("aggSig: %x\n", aggSig.Serialize(true))
+			fmt.Printf("aggSig: %x\n", aggSig.Serialize())
 			// Aggregate(sig1, sig2)
 			is.Equal(1, 1)
 		})
