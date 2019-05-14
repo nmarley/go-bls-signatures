@@ -31,7 +31,17 @@ type Signature struct {
 }
 
 // NewSignature ...
-// func NewSignature() *Signature { return &Signature{} }
+func NewSignature(p *G2Projective, ai *AggregationInfo) *Signature {
+	return &Signature{
+		s:  p,
+		ai: ai,
+	}
+}
+
+// TODO
+func (s *Signature) SetAggregationInfo(ai *AggregationInfo) {
+	s.ai = ai
+}
 
 // Debug ...
 func (s *Signature) Debug() string {
@@ -45,27 +55,15 @@ func (s *Signature) Serialize() []byte {
 
 // DeserializeSignature deserializes a signature from bytes.
 func DeserializeSignature(b []byte) (*Signature, error) {
-	switch len(b) {
-	case G2ElementSize:
-		a, err := DecompressG2(new(big.Int).SetBytes(b))
-		if err != nil {
-			return nil, err
-		}
-
-		// TODO: NewSignature
-		return &Signature{s: a.ToProjective()}, nil
-
-	case G2ElementSize * 2:
-		a := G2Affine{}
-
-		// Set points given raw bytes for coordinates
-		a.SetRawBytes(b)
-
-		// TODO: NewSignature
-		return &Signature{s: a.ToProjective()}, nil
+	if len(b) != SignatureSize {
+		return nil, fmt.Errorf("invalid signature bytes")
+	}
+	a, err := DecompressG2(new(big.Int).SetBytes(b))
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, fmt.Errorf("invalid signature bytes")
+	return NewSignature(a.ToProjective(), nil), nil
 }
 
 // PublicKey is a public key.
@@ -162,7 +160,10 @@ func DeserializeSecretKey(b []byte) *SecretKey {
 // Sign signs a message with a secret key.
 func Sign(message []byte, key *SecretKey) *Signature {
 	h := HashG2(message)
-	return &Signature{s: h.Mul(key.f.n)}
+	mh := NewMessageHashFromBytes(message)
+	aggInfo := AggregationInfoFromMsgHash(key.PublicKey(), mh)
+
+	return NewSignature(h.Mul(key.f.n), aggInfo)
 }
 
 // PrivToPub converts the private key into a public key.
@@ -295,53 +296,89 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 	return final
 }
 
+//func AggregateSignaturesSimple(signatures []*Signature) *Signature {
+//
+//}
+
+//// aggregates many signatures on messages, some of
+//// which may be identical. The returned signature contains
+//// information on how the aggregation was done (AggragationInfo).
+//static Signature Aggregate(std::vector<Signature> const &sigs);
+
 // AggregateSignatures aggregates many (aggregate) signatures, using a
 // combination of simple and secure aggregation. Signatures are grouped based
 // on which ones share common messages, and these are all merged securely.
 func AggregateSignatures(signatures []*Signature) *Signature {
-	fmt.Println("NGMgo s:", signatures)
+	//fmt.Println("NGMgo s:", signatures)
 
 	// public_keys = []  # List of lists
 	// message_hashes = []  # List of lists
-	var publicKeys []*PublicKey
-	var messageHashes []*MessageHash
+	type publicKeysList []*PublicKey
+	type messageHashesList []*MessageHash
+
+	var publicKeys []publicKeysList
+	var messageHashes []messageHashesList
+
 	for _, sig := range signatures {
 		if sig.ai == nil {
 			// TODO: error, do not panic
 			panic("Each signature must have a valid aggregation info")
 		}
-		publicKeys = append(publicKeys, sig.ai.PublicKeys...)
-		messageHashes = append(messageHashes, sig.ai.Hashes...)
+		publicKeys = append(publicKeys, sig.ai.PublicKeys)
+		messageHashes = append(messageHashes, sig.ai.Hashes)
+	}
+
+	//fmt.Println("NGMgo(AggregateSignatures) publicKeys:", publicKeys)
+	//for _, list := range publicKeys {
+	//	for _, k := range list {
+	//		fmt.Println("NGMgo(AggregateSignatures) k:", k.p.ToAffine().PP())
+	//	}
+	//}
+	//fmt.Println("NGMgo(AggregateSignatures) messageHashes:", messageHashes)
+
+	// TODO: Maybe sth like this as syntactic sugar?
+	// type MessageSet map[*MessageHash]struct{}
+	// NewMessageSet make(map[*MessageHash]struct{})
+	// func (ms *MessageSet) AddMsg(msg) { ms[msg] = struct{}{} }
+	// func (ms *MessageSet) HasMsg(msg) { _, found := ms[msg]; return found }
+
+	// Find colliding vectors, save colliding messages
+	messagesSet := make(map[*MessageHash]struct{})
+	collidingMessagesSet := make(map[*MessageHash]struct{})
+	for _, hashList := range messageHashes {
+		messagesSetLocal := make(map[*MessageHash]struct{})
+		for _, msg := range hashList {
+			_, foundGlobal := messagesSet[msg]
+			_, foundLocal := messagesSetLocal[msg]
+			if foundGlobal && !foundLocal {
+				collidingMessagesSet[msg] = struct{}{}
+			}
+			messagesSet[msg] = struct{}{}
+			messagesSetLocal[msg] = struct{}{}
+		}
+	}
+
+	if len(collidingMessagesSet) == 0 {
+		// There are no colliding messages between the groups, so we
+		// will just aggregate them all simply. Note that we assume
+		// that every group is a valid aggregate signature. If an invalid
+		// or insecure signature is given, and invalid signature will
+		// be created. We don't verify for performance reasons.
+
+		// final_sig = Signature.aggregate_sigs_simple(signatures)
+		// finalSig = Signature.aggregate_sigs_simple(signatures)
+
+		//        aggregation_infos = [sig.aggregation_info for sig in signatures]
+		//        final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
+		//        final_sig.set_aggregation_info(final_agg_info)
+		//        return final_sig
 	}
 
 	return signatures[0]
 }
 
 //def aggregate(signatures):
-//    # Find colliding vectors, save colliding messages
-//    messages_set = set()
-//    colliding_messages_set = set()
-//
-//    for msg_vector in message_hashes:
-//        messages_set_local = set()
-//        for msg in msg_vector:
-//            if msg in messages_set and msg not in messages_set_local:
-//                colliding_messages_set.add(msg)
-//            messages_set.add(msg)
-//            messages_set_local.add(msg)
-//
-//    if len(colliding_messages_set) == 0:
-//        # There are no colliding messages between the groups, so we
-//        # will just aggregate them all simply. Note that we assume
-//        # that every group is a valid aggregate signature. If an invalid
-//        # or insecure signature is given, and invalid signature will
-//        # be created. We don't verify for performance reasons.
-//        final_sig = Signature.aggregate_sigs_simple(signatures)
-//        aggregation_infos = [sig.aggregation_info for sig in signatures]
-//        final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
-//        final_sig.set_aggregation_info(final_agg_info)
-//        return final_sig
-//
+
 //    # There are groups that share messages, therefore we need
 //    # to use a secure form of aggregation. First we find which
 //    # groups collide, and securely aggregate these. Then, we
@@ -350,7 +387,7 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 //    non_colliding_sigs = []
 //    colliding_message_hashes = []  # List of lists
 //    colliding_public_keys = []  # List of lists
-//
+
 //    for i in range(len(signatures)):
 //        group_collides = False
 //        for msg in message_hashes[i]:
@@ -362,38 +399,39 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 //                break
 //        if not group_collides:
 //            non_colliding_sigs.append(signatures[i])
-//
+
 //    # Arrange all signatures, sorted by their aggregation info
 //    colliding_sigs.sort(key=lambda s: s.aggregation_info)
-//
+
 //    # Arrange all public keys in sorted order, by (m, pk)
 //    sort_keys_sorted = []
 //    for i in range(len(colliding_public_keys)):
 //        for j in range(len(colliding_public_keys[i])):
 //            sort_keys_sorted.append((colliding_message_hashes[i][j],
 //                                     colliding_public_keys[i][j]))
+
 //    sort_keys_sorted.sort()
 //    sorted_public_keys = [pk for (mh, pk) in sort_keys_sorted]
-//
+
 //    computed_Ts = BLS.hash_pks(len(colliding_sigs), sorted_public_keys)
-//
+
 //    # Raise each sig to a power of each t,
 //    # and multiply all together into agg_sig
 //    ec = sorted_public_keys[0].value.ec
 //    agg_sig = JacobianPoint(Fq2.one(ec.q), Fq2.one(ec.q),
 //                            Fq2.zero(ec.q), True, ec)
-//
+
 //    for i, signature in enumerate(colliding_sigs):
 //        agg_sig += signature.value * computed_Ts[i]
-//
+
 //    for signature in non_colliding_sigs:
 //        agg_sig += signature.value
-//
+
 //    final_sig = Signature.from_g2(agg_sig)
 //    aggregation_infos = [sig.aggregation_info for sig in signatures]
 //    final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
 //    final_sig.set_aggregation_info(final_agg_info)
-//
+
 //    return final_sig
 
 //// Aggregate adds one signature to another
