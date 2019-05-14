@@ -203,21 +203,21 @@ func (k *ExtendedPublicKey) PublicChild(i uint32) *ExtendedPublicKey {
 		panic("Cannot derive hardened children from public key")
 	}
 
-	var hmacInput []byte
+	var hmacInput [PublicKeySize + 4]byte
 	pkBytes := k.PublicKey.Serialize(true)
-	copy(hmacInput, pkBytes)
+	copy(hmacInput[:], pkBytes)
+	//fmt.Printf("NGMgo(epk/pubchild) hmacInput1: %x\n", hmacInput)
 
-	var b [4]byte
-	binary.BigEndian.PutUint32(b[:], i)
-	hmacInput = append(hmacInput, b[:]...)
+	binary.BigEndian.PutUint32(hmacInput[PublicKeySize:], i)
+	//fmt.Printf("NGMgo(epk/pubchild) hmacInput2: %x\n", hmacInput)
 
 	// Chain code is used as hmac key
 	cc := [32]byte{}
 	ccBytes := k.ChainCode.Bytes()
 	copy(cc[32-len(ccBytes):], ccBytes)
 
-	iLeft := Hmac256(append(hmacInput, []byte{0}...), cc[:])
-	iRight := Hmac256(append(hmacInput, []byte{1}...), cc[:])
+	iLeft := Hmac256(append(hmacInput[:], []byte{0}...), cc[:])
+	iRight := Hmac256(append(hmacInput[:], []byte{1}...), cc[:])
 
 	skLeftInt := new(big.Int).SetBytes(iLeft)
 	skLeftInt.Mod(skLeftInt, RFieldModulus)

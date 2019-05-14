@@ -113,6 +113,7 @@ func TestVectorSignaturesVerify(t *testing.T) {
 
 // Implement test for test vector for HDKeys
 func TestVectorHDKeys(t *testing.T) {
+	// TODO: reconsider table-driven in this special case...
 	tests := []struct {
 		seed          []byte
 		pkFingerprint uint32
@@ -147,7 +148,7 @@ func TestVectorHDKeys(t *testing.T) {
 			Fp317 := esk.PrivateChild(3).PrivateChild(17).GetPublicKey().Fingerprint()
 			is.Equal(Fp317, uint32(0xff26a31f))
 
-			pubFp317 := esk.GetExtendedPublicKey().PublicChild(3).PublicChild(17)
+			pubFp317 := esk.GetExtendedPublicKey().PublicChild(3).PublicChild(17).PublicKey.Fingerprint()
 			is.Equal(pubFp317, uint32(0xff26a31f))
 		})
 	}
