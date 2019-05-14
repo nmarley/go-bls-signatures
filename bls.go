@@ -201,8 +201,8 @@ func Verify(m []byte, pub *PublicKey, sig *Signature) bool {
 
 	mh := NewMessageHashFromBytes(h)
 	agginfo := AggregationInfoFromMsgHash(pub, mh)
-	messageHashes := agginfo.GetMessageHashes()
-	publicKeys := agginfo.GetPublicKeys()
+	messageHashes := agginfo.Hashes
+	publicKeys := agginfo.PublicKeys
 	if len(messageHashes) != len(publicKeys) {
 		return false
 	}
@@ -295,17 +295,106 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 	return final
 }
 
-// AggregateSignatures adds up all of the signatures.
-//
-// TODO/NGM comments:
-//Aggregates many (aggregate) signatures, using a combination of simple
-//and secure aggregation. Signatures are grouped based on which ones
-//share common messages, and these are all merged securely.
-func AggregateSignatures(s []*Signature) *Signature {
-	//fmt.Println("NGMgo s:", s)
+// AggregateSignatures aggregates many (aggregate) signatures, using a
+// combination of simple and secure aggregation. Signatures are grouped based
+// on which ones share common messages, and these are all merged securely.
+func AggregateSignatures(signatures []*Signature) *Signature {
+	fmt.Println("NGMgo s:", signatures)
 
-	return s[0]
+	// public_keys = []  # List of lists
+	// message_hashes = []  # List of lists
+	var publicKeys []*PublicKey
+	var messageHashes []*MessageHash
+	for _, sig := range signatures {
+		if sig.ai == nil {
+			// TODO: error, do not panic
+			panic("Each signature must have a valid aggregation info")
+		}
+		publicKeys = append(publicKeys, sig.ai.PublicKeys...)
+		messageHashes = append(messageHashes, sig.ai.Hashes...)
+	}
+
+	return signatures[0]
 }
+
+//def aggregate(signatures):
+//    # Find colliding vectors, save colliding messages
+//    messages_set = set()
+//    colliding_messages_set = set()
+//
+//    for msg_vector in message_hashes:
+//        messages_set_local = set()
+//        for msg in msg_vector:
+//            if msg in messages_set and msg not in messages_set_local:
+//                colliding_messages_set.add(msg)
+//            messages_set.add(msg)
+//            messages_set_local.add(msg)
+//
+//    if len(colliding_messages_set) == 0:
+//        # There are no colliding messages between the groups, so we
+//        # will just aggregate them all simply. Note that we assume
+//        # that every group is a valid aggregate signature. If an invalid
+//        # or insecure signature is given, and invalid signature will
+//        # be created. We don't verify for performance reasons.
+//        final_sig = Signature.aggregate_sigs_simple(signatures)
+//        aggregation_infos = [sig.aggregation_info for sig in signatures]
+//        final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
+//        final_sig.set_aggregation_info(final_agg_info)
+//        return final_sig
+//
+//    # There are groups that share messages, therefore we need
+//    # to use a secure form of aggregation. First we find which
+//    # groups collide, and securely aggregate these. Then, we
+//    # use simple aggregation at the end.
+//    colliding_sigs = []
+//    non_colliding_sigs = []
+//    colliding_message_hashes = []  # List of lists
+//    colliding_public_keys = []  # List of lists
+//
+//    for i in range(len(signatures)):
+//        group_collides = False
+//        for msg in message_hashes[i]:
+//            if msg in colliding_messages_set:
+//                group_collides = True
+//                colliding_sigs.append(signatures[i])
+//                colliding_message_hashes.append(message_hashes[i])
+//                colliding_public_keys.append(public_keys[i])
+//                break
+//        if not group_collides:
+//            non_colliding_sigs.append(signatures[i])
+//
+//    # Arrange all signatures, sorted by their aggregation info
+//    colliding_sigs.sort(key=lambda s: s.aggregation_info)
+//
+//    # Arrange all public keys in sorted order, by (m, pk)
+//    sort_keys_sorted = []
+//    for i in range(len(colliding_public_keys)):
+//        for j in range(len(colliding_public_keys[i])):
+//            sort_keys_sorted.append((colliding_message_hashes[i][j],
+//                                     colliding_public_keys[i][j]))
+//    sort_keys_sorted.sort()
+//    sorted_public_keys = [pk for (mh, pk) in sort_keys_sorted]
+//
+//    computed_Ts = BLS.hash_pks(len(colliding_sigs), sorted_public_keys)
+//
+//    # Raise each sig to a power of each t,
+//    # and multiply all together into agg_sig
+//    ec = sorted_public_keys[0].value.ec
+//    agg_sig = JacobianPoint(Fq2.one(ec.q), Fq2.one(ec.q),
+//                            Fq2.zero(ec.q), True, ec)
+//
+//    for i, signature in enumerate(colliding_sigs):
+//        agg_sig += signature.value * computed_Ts[i]
+//
+//    for signature in non_colliding_sigs:
+//        agg_sig += signature.value
+//
+//    final_sig = Signature.from_g2(agg_sig)
+//    aggregation_infos = [sig.aggregation_info for sig in signatures]
+//    final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
+//    final_sig.set_aggregation_info(final_agg_info)
+//
+//    return final_sig
 
 //// Aggregate adds one signature to another
 //func (s *Signature) Aggregate(other *Signature) {
