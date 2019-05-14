@@ -169,7 +169,7 @@ type ExtendedPublicKey struct {
 	PublicKey         *PublicKey
 }
 
-// ExtendedPublicKeyFromBytes ...
+// ExtendedPublicKeyFromBytes parses public key and chain code from bytes
 func ExtendedPublicKeyFromBytes(b []byte) *ExtendedPublicKey {
 	version := binary.BigEndian.Uint32(b[0:4])
 	depth := uint8(b[4])
@@ -186,5 +186,53 @@ func ExtendedPublicKeyFromBytes(b []byte) *ExtendedPublicKey {
 		ChildNumber:       childNumber,
 		ChainCode:         chainCode,
 		PublicKey:         publicKey,
+	}
+}
+
+// PublicChild derives a child extended public key, cannot be hardened
+func (k *ExtendedPublicKey) PublicChild(i uint32) *ExtendedPublicKey {
+	// NOTE: depth is a uint8 ...
+	if k.Depth >= 255 {
+		// TODO/NGM: Remove panic / return err
+		panic("Cannot go further than 255 levels")
+	}
+
+	// Hardened children have i >= 2^31. Non-hardened have i < 2^31
+	if i >= (1 << 31) {
+		// TODO/NGM: Remove panic / return err
+		panic("Cannot derive hardened children from public key")
+	}
+
+	var hmacInput []byte
+	pkBytes := k.PublicKey.Serialize(true)
+	copy(hmacInput, pkBytes)
+
+	var b [4]byte
+	binary.BigEndian.PutUint32(b[:], i)
+	hmacInput = append(hmacInput, b[:]...)
+
+	// Chain code is used as hmac key
+	cc := [32]byte{}
+	ccBytes := k.ChainCode.Bytes()
+	copy(cc[32-len(ccBytes):], ccBytes)
+
+	iLeft := Hmac256(append(hmacInput, []byte{0}...), cc[:])
+	iRight := Hmac256(append(hmacInput, []byte{1}...), cc[:])
+
+	skLeftInt := new(big.Int).SetBytes(iLeft)
+	skLeftInt.Mod(skLeftInt, RFieldModulus)
+
+	skLeft := DeserializeSecretKey(skLeftInt.Bytes())
+
+	newG1 := skLeft.PublicKey().p.Add(k.PublicKey.p)
+	newPk := &PublicKey{p: newG1}
+
+	return &ExtendedPublicKey{
+		Version:           k.Version,
+		Depth:             k.Depth + 1,
+		ParentFingerprint: k.PublicKey.Fingerprint(),
+		ChildNumber:       i,
+		ChainCode:         new(big.Int).SetBytes(iRight),
+		PublicKey:         newPk,
 	}
 }

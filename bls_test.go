@@ -144,15 +144,11 @@ func TestVectorHDKeys(t *testing.T) {
 			cc = hexToInt("f2c8e4269bb3e54f8179a5c6976d92ca14c3260dd729981e9d15f53049fd698b")
 			is.Equal(esk77.GetChainCode(), cc)
 
-			//fmt.Println("esk77:", esk77)
-
 			Fp317 := esk.PrivateChild(3).PrivateChild(17).GetPublicKey().Fingerprint()
 			is.Equal(Fp317, uint32(0xff26a31f))
 
-			pubFp317 := esk.GetExtendedPublicKey().PublicChild(3)
-			//esk.extendedPublicKey.publicChild(3).publicChild(17).publicKeyFingerprint
-			//0xff26a31f
-
+			pubFp317 := esk.GetExtendedPublicKey().PublicChild(3).PublicChild(17)
+			is.Equal(pubFp317, uint32(0xff26a31f))
 		})
 	}
 }
