@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"bytes"
 	"fmt"
 	"math/big"
 )
@@ -75,3 +76,54 @@ func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo
 
 // AggregationTree ...
 type AggregationTree map[MapKey]*big.Int
+
+// Empty
+func (at *AggregationTree) Empty() bool {
+	return len(*at) == 0
+}
+
+// Less compares two aggregation infos by the following process:
+// (A.msgHash || A.pk || A.exponent) < (B.msgHash || B.pk || B.exponent)
+// for each element in their trees
+func (ai *AggregationInfo) Less(other *AggregationInfo) bool {
+	if ai.Tree.Empty() && other.Tree.Empty() {
+		return false
+	}
+
+	lessThan := false
+	for i := 0; i < len(ai.Hashes) || i < len(other.Hashes); i++ {
+		// If we run out of elements, return
+		if len(ai.Hashes) == i {
+			lessThan = true
+			break
+		}
+		if len(other.Hashes) == i {
+			lessThan = false
+			break
+		}
+		// Otherwise, compare the elements
+		bufA := NewMapKey(ai.PublicKeys[i], ai.Hashes[i])
+		bufB := NewMapKey(other.PublicKeys[i], other.Hashes[i])
+		compare := bytes.Compare(bufA[:], bufB[:])
+		if compare < 0 {
+			lessThan = true
+			break
+		} else if compare > 0 {
+			lessThan = false
+			break
+		}
+		// If they are equal, compare the exponents
+		aExp, _ := ai.Tree[bufA]
+		bExp, _ := other.Tree[bufB]
+		compare = aExp.Cmp(bExp)
+		if compare < 0 {
+			lessThan = true
+			break
+		} else if compare > 0 {
+			lessThan = false
+			break
+		}
+	}
+	// If all comparisons are equal, return false
+	return lessThan
+}
