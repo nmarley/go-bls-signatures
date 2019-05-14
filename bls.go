@@ -484,11 +484,6 @@ func (s Signature) String() string {
 //	p.p = newP
 //}
 
-// Copy copies the public key and returns it.
-func (p *PublicKey) Copy() *PublicKey {
-	return &PublicKey{p: p.p.Copy()}
-}
-
 //// NewAggregateSignature creates a blank aggregate signature.
 //func NewAggregateSignature() *Signature {
 //	return &Signature{s: G2ProjectiveZero.Copy()}
