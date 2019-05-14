@@ -146,9 +146,10 @@ func TestVectorHDKeys(t *testing.T) {
 
 			//fmt.Println("esk77:", esk77)
 
-			fp_3_17 := esk.PrivateChild(3).PrivateChild(17).GetPublicKey().Fingerprint()
-			is.Equal(fp_3_17, uint32(0xff26a31f))
+			Fp317 := esk.PrivateChild(3).PrivateChild(17).GetPublicKey().Fingerprint()
+			is.Equal(Fp317, uint32(0xff26a31f))
 
+			pubFp317 := esk.GetExtendedPublicKey().PublicChild(3)
 			//esk.extendedPublicKey.publicChild(3).publicChild(17).publicKeyFingerprint
 			//0xff26a31f
 

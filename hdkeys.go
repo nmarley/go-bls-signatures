@@ -15,7 +15,7 @@ type ExtendedSecretKey struct {
 	ChainCode         *big.Int
 }
 
-// thing ...
+// TODO ...
 const (
 	ExtendedSecretKeyVersion = 1
 	ExtendedSecretKeySize    = 77
@@ -120,35 +120,71 @@ func (k *ExtendedSecretKey) PrivateChild(i uint32) *ExtendedSecretKey {
 //	return k
 //}
 
-// HD keys
+// GetExtendedPublicKey ...
+func (k *ExtendedSecretKey) GetExtendedPublicKey() *ExtendedPublicKey {
+	buf := [ExtendedPublicKeySize]byte{}
+
+	binary.BigEndian.PutUint32(buf[0:4], k.Version)
+	buf[4] = k.Depth
+	binary.BigEndian.PutUint32(buf[5:9], k.ParentFingerprint)
+	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
+
+	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
+
+	ccBuf := [32]byte{}
+	ccBytes := k.ChainCode.Bytes()
+	copy(ccBuf[32-len(ccBytes):], ccBytes)
+
+	// copy ChainCode bytes into buffer
+	copy(buf[13:45], ccBuf[:])
+
+	pkBytes := k.SecretKey.PublicKey().Serialize(true)
+	copy(buf[45:], pkBytes)
+
+	return ExtendedPublicKeyFromBytes(buf[:])
+}
+
+//// Parse public key and chain code from bytes
+//static ExtendedPublicKey FromBytes(const uint8_t* serialized);
 //
-// esk = ExtendedPrivateKey([1, 50, 6, 244, 24, 199, 1, 25])
-// esk.publicKeyFigerprint
+//// Derive a child extended public key, cannot be hardened
+//ExtendedPublicKey PublicChild(uint32_t i) const;
 //
-// 0xa4700b27
-//
-//
-// esk.chainCode
-//
-// 0xd8b12555b4cc5578951e4a7c80031e22019cc0dce168b3ed88115311b8feb1e3
-//
-//
-// esk77 = esk.privateChild(77 + 2^31)
-// esk77.publicKeyFingerprint
-//
-// 0xa8063dcf
-//
-//
-// esk77.chainCode
-//
-// 0xf2c8e4269bb3e54f8179a5c6976d92ca14c3260dd729981e9d15f53049fd698b
-//
-//
-// esk.privateChild(3).privateChild(17).publicKeyFingerprint
-//
-// 0xff26a31f
-//
-//
-// esk.extendedPublicKey.publicChild(3).publicChild(17).publicKeyFingerprint
-//
-// 0xff26a31f
+//uint32_t GetVersion() const;
+//uint8_t GetDepth() const;
+
+// TODO ...
+const (
+	ExtendedPublicKeyVersion = 1
+	ExtendedPublicKeySize    = 93
+)
+
+// ExtendedPublicKey represents a BLS extended public key.
+type ExtendedPublicKey struct {
+	Version           uint32
+	Depth             uint8
+	ParentFingerprint uint32
+	ChildNumber       uint32
+	ChainCode         *big.Int
+	PublicKey         *PublicKey
+}
+
+// ExtendedPublicKeyFromBytes ...
+func ExtendedPublicKeyFromBytes(b []byte) *ExtendedPublicKey {
+	version := binary.BigEndian.Uint32(b[0:4])
+	depth := uint8(b[4])
+	parentFingerprint := binary.BigEndian.Uint32(b[5:9])
+	childNumber := binary.BigEndian.Uint32(b[9:13])
+	chainCode := new(big.Int).SetBytes(b[13:45])
+	// TODO: check error?
+	publicKey, _ := DeserializePublicKey(b[45:])
+
+	return &ExtendedPublicKey{
+		Version:           version,
+		Depth:             depth,
+		ParentFingerprint: parentFingerprint,
+		ChildNumber:       childNumber,
+		ChainCode:         chainCode,
+		PublicKey:         publicKey,
+	}
+}
