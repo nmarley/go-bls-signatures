@@ -541,15 +541,10 @@ func (g G2Projective) AddAffine(other *G2Affine) *G2Projective {
 // Double and add:
 // https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
 func (g *G2Projective) Mul(n *big.Int) *G2Projective {
-	// TODO: this
-	//	if p1.infinity or c % ec.q == 0:
-	//	return JacobianPoint(FE.one(ec.q), FE.one(ec.q),
-	//		FE.zero(ec.q), True, ec)
-
-	//isInfinity := new(big.Int).Mod(b, QFieldModulus).Cmp(bigZero) == 0
-	//if g.infinity || isInfinity {
-	//	return G2AffineZero.ToProjective()
-	//}
+	// if p1.infinity or c % ec.q == 0:
+	if g.IsZero() || new(big.Int).Mod(n, QFieldModulus).Cmp(bigZero) == 0 {
+		return NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+	}
 
 	addend := g.Copy()
 	result := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
