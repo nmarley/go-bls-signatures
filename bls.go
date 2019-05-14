@@ -296,9 +296,24 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 	return final
 }
 
-//func AggregateSignaturesSimple(signatures []*Signature) *Signature {
+// AggregateSignaturesSimple aggregate signatures by multiplying them together.
+// This is NOT secure against rogue public key attacks, so do not use this for
+// signatures on the same message.
+func AggregateSignaturesSimple(signatures []*Signature) *Signature {
+	aggSig := G2ProjectiveZero.Copy()
+
+	for _, sig := range signatures {
+		aggSig = aggSig.Add(sig.s)
+	}
+
+	return NewSignature(aggSig, nil)
+}
+
+//def aggregate_sigs_simple(signatures):
+//    for sig in signatures:
+//        agg_sig += sig.value
 //
-//}
+//    return Signature.from_g2(agg_sig)
 
 //// aggregates many signatures on messages, some of
 //// which may be identical. The returned signature contains
@@ -343,20 +358,28 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	// func (ms *MessageSet) HasMsg(msg) { _, found := ms[msg]; return found }
 
 	// Find colliding vectors, save colliding messages
-	messagesSet := make(map[*MessageHash]struct{})
-	collidingMessagesSet := make(map[*MessageHash]struct{})
+	messagesSet := make(map[MessageHash]struct{})
+	collidingMessagesSet := make(map[MessageHash]struct{})
+
 	for _, hashList := range messageHashes {
-		messagesSetLocal := make(map[*MessageHash]struct{})
+		//fmt.Println("NGMgo outer for, hashList:", hashList)
+		messagesSetLocal := make(map[MessageHash]struct{})
+
 		for _, msg := range hashList {
-			_, foundGlobal := messagesSet[msg]
-			_, foundLocal := messagesSetLocal[msg]
+			_, foundGlobal := messagesSet[*msg]
+			_, foundLocal := messagesSetLocal[*msg]
+
+			//fmt.Printf("NGMgo inner for, foundGlobal, foundLocal = %v, %v\n", foundGlobal, foundLocal)
 			if foundGlobal && !foundLocal {
-				collidingMessagesSet[msg] = struct{}{}
+				collidingMessagesSet[*msg] = struct{}{}
 			}
-			messagesSet[msg] = struct{}{}
-			messagesSetLocal[msg] = struct{}{}
+			messagesSet[*msg] = struct{}{}
+			messagesSetLocal[*msg] = struct{}{}
 		}
+		//fmt.Println("NGMgo outer for, messagesSet:", messagesSet)
 	}
+
+	//fmt.Println("NGMgo(AggregateSignatures) collidingMessagesSet:", collidingMessagesSet)
 
 	if len(collidingMessagesSet) == 0 {
 		// There are no colliding messages between the groups, so we
@@ -366,7 +389,8 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		// be created. We don't verify for performance reasons.
 
 		// final_sig = Signature.aggregate_sigs_simple(signatures)
-		// finalSig = Signature.aggregate_sigs_simple(signatures)
+		finalSig := AggregateSignaturesSimple(signatures)
+		fmt.Println("NGMgo(AggregateSignatures) finalSig:", finalSig)
 
 		//        aggregation_infos = [sig.aggregation_info for sig in signatures]
 		//        final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
@@ -375,6 +399,21 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	}
 
 	return signatures[0]
+}
+
+// TODO: Maybe sth like this as syntactic sugar?
+type MessageSet map[MessageHash]struct{}
+
+func NewMessageSet() *MessageSet {
+	ms := make(MessageSet)
+	return &ms
+}
+func (ms *MessageSet) AddMsg(msg MessageHash) {
+	(*ms)[msg] = struct{}{}
+}
+func (ms *MessageSet) HasMsg(msg MessageHash) bool {
+	_, found := (*ms)[msg]
+	return found
 }
 
 //def aggregate(signatures):
