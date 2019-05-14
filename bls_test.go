@@ -106,7 +106,7 @@ func TestVectorSignaturesVerify(t *testing.T) {
 			is := is.New(st)
 			pk, _ := bls.DeserializePublicKey(tt.publicKey)
 			sig, _ := bls.DeserializeSignature(tt.signature)
-			is.True(bls.XVerify(tt.payload, pk, sig))
+			is.True(bls.Verify(tt.payload, pk, sig))
 		})
 	}
 }

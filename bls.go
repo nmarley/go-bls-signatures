@@ -161,7 +161,7 @@ func DeserializeSecretKey(b []byte) *SecretKey {
 
 // Sign signs a message with a secret key.
 func Sign(message []byte, key *SecretKey) *Signature {
-	h := XHashG2(message)
+	h := HashG2(message)
 	return &Signature{s: h.Mul(key.f.n)}
 }
 
@@ -187,14 +187,6 @@ func KeyFromBig(i *big.Int) *SecretKey {
 }
 
 // Verify verifies a signature against a message and a public key.
-func Verify(m []byte, pub *PublicKey, sig *Signature, domain uint64) bool {
-	h := HashG2(m, domain)
-	lhs := Pairing(G1ProjectiveOne, sig.s)
-	rhs := Pairing(pub.p, h)
-	return lhs.Equals(rhs)
-}
-
-// XVerify verifies a signature against a message and a public key.
 //
 // This implementation of verify has several steps. First, it reorganizes the
 // pubkeys and messages into groups, where each group corresponds to a message.
@@ -204,7 +196,7 @@ func Verify(m []byte, pub *PublicKey, sig *Signature, domain uint64) bool {
 // of these securely (with exponents.).  Finally, since each public key now
 // corresponds to a unique message (since we grouped them), we can verify using
 // the distinct verification procedure.
-func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
+func Verify(m []byte, pub *PublicKey, sig *Signature) bool {
 	h := Hash256(m)
 
 	mh := NewMessageHashFromBytes(h)
@@ -257,7 +249,7 @@ func XVerify(m []byte, pub *PublicKey, sig *Signature) bool {
 		}
 		finalMessageHashes = append(finalMessageHashes, mh)
 		finalPublicKeys = append(finalPublicKeys, publicKeySum)
-		mappedHashes = append(mappedHashes, XHashG2PreHashed(mh[:]))
+		mappedHashes = append(mappedHashes, HashG2PreHashed(mh[:]))
 	}
 
 	fq := NewFQ(new(big.Int).Sub(RFieldModulus, bigOne))

@@ -1,13 +1,10 @@
 package bls
 
 import (
-	"encoding/binary"
 	"errors"
 	"fmt"
 	"io"
 	"math/big"
-
-	"golang.org/x/crypto/blake2b"
 )
 
 // G2Affine is an affine point on the G2 curve.
@@ -793,49 +790,49 @@ func SWEncodeG2(t *FQ2) *G2Affine {
 	return GetG2PointFromX(x3, parity)
 }
 
-// HashG2 converts a message to a point on the G2 curve.
-func HashG2(msg []byte, domain uint64) *G2Projective {
-	domainBytes := [8]byte{}
-	binary.BigEndian.PutUint64(domainBytes[:], domain)
+//// HashG2 converts a message to a point on the G2 curve.
+//func HashG2(msg []byte, domain uint64) *G2Projective {
+//	domainBytes := [8]byte{}
+//	binary.BigEndian.PutUint64(domainBytes[:], domain)
+//
+//	hasher0, _ := blake2b.New(64, nil)
+//	hasher0.Write(domainBytes[:])
+//	hasher0.Write([]byte("G2_0"))
+//	hasher0.Write(msg)
+//	hasher1, _ := blake2b.New(64, nil)
+//	hasher1.Write(domainBytes[:])
+//	hasher1.Write([]byte("G2_1"))
+//	hasher1.Write(msg)
+//
+//	xRe := HashFQ(hasher0)
+//	xIm := HashFQ(hasher1)
+//
+//	xCoordinate := NewFQ2(xRe, xIm)
+//
+//	for {
+//		yCoordinateSquared := xCoordinate.Copy()
+//		yCoordinateSquared.Square()
+//		yCoordinateSquared.Mul(yCoordinateSquared)
+//
+//		yCoordinateSquared.AddAssign(BCoeffFQ2)
+//
+//		yCoordinate := yCoordinateSquared.Sqrt()
+//		if yCoordinate != nil {
+//			return NewG2Affine(xCoordinate, yCoordinate).ScaleByCofactor()
+//		}
+//		xCoordinate.AddAssign(FQ2One)
+//	}
+//}
 
-	hasher0, _ := blake2b.New(64, nil)
-	hasher0.Write(domainBytes[:])
-	hasher0.Write([]byte("G2_0"))
-	hasher0.Write(msg)
-	hasher1, _ := blake2b.New(64, nil)
-	hasher1.Write(domainBytes[:])
-	hasher1.Write([]byte("G2_1"))
-	hasher1.Write(msg)
-
-	xRe := HashFQ(hasher0)
-	xIm := HashFQ(hasher1)
-
-	xCoordinate := NewFQ2(xRe, xIm)
-
-	for {
-		yCoordinateSquared := xCoordinate.Copy()
-		yCoordinateSquared.Square()
-		yCoordinateSquared.Mul(yCoordinateSquared)
-
-		yCoordinateSquared.AddAssign(BCoeffFQ2)
-
-		yCoordinate := yCoordinateSquared.Sqrt()
-		if yCoordinate != nil {
-			return NewG2Affine(xCoordinate, yCoordinate).ScaleByCofactor()
-		}
-		xCoordinate.AddAssign(FQ2One)
-	}
-}
-
-// XHashG2 maps any string to a deterministic random point in G2.
-func XHashG2(msg []byte) *G2Projective {
+// HashG2 maps any string to a deterministic random point in G2.
+func HashG2(msg []byte) *G2Projective {
 	// h <- hash256(m)
 	h := Hash256(msg)
-	return XHashG2PreHashed(h)
+	return HashG2PreHashed(h)
 }
 
-// XHashG2PreHashed maps a prehashed message to a deterministic random point in G2.
-func XHashG2PreHashed(h []byte) *G2Projective {
+// HashG2PreHashed maps a prehashed message to a deterministic random point in G2.
+func HashG2PreHashed(h []byte) *G2Projective {
 	//t00 <- hash512(h + b"G2_0_c0") % q
 	t00 := new(big.Int).Mod(
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_0_c0")...))),
