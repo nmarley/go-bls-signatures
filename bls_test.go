@@ -133,10 +133,25 @@ func TestVectorHDKeys(t *testing.T) {
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
 			is := is.New(st)
-			xpriv := bls.ExtendedSecretKeyFromSeed(tt.seed)
-			is.Equal(xpriv.GetPublicKey().Fingerprint(), tt.pkFingerprint)
+			esk := bls.ExtendedSecretKeyFromSeed(tt.seed)
+			is.Equal(esk.GetPublicKey().Fingerprint(), tt.pkFingerprint)
 			cc := hexToInt(tt.chainCode)
-			is.Equal(xpriv.GetChainCode(), cc)
+			is.Equal(esk.GetChainCode(), cc)
+
+			esk77 := esk.PrivateChild(77 + (1 << 31))
+			is.Equal(esk77.GetPublicKey().Fingerprint(), uint32(0xa8063dcf))
+
+			cc = hexToInt("f2c8e4269bb3e54f8179a5c6976d92ca14c3260dd729981e9d15f53049fd698b")
+			is.Equal(esk77.GetChainCode(), cc)
+
+			//fmt.Println("esk77:", esk77)
+
+			fp_3_17 := esk.PrivateChild(3).PrivateChild(17).GetPublicKey().Fingerprint()
+			is.Equal(fp_3_17, uint32(0xff26a31f))
+
+			//esk.extendedPublicKey.publicChild(3).publicChild(17).publicKeyFingerprint
+			//0xff26a31f
+
 		})
 	}
 }

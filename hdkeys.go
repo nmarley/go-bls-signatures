@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"encoding/binary"
 	"math/big"
 )
 
@@ -66,6 +67,58 @@ func (k *ExtendedSecretKey) GetPublicKey() *PublicKey {
 func (k *ExtendedSecretKey) GetChainCode() *big.Int {
 	return k.ChainCode
 }
+
+// PrivateChild derives a child extEnded private key, hardened if i >= 2^31
+func (k *ExtendedSecretKey) PrivateChild(i uint32) *ExtendedSecretKey {
+	// NOTE: depth is a uint8 ...
+	if k.Depth >= 255 {
+		// throw std::string("Cannot go further than 255 levels");
+		// TODO/NGM: Remove panic / return err
+		panic("Cannot go further than 255 levels")
+	}
+
+	// Hardened keys have i >= 2^31. Non-hardened have i < 2^31
+	hardened := i >= (1 << 31)
+
+	var hmacInput []byte
+	if hardened {
+		hmacInput = k.SecretKey.Serialize()
+	} else {
+		hmacInput = k.GetPublicKey().Serialize(true)
+	}
+
+	// Now append i as 4 bytes to hmacInput (big endian)
+	var b [4]byte
+	binary.BigEndian.PutUint32(b[:], i)
+	hmacInput = append(hmacInput, b[:]...)
+	//fmt.Printf("NGMgo(PrivateChild) hmacInput: %x\n", hmacInput)
+
+	cc := [32]byte{}
+	ccBytes := k.ChainCode.Bytes()
+	copy(cc[32-len(ccBytes):], ccBytes)
+
+	iLeft := Hmac256(append(hmacInput, []byte{0}...), cc[:])
+	iRight := Hmac256(append(hmacInput, []byte{1}...), cc[:])
+
+	skInt := new(big.Int).SetBytes(iLeft)
+	skInt.Add(skInt, k.SecretKey.f.n)
+	skInt.Mod(skInt, RFieldModulus)
+	sk := DeserializeSecretKey(skInt.Bytes())
+
+	return &ExtendedSecretKey{
+		Version:           ExtendedSecretKeyVersion,
+		Depth:             k.Depth + 1,
+		ParentFingerprint: k.GetPublicKey().Fingerprint(),
+		ChildNumber:       i,
+		ChainCode:         new(big.Int).SetBytes(iRight),
+		SecretKey:         sk,
+	}
+}
+
+// PublicChild derives a child extended public key, hardened if i >= 2^31
+//func (k *ExtendedSecretKey) PublicChild(i uint32) *ExtendedPublicKey {
+//	return k
+//}
 
 // HD keys
 //
