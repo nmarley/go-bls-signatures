@@ -116,9 +116,9 @@ func (k *ExtendedSecretKey) PrivateChild(i uint32) *ExtendedSecretKey {
 }
 
 // PublicChild derives a child extended public key, hardened if i >= 2^31
-//func (k *ExtendedSecretKey) PublicChild(i uint32) *ExtendedPublicKey {
-//	return k
-//}
+func (k *ExtendedSecretKey) PublicChild(i uint32) *ExtendedPublicKey {
+	return k.PrivateChild(i).GetExtendedPublicKey()
+}
 
 // GetExtendedPublicKey ...
 func (k *ExtendedSecretKey) GetExtendedPublicKey() *ExtendedPublicKey {
