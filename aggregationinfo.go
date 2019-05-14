@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"fmt"
 	"math/big"
 )
 
@@ -31,6 +32,11 @@ type MapKey [MapKeyLen]byte
 
 // MessageHash represents ... and is required because ...
 type MessageHash [MessageHashSize]byte
+
+// String
+func (mh *MessageHash) String() string {
+	return fmt.Sprintf("%064x", *mh)
+}
 
 // NewMessageHash initializes a new message hash from a byte slice
 func NewMessageHashFromBytes(b []byte) *MessageHash {
