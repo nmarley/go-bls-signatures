@@ -326,8 +326,6 @@ func AggregateSignaturesSimple(signatures []*Signature) *Signature {
 func AggregateSignatures(signatures []*Signature) *Signature {
 	//fmt.Println("NGMgo s:", signatures)
 
-	// public_keys = []  # List of lists
-	// message_hashes = []  # List of lists
 	type publicKeysList []*PublicKey
 	type messageHashesList []*MessageHash
 
@@ -350,12 +348,6 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	//	}
 	//}
 	//fmt.Println("NGMgo(AggregateSignatures) messageHashes:", messageHashes)
-
-	// TODO: Maybe sth like this as syntactic sugar?
-	// type MessageSet map[*MessageHash]struct{}
-	// NewMessageSet make(map[*MessageHash]struct{})
-	// func (ms *MessageSet) AddMsg(msg) { ms[msg] = struct{}{} }
-	// func (ms *MessageSet) HasMsg(msg) { _, found := ms[msg]; return found }
 
 	// Find colliding vectors, save colliding messages
 	messagesSet := NewMessageSet()
@@ -398,34 +390,48 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		//        return final_sig
 	}
 
+	// There are groups that share messages, therefore we need
+	// to use a secure form of aggregation. First we find which
+	// groups collide, and securely aggregate these. Then, we
+	// use simple aggregation at the end.
+
+	var collidingSigs []*Signature
+	var nonCollidingSigs []*Signature
+
+	// Lists of lists
+	var collidingMessageHashes []messageHashesList
+	var collidingPublicKeys []publicKeysList
+
+	for i, sig := range signatures {
+		groupCollides := false
+		for _, msg := range messageHashes[i] {
+			if collidingMessagesSet.HasMsg(msg) {
+				groupCollides = true
+				collidingSigs = append(collidingSigs, sig)
+				collidingMessageHashes = append(collidingMessageHashes, messageHashes[i])
+				collidingPublicKeys = append(collidingPublicKeys, publicKeys[i])
+				break
+			}
+		}
+		if !groupCollides {
+			nonCollidingSigs = append(nonCollidingSigs, sig)
+		}
+	}
+
+	// # Arrange all signatures, sorted by their aggregation info
+	// colliding_sigs.sort(key=lambda s: s.aggregation_info)
+	collidingSigs
+
 	return signatures[0]
 }
 
+// SigsByAI ... sort
+//type SigsByAI []*Signature
+//func (s SigsByAI) Len() int { return len(s) }
+//func (s SigsByAI) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+//func (s SigsByAI) Less(i, j int) bool { return s[i].ai < s[j].ai }
+
 //def aggregate(signatures):
-
-//    # There are groups that share messages, therefore we need
-//    # to use a secure form of aggregation. First we find which
-//    # groups collide, and securely aggregate these. Then, we
-//    # use simple aggregation at the end.
-//    colliding_sigs = []
-//    non_colliding_sigs = []
-//    colliding_message_hashes = []  # List of lists
-//    colliding_public_keys = []  # List of lists
-
-//    for i in range(len(signatures)):
-//        group_collides = False
-//        for msg in message_hashes[i]:
-//            if msg in colliding_messages_set:
-//                group_collides = True
-//                colliding_sigs.append(signatures[i])
-//                colliding_message_hashes.append(message_hashes[i])
-//                colliding_public_keys.append(public_keys[i])
-//                break
-//        if not group_collides:
-//            non_colliding_sigs.append(signatures[i])
-
-//    # Arrange all signatures, sorted by their aggregation info
-//    colliding_sigs.sort(key=lambda s: s.aggregation_info)
 
 //    # Arrange all public keys in sorted order, by (m, pk)
 //    sort_keys_sorted = []
