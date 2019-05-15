@@ -156,6 +156,41 @@ func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 
 	}
 
+	if collidingMessages.Len() == 0 {
+		return SimpleMergeAggregationInfos(aggInfos)
+	}
+
+	collidingInfos := []*AggregationInfo{}
+	nonCollidingInfos := []*AggregationInfo{}
+
+	for _, ai := range aggInfos {
+		infoCollides := false
+		for k, _ := range ai.Tree {
+			_, mh := k.Split()
+			if collidingMessages.HasMsg(mh) {
+				infoCollides = true
+				collidingInfos = append(collidingInfos, ai)
+				break
+			}
+		}
+		if !infoCollides {
+			nonCollidingInfos = append(nonCollidingInfos, ai)
+		}
+	}
+
+	combined := SecureMergeAggregationInfos(collidingInfos)
+	nonCollidingInfos = append(nonCollidingInfos, combined)
+
+	return SimpleMergeAggregationInfos(nonCollidingInfos)
+}
+
+// SimpleMergeAggregationInfos ...
+func SimpleMergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
+	return &AggregationInfo{}
+}
+
+// SecureMergeAggregationInfos ...
+func SecureMergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 	return &AggregationInfo{}
 }
 
