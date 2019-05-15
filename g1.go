@@ -486,19 +486,26 @@ func (g G1Projective) Mul(n *big.Int) *G1Projective {
 
 	addend := g.Copy()
 
+	fmt.Println("NGMgo res(initial):", res)
+	fmt.Println("NGMgo addend(initial):", addend)
+
 	// while n > 0:
 	for n.Cmp(bigZero) > 0 {
 		// if n is odd
 		if n.Bit(0) == 1 {
 			// res += addend
+			fmt.Println("NGMgo rbef:", res)
 			res = res.Add(addend)
+			fmt.Println("NGMgo r+a:", res)
 		}
 		// Double point
 		addend = addend.Double()
+		fmt.Println("NGMgo a+a:", addend)
 		// Shift bits right to halve n
 		n.Rsh(n, 1)
 	}
 
+	fmt.Println("NGMgo res(final):", res)
 	return res
 }
 
