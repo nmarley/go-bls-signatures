@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"log"
 	"math/big"
 	"sort"
 )
@@ -499,111 +498,10 @@ func HashPKs(numOutputs int, publicKeys []*PublicKey) []*big.Int {
 	return computedTs
 }
 
-//// Aggregate adds one signature to another
-//func (s *Signature) Aggregate(other *Signature) {
-//	newS := s.s.Add(other.s)
-//	s.s = newS
-//}
-
 // String implements the Stringer interface
 func (s Signature) String() string {
 	return fmt.Sprintf("%096x", s.Serialize())
 }
-
-//// AggregatePublicKeys adds public keys together.
-//func AggregatePublicKeys(p []*PublicKey) *PublicKey {
-//	newPub := &PublicKey{p: G1ProjectiveZero.Copy()}
-//	for _, pub := range p {
-//		newPub.Aggregate(pub)
-//	}
-//	return newPub
-//}
-
-//// Aggregate adds two public keys together.
-//func (p *PublicKey) Aggregate(other *PublicKey) {
-//	newP := p.p.Add(other.p)
-//	p.p = newP
-//}
-
-//// NewAggregateSignature creates a blank aggregate signature.
-//func NewAggregateSignature() *Signature {
-//	return &Signature{s: G2ProjectiveZero.Copy()}
-//}
-//
-//// NewAggregatePubkey creates a blank public key.
-//func NewAggregatePubkey() *PublicKey {
-//	return &PublicKey{p: G1ProjectiveZero.Copy()}
-//}
-
-// implement `Interface` in sort package.
-type sortableByteArray [][]byte
-
-func (b sortableByteArray) Len() int {
-	return len(b)
-}
-
-func (b sortableByteArray) Less(i, j int) bool {
-	// bytes package already implements Comparable for []byte.
-	switch bytes.Compare(b[i], b[j]) {
-	case -1:
-		return true
-	case 0, 1:
-		return false
-	default:
-		log.Panic("not fail-able with `bytes.Comparable` bounded [-1, 1].")
-		return false
-	}
-}
-
-func (b sortableByteArray) Swap(i, j int) {
-	b[j], b[i] = b[i], b[j]
-}
-
-func sortByteArrays(src [][]byte) [][]byte {
-	sorted := sortableByteArray(src)
-	sort.Sort(sorted)
-	return sorted
-}
-
-// VerifyAggregate verifies each public key against each message.
-//func (s *Signature) VerifyAggregate(pubKeys []*PublicKey, msgs [][]byte, domain uint64) bool {
-//	if len(pubKeys) != len(msgs) {
-//		return false
-//	}
-//
-//	// messages must be distinct
-//	msgsSorted := sortByteArrays(msgs)
-//	lastMsg := []byte(nil)
-//
-//	// check for duplicates
-//	for _, m := range msgsSorted {
-//		if bytes.Equal(m, lastMsg) {
-//			return false
-//		}
-//		lastMsg = m
-//	}
-//
-//	lhs := Pairing(G1ProjectiveOne, s.s)
-//	rhs := FQ12One.Copy()
-//	for i := range pubKeys {
-//		h := HashG2(msgs[i], domain)
-//		rhs.MulAssign(Pairing(pubKeys[i].p, h))
-//	}
-//	return lhs.Equals(rhs)
-//}
-
-// VerifyAggregateCommon verifies each public key against a message.
-// This is vulnerable to rogue public-key attack. Each user must
-// provide a proof-of-knowledge of the public key.
-//func (s *Signature) VerifyAggregateCommon(pubKeys []*PublicKey, msg []byte, domain uint64) bool {
-//	h := HashG2(msg, domain)
-//	lhs := Pairing(G1ProjectiveOne, s.s)
-//	rhs := FQ12One.Copy()
-//	for _, p := range pubKeys {
-//		rhs.MulAssign(Pairing(p.p, h))
-//	}
-//	return lhs.Equals(rhs)
-//}
 
 // MessageSet and associate funcs are a syntactic sugar wrapper around a map
 type MessageSet map[MessageHash]struct{}
