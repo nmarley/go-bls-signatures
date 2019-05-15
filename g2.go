@@ -1023,7 +1023,7 @@ func (g G2Projective) PP() string {
 		return g.String()
 	}
 
-	return fmt.Sprintf("G2Projective(\nx=%s, y=%s, z=%s\n)", g.x.PP(4), g.y.PP(4), g.z.PP(4))
+	return fmt.Sprintf("G2Projective(x=%s, y=%s, z=%s)", g.x.PP(4), g.y.PP(4), g.z.PP(4))
 }
 
 // PP ...
