@@ -50,23 +50,15 @@ func (p PublicKey) Equals(other PublicKey) bool {
 
 // DeserializePublicKey deserializes a public key from bytes.
 func DeserializePublicKey(b []byte) (*PublicKey, error) {
-	switch len(b) {
-	case G1ElementSize:
-		a, err := DecompressG1(new(big.Int).SetBytes(b))
-		if err != nil {
-			return nil, err
-		}
-
-		return &PublicKey{p: a.ToProjective()}, nil
-
-	case G1ElementSize * 2:
-		g := G1Affine{}
-
-		// Set points given raw bytes for coordinates
-		g.SetRawBytes(b)
-
-		return &PublicKey{p: g.ToProjective()}, nil
+	if len(b) != PublicKeySize {
+		return nil, fmt.Errorf("invalid public key bytes")
 	}
 
-	return nil, fmt.Errorf("invalid pubkey bytes")
+	a, err := DecompressG1(new(big.Int).SetBytes(b))
+	if err != nil {
+		return nil, err
+	}
+
+	return &PublicKey{p: a.ToProjective()}, nil
+}
 }
