@@ -203,10 +203,10 @@ func KeyFromBig(i *big.Int) *SecretKey {
 //
 // This implementation of verify has several steps. First, it reorganizes the
 // pubkeys and messages into groups, where each group corresponds to a message.
-// Then, it checks if the siganture has info on how it was aggregated. If so,
-// we exponentiate each pk based on the exponent in the AggregationInfo.  If
+// Then, it checks if the signature has info on how it was aggregated. If so,
+// we exponentiate each pk based on the exponent in the AggregationInfo. If
 // not, we find public keys that share messages with others, and aggregate all
-// of these securely (with exponents.).  Finally, since each public key now
+// of these securely (with exponents). Finally, since each public key now
 // corresponds to a unique message (since we grouped them), we can verify using
 // the distinct verification procedure.
 func (s *Signature) Verify() bool {
@@ -323,23 +323,12 @@ func AggregateSignaturesSimple(signatures []*Signature) *Signature {
 	return NewSignature(aggSig, nil)
 }
 
-//def aggregate_sigs_simple(signatures):
-//    for sig in signatures:
-//        agg_sig += sig.value
-//
-//    return Signature.from_g2(agg_sig)
-
-//// aggregates many signatures on messages, some of
-//// which may be identical. The returned signature contains
-//// information on how the aggregation was done (AggragationInfo).
-//static Signature Aggregate(std::vector<Signature> const &sigs);
-
-// AggregateSignatures aggregates many (aggregate) signatures, using a
-// combination of simple and secure aggregation. Signatures are grouped based
-// on which ones share common messages, and these are all merged securely.
+// AggregateSignatures aggregates many signatures aggregates many signatures on
+// messages, some of which may be identical, using a combination of simple and
+// secure aggregation. Signatures are grouped based on which ones share common
+// messages, and these are all merged securely. The returned signature contains
+// information on how the aggregation was done (AggragationInfo).
 func AggregateSignatures(signatures []*Signature) *Signature {
-	//fmt.Println("NGMgo s:", signatures)
-
 	type publicKeysList []*PublicKey
 	type messageHashesList []*MessageHash
 
@@ -380,15 +369,14 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		// be created. We don't verify for performance reasons.
 
 		// TODO: Test this!!!
+
 		aggInfos := make([]*AggregationInfo, len(signatures))
 		for i, sig := range signatures {
 			aggInfos[i] = sig.ai
 		}
 		finalAggInfo := MergeAggregationInfos(aggInfos)
-
 		finalSig := AggregateSignaturesSimple(signatures)
 		finalSig.SetAggregationInfo(finalAggInfo)
-
 		return finalSig
 	}
 
