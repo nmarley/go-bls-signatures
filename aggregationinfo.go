@@ -58,12 +58,12 @@ func NewMapKey(pk *PublicKey, mh *MessageHash) MapKey {
 
 // Split "deserializes" a message hash / public key entry and returns the results
 func (mk *MapKey) Split() (*PublicKey, *MessageHash) {
-	var mh *MessageHash
+	var mh MessageHash
 	copy(mh[0:MessageHashSize], mk[0:MessageHashSize])
 
 	pk, _ := DeserializePublicKey(mk[MessageHashSize:MapKeyLen])
 
-	return pk, mh
+	return pk, &mh
 }
 
 func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo {

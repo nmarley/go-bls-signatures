@@ -2,28 +2,32 @@ package bls_test
 
 import (
 	"fmt"
-	// "math/big"
+	"testing"
+
 	"github.com/matryer/is"
 	"gitlab.com/nmarley/go-bls-signatures"
-	"testing"
 )
 
+// TODO: use strings, not bytes here (use serialize/deserialize methods)
 func TestVectorAggregation(t *testing.T) {
 	tests := []struct {
-		sigs     [][]byte
-		pubkeys  [][]byte
-		payloads [][]byte
+		sigs        [][]byte
+		pubkeys     [][]byte
+		payloads    [][]byte
+		expectedSig string
 	}{
 		{
-			sigs:     [][]byte{sig1, sig2},
-			pubkeys:  [][]byte{pk1, pk2},
-			payloads: [][]byte{payload, payload},
+			sigs:        [][]byte{sig1, sig2},
+			pubkeys:     [][]byte{pk1, pk2},
+			payloads:    [][]byte{payload, payload},
+			expectedSig: "0a638495c1403b25be391ed44c0ab013390026b5892c796a85ede46310ff7d0e0671f86ebe0e8f56bee80f28eb6d999c0a418c5fc52debac8fc338784cd32b76338d629dc2b4045a5833a357809795ef55ee3e9bee532edfc1d9c443bf5bc658",
 		},
 	}
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
 			is := is.New(st)
+
 			var sigs []*bls.Signature
 			for i, sigBytes := range tt.sigs {
 				pub, _ := bls.DeserializePublicKey(tt.pubkeys[i])
@@ -33,11 +37,11 @@ func TestVectorAggregation(t *testing.T) {
 				signature.SetAggregationInfo(aggInfo)
 				sigs = append(sigs, signature)
 			}
-			//fmt.Println("sigs:", sigs)
 			aggSig := bls.AggregateSignatures(sigs)
-			fmt.Printf("NGMgo(test) aggSig: %x\n", aggSig.Serialize())
+
 			// Aggregate(sig1, sig2)
-			is.Equal(1, 1)
+			// fmt.Printf("NGMgo(test) aggSig: %x\n", aggSig.Serialize())
+			is.Equal(fmt.Sprintf("%096x", aggSig.Serialize()), tt.expectedSig)
 		})
 	}
 }
