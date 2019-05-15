@@ -76,7 +76,7 @@ func TestVectorSignaturesSign(t *testing.T) {
 		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
 			is := is.New(st)
 			key := bls.DeserializeSecretKey(tt.secretKey)
-			sig := bls.Sign(tt.payload, key)
+			sig := key.Sign(tt.payload)
 			//fmt.Printf("sig%d: %x\n", i+1, sig.Serialize())
 			is.Equal(sig.Serialize(), tt.expectedSig)
 		})

@@ -38,7 +38,7 @@ func NewSignature(p *G2Projective, ai *AggregationInfo) *Signature {
 	}
 }
 
-// TODO
+// SetAggregationInfo ... TODO
 func (s *Signature) SetAggregationInfo(ai *AggregationInfo) {
 	s.ai = ai
 }
@@ -158,12 +158,12 @@ func DeserializeSecretKey(b []byte) *SecretKey {
 }
 
 // Sign signs a message with a secret key.
-func Sign(message []byte, key *SecretKey) *Signature {
+func (k *SecretKey) Sign(message []byte) *Signature {
 	h := HashG2(message)
 	mh := NewMessageHashFromBytes(message)
-	aggInfo := AggregationInfoFromMsgHash(key.PublicKey(), mh)
+	aggInfo := AggregationInfoFromMsgHash(k.PublicKey(), mh)
 
-	return NewSignature(h.Mul(key.f.n), aggInfo)
+	return NewSignature(h.Mul(k.f.n), aggInfo)
 }
 
 // PrivToPub converts the private key into a public key.

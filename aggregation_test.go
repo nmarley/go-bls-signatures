@@ -56,9 +56,9 @@ func TestVectorAggregation(t *testing.T) {
 			sk2o := bls.DeserializeSecretKey(sk2)
 
 			// TODO: Define sign on SecretKey obj...
-			sig3 := bls.Sign([]byte{1, 2, 3}, sk1o)
-			sig4 := bls.Sign([]byte{1, 2, 3, 4}, sk1o)
-			sig5 := bls.Sign([]byte{1, 2}, sk2o)
+			sig3 := sk1o.Sign([]byte{1, 2, 3})
+			sig4 := sk1o.Sign([]byte{1, 2, 3, 4})
+			sig5 := sk2o.Sign([]byte{1, 2})
 
 			// TODO: Define verify on signature obj...
 			aggSig2 := bls.AggregateSignatures([]*bls.Signature{sig3, sig4, sig5})
