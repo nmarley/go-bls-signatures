@@ -247,9 +247,6 @@ func (s *Signature) Verify() bool {
 		}
 	}
 
-	// TODO: Only once all Chia test vectors passing, review this and see if
-	// finalMessageHashes / mappedhashes is really needed.
-	var finalMessageHashes []*MessageHash
 	var finalPublicKeys []*G1Projective
 	var mappedHashes []*G2Projective
 
@@ -261,7 +258,6 @@ func (s *Signature) Verify() bool {
 			sum := k.p.Mul(exponent)
 			publicKeySum = publicKeySum.Add(sum)
 		}
-		finalMessageHashes = append(finalMessageHashes, mh)
 		finalPublicKeys = append(finalPublicKeys, publicKeySum)
 		mappedHashes = append(mappedHashes, HashG2PreHashed(mh[:]))
 	}
