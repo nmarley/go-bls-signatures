@@ -497,18 +497,29 @@ func (g G1Projective) AddAffine(other *G1Affine) *G1Projective {
 }
 
 // Mul performs a EC multiply operation on the point.
-func (g G1Projective) Mul(b *big.Int) *G1Projective {
-	bs := b.Bytes()
-	res := G1ProjectiveZero.Copy()
-	for i := uint(0); i < uint((b.BitLen()+7)/8)*8; i++ {
-		part := i / 8
-		bit := 7 - i%8
-		o := bs[part]&(1<<(bit)) > 0
-		res = res.Double()
-		if o {
-			res = res.Add(&g)
-		}
+// Double and add:
+// https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
+func (g G1Projective) Mul(n *big.Int) *G1Projective {
+	res := NewG1Projective(FQOne, FQOne, FQZero)
+	if g.z.IsZero() || (new(big.Int).Mod(n, QFieldModulus).Cmp(bigZero) == 0) {
+		return res
 	}
+
+	addend := g.Copy()
+
+	// while n > 0:
+	for n.Cmp(bigZero) > 0 {
+		// if n is odd
+		if n.Bit(0) == 1 {
+			// res += addend
+			res = res.Add(addend)
+		}
+		// Double point
+		addend = addend.Double()
+		// Shift bits right to halve n
+		n.Rsh(n, 1)
+	}
+
 	return res
 }
 
