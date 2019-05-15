@@ -61,4 +61,8 @@ func DeserializePublicKey(b []byte) (*PublicKey, error) {
 
 	return &PublicKey{p: a.ToProjective()}, nil
 }
+
+// AggregatePublicKeys ...
+func AggregatePublicKeys(publicKeys []*PublicKey) *PublicKey {
+	return publicKeys[0]
 }
