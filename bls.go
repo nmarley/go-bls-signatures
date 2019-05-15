@@ -425,17 +425,59 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	// Sort signatures by their aggregation info
 	sort.Sort(SigsByAI(collidingSigs))
 
-	//sortKeysSorted := []
+	var sortKeysSorted []MapKey
+
 	// Arrange all public keys in sorted order, by (m, pk)
 	// sort_keys_sorted = []
-	// for i in range(len(colliding_public_keys)):
 	for i := 0; i < len(collidingPublicKeys); i++ {
 		for j := 0; j < len(collidingPublicKeys[i]); j++ {
-			// sort_keys_sorted.append((colliding_message_hashes[i][j], colliding_public_keys[i][j]))
+			mh := collidingMessageHashes[i][j]
+			pk := collidingPublicKeys[i][j]
+			sortKeysSorted = append(sortKeysSorted, NewMapKey(pk, mh))
+			// sort_keys_sorted.append(
+			//     (colliding_message_hashes[i][j], colliding_public_keys[i][j])
+			// )
 		}
 	}
 
-	return signatures[0]
+	// Sort lexicographically binary, then split out pks / hashes
+	sort.Sort(By(sortKeysSorted))
+	// sorted_public_keys = [pk for (mh, pk) in sort_keys_sorted]
+	var sortedPublicKeys []*PublicKey
+	for _, mk := range sortKeysSorted {
+		buf := [PublicKeySize]byte{}
+		copy(buf[:], mk[MessageHashSize:])
+		pk, err := DeserializePublicKey(buf[:])
+		if err != nil {
+			// todo: don't panic
+			panic("oh shit")
+		}
+		sortedPublicKeys = append(sortedPublicKeys, pk)
+	}
+
+	// computed_Ts = BLS.hash_pks(len(colliding_sigs), sorted_public_keys)
+	computed_Ts := HashPKs(len(collidingSigs), sortedPublicKeys)
+
+	// Raise each sig to a power of each t,
+	// and multiply all together into agg_sig
+	aggSig := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+	for i, sig := range collidingSigs {
+		aggSig = aggSig.Add(sig.s.Mul(computed_Ts[i]))
+	}
+
+	//aggregation_infos = [sig.aggregation_info for sig in signatures]
+	aggInfos := make([]*AggregationInfo, len(signatures))
+	for i, sig := range signatures {
+		aggInfos[i] = sig.ai
+	}
+
+	//final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
+	finalAggInfo := MergeAggregationInfos()
+
+	finalSig := NewSignature(aggSig, nil)
+	finalSig.SetAggregationInfo(finalAggInfo)
+
+	return finalSig
 }
 
 // SigsByAI implements sort.Interface for []*Signature, and sorts by
@@ -446,29 +488,37 @@ func (s SigsByAI) Len() int           { return len(s) }
 func (s SigsByAI) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 func (s SigsByAI) Less(i, j int) bool { return s[i].ai.Less(s[j].ai) }
 
-//    sort_keys_sorted.sort()
-//    sorted_public_keys = [pk for (mh, pk) in sort_keys_sorted]
+// By implements sort.Interface for []MapKey
+type By []MapKey
 
-//    computed_Ts = BLS.hash_pks(len(colliding_sigs), sorted_public_keys)
+func (s By) Len() int           { return len(s) }
+func (s By) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s By) Less(i, j int) bool { return bytes.Compare(s[i][:], s[j][:]) == -1 }
 
-//    # Raise each sig to a power of each t,
-//    # and multiply all together into agg_sig
-//    ec = sorted_public_keys[0].value.ec
-//    agg_sig = JacobianPoint(Fq2.one(ec.q), Fq2.one(ec.q),
-//                            Fq2.zero(ec.q), True, ec)
+// HashPKs ... no fucking idea. :/
+//
+// Construction from https://eprint.iacr.org/2018/483.pdf
+// Two hashes are performed for speed.
+func HashPKs(numOutputs int, publicKeys []*PublicKey) []*big.Int {
+	inputBytes := make([]byte, len(publicKeys)*PublicKeySize)
+	for i, k := range publicKeys {
+		pkBytes := k.Serialize()
+		copy(inputBytes[(i*PublicKeySize):], pkBytes)
+	}
 
-//    for i, signature in enumerate(colliding_sigs):
-//        agg_sig += signature.value * computed_Ts[i]
+	pkHash := Hash256(inputBytes)
+	computedTs := make([]*big.Int, numOutputs)
+	for i := uint32(0); i < uint32(numOutputs); i++ {
+		var b [4]byte
+		binary.BigEndian.PutUint32(b[:], i)
+		innerHash := Hash256(append(b[:], pkHash...))
+		t := new(big.Int).SetBytes(innerHash)
+		t.Mod(t, RFieldModulus)
+		computedTs[i] = t
+	}
 
-//    for signature in non_colliding_sigs:
-//        agg_sig += signature.value
-
-//    final_sig = Signature.from_g2(agg_sig)
-//    aggregation_infos = [sig.aggregation_info for sig in signatures]
-//    final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
-//    final_sig.set_aggregation_info(final_agg_info)
-
-//    return final_sig
+	return computedTs
+}
 
 //// Aggregate adds one signature to another
 //func (s *Signature) Aggregate(other *Signature) {

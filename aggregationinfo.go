@@ -127,3 +127,8 @@ func (ai *AggregationInfo) Less(other *AggregationInfo) bool {
 	// If all comparisons are equal, return false
 	return lessThan
 }
+
+// MergeAggregationInfos ...
+func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
+	return &AggregationInfo{}
+}
