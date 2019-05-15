@@ -341,37 +341,22 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		messageHashes = append(messageHashes, sig.ai.Hashes)
 	}
 
-	//fmt.Println("NGMgo(AggregateSignatures) publicKeys:", publicKeys)
-	//for _, list := range publicKeys {
-	//	for _, k := range list {
-	//		fmt.Println("NGMgo(AggregateSignatures) k:", k.p.ToAffine().PP())
-	//	}
-	//}
-	//fmt.Println("NGMgo(AggregateSignatures) messageHashes:", messageHashes)
-
 	// Find colliding vectors, save colliding messages
 	messagesSet := NewMessageSet()
 	collidingMessagesSet := NewMessageSet()
 
 	for _, hashList := range messageHashes {
-		//fmt.Println("NGMgo outer for, hashList:", hashList)
 		messagesSetLocal := NewMessageSet()
-
 		for _, msg := range hashList {
 			foundGlobal := messagesSet.HasMsg(msg)
 			foundLocal := messagesSetLocal.HasMsg(msg)
-
-			//fmt.Printf("NGMgo inner for, foundGlobal, foundLocal = %v, %v\n", foundGlobal, foundLocal)
 			if foundGlobal && !foundLocal {
 				collidingMessagesSet.AddMsg(msg)
 			}
 			messagesSet.AddMsg(msg)
 			messagesSetLocal.AddMsg(msg)
 		}
-		//fmt.Println("NGMgo outer for, messagesSet:", messagesSet)
 	}
-
-	//fmt.Println("NGMgo(AggregateSignatures) collidingMessagesSet:", collidingMessagesSet)
 
 	if collidingMessagesSet.Len() == 0 {
 		// There are no colliding messages between the groups, so we
@@ -380,17 +365,16 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		// or insecure signature is given, and invalid signature will
 		// be created. We don't verify for performance reasons.
 
-		finalSig := AggregateSignaturesSimple(signatures)
-		fmt.Println("NGMgo(AggregateSignatures) finalSig:", finalSig)
-
-		// TODO: Finish this!!! Test it!!
-		var aggInfos []*AggregationInfo
-		for _, sig := range signatures {
-			aggInfos = append(aggInfos, sig.ai)
+		// TODO: Test this!!!
+		aggInfos := make([]*AggregationInfo, len(signatures))
+		for i, sig := range signatures {
+			aggInfos[i] = sig.ai
 		}
-		// TODO: All we really need is MergeAggregationInfos to be implemented...
-		//finalAggInfo := MergeAggregationInfos(aggInfos)
-		//finalSig.SetAggregationInfo(finalAggInfo)
+		finalAggInfo := MergeAggregationInfos(aggInfos)
+
+		finalSig := AggregateSignaturesSimple(signatures)
+		finalSig.SetAggregationInfo(finalAggInfo)
+
 		return finalSig
 	}
 
@@ -428,21 +412,16 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	var sortKeysSorted []MapKey
 
 	// Arrange all public keys in sorted order, by (m, pk)
-	// sort_keys_sorted = []
 	for i := 0; i < len(collidingPublicKeys); i++ {
 		for j := 0; j < len(collidingPublicKeys[i]); j++ {
 			mh := collidingMessageHashes[i][j]
 			pk := collidingPublicKeys[i][j]
 			sortKeysSorted = append(sortKeysSorted, NewMapKey(pk, mh))
-			// sort_keys_sorted.append(
-			//     (colliding_message_hashes[i][j], colliding_public_keys[i][j])
-			// )
 		}
 	}
 
 	// Sort lexicographically binary, then split out pks / hashes
 	sort.Sort(By(sortKeysSorted))
-	// sorted_public_keys = [pk for (mh, pk) in sort_keys_sorted]
 	var sortedPublicKeys []*PublicKey
 	for _, mk := range sortKeysSorted {
 		buf := [PublicKeySize]byte{}
@@ -455,7 +434,6 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		sortedPublicKeys = append(sortedPublicKeys, pk)
 	}
 
-	// computed_Ts = BLS.hash_pks(len(colliding_sigs), sorted_public_keys)
 	computed_Ts := HashPKs(len(collidingSigs), sortedPublicKeys)
 
 	// Raise each sig to a power of each t,
@@ -465,15 +443,12 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		aggSig = aggSig.Add(sig.s.Mul(computed_Ts[i]))
 	}
 
-	//aggregation_infos = [sig.aggregation_info for sig in signatures]
 	aggInfos := make([]*AggregationInfo, len(signatures))
 	for i, sig := range signatures {
 		aggInfos[i] = sig.ai
 	}
 
-	//final_agg_info = AggregationInfo.merge_infos(aggregation_infos)
-	finalAggInfo := MergeAggregationInfos()
-
+	finalAggInfo := MergeAggregationInfos(aggInfos)
 	finalSig := NewSignature(aggSig, nil)
 	finalSig.SetAggregationInfo(finalAggInfo)
 

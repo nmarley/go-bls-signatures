@@ -55,6 +55,16 @@ func NewMapKey(pk *PublicKey, mh *MessageHash) MapKey {
 	return mk
 }
 
+// Split "deserializes" a message hash / public key entry and returns the results
+func (mk *MapKey) Split() (*PublicKey, *MessageHash) {
+	var mh *MessageHash
+	copy(mh[0:MessageHashSize], mk[0:MessageHashSize])
+
+	pk, _ := DeserializePublicKey(mk[MessageHashSize:MapKeyLen])
+
+	return pk, mh
+}
+
 func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo {
 	// Public key len + Message hash len (sha256 hash = 32 bytes)
 	var mk MapKey
@@ -130,5 +140,23 @@ func (ai *AggregationInfo) Less(other *AggregationInfo) bool {
 
 // MergeAggregationInfos ...
 func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
+	messages := NewMessageSet()
+	collidingMessages := NewMessageSet()
+
+	for _, ai := range aggInfos {
+		messagesLocal := NewMessageSet()
+		for k, _ := range ai.Tree {
+			_, mh := k.Split()
+			if messages.HasMsg(mh) && !messagesLocal.HasMsg(mh) {
+				collidingMessages.AddMsg(mh)
+			}
+			messages.AddMsg(mh)
+			messagesLocal.AddMsg(mh)
+		}
+
+	}
+
 	return &AggregationInfo{}
 }
+
+func Nothing() {}
