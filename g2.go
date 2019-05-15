@@ -534,28 +534,27 @@ func (g G2Projective) AddAffine(other *G2Affine) *G2Projective {
 // Double and add:
 // https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
 func (g *G2Projective) Mul(n *big.Int) *G2Projective {
-	// if p1.infinity or c % ec.q == 0:
+	res := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 	if g.IsZero() || new(big.Int).Mod(n, QFieldModulus).Cmp(bigZero) == 0 {
-		return NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+		return res
 	}
 
 	addend := g.Copy()
-	result := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 
 	// while n > 0:
 	for n.Cmp(bigZero) > 0 {
 		// if n is odd
 		if n.Bit(0) == 1 {
-			//	result += addend
-			result = result.Add(addend)
+			// res += addend
+			res = res.Add(addend)
 		}
-		// double point
+		// Double point
 		addend = addend.Double()
-		// c = c >> 1
-		n = new(big.Int).Rsh(n, 1)
+		// Shift bits right to halve n
+		n.Rsh(n, 1)
 	}
 
-	return result
+	return res
 }
 
 var blsX, _ = new(big.Int).SetString("d201000000010000", 16)
