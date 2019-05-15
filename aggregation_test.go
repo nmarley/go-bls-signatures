@@ -58,7 +58,7 @@ func TestVectorAggregation(t *testing.T) {
 			pk2, _ := bls.DeserializePublicKey(pk2Bytes)
 
 			//agg_pk = PublicKey.aggregate([pk1, pk2], True)
-			aggPk := bls.AggregatePublicKeys([]*bls.PublicKey{pk1, pk2})
+			aggPk := bls.AggregatePublicKeys([]*bls.PublicKey{pk1, pk2}, true)
 			fmt.Println("NGMgo(aggTest) aggPk:", aggPk)
 
 			//aggPk2, _ := bls.DeserializePublicKey(pk2Bytes)

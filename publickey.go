@@ -1,9 +1,11 @@
 package bls
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
 	"math/big"
+	"sort"
 )
 
 // ...
@@ -48,6 +50,11 @@ func (p PublicKey) Equals(other PublicKey) bool {
 	return p.p.Equal(other.p)
 }
 
+// Less compares two public keys by their serialized byte values
+func (p *PublicKey) Less(other *PublicKey) bool {
+	return bytes.Compare(p.Serialize(), other.Serialize()) == -1
+}
+
 // DeserializePublicKey deserializes a public key from bytes.
 func DeserializePublicKey(b []byte) (*PublicKey, error) {
 	if len(b) != PublicKeySize {
@@ -62,7 +69,44 @@ func DeserializePublicKey(b []byte) (*PublicKey, error) {
 	return &PublicKey{p: a.ToProjective()}, nil
 }
 
-// AggregatePublicKeys ...
-func AggregatePublicKeys(publicKeys []*PublicKey) *PublicKey {
-	return publicKeys[0]
+// AggregatePublicKeys aggregates multiple public keys into one. The secure
+// flag securely aggregates multiple public keys into one by exponentiating the
+// keys with the pubKey hashes first.
+func AggregatePublicKeys(publicKeys []*PublicKey, secure bool) *PublicKey {
+	if len(publicKeys) == 0 {
+		// TODO: don't panic
+		panic("Number of public keys must be at least 1")
+	}
+
+	fmt.Println("NGMgo(AggPKs) publicKeys1:", publicKeys)
+
+	// Sort public keys
+	sort.Sort(PkByBytes(publicKeys))
+
+	fmt.Println("NGMgo(AggPKs) publicKeys2:", publicKeys)
+
+	// TODO: potential optimization:
+	// consider splitting this so these don't have to be calculated for non-secure
+	computedTs := HashPKs(len(publicKeys), publicKeys)
+	fmt.Println("NGMgo(AggPKs) computedTs:", computedTs)
+
+	aggPk := G1ProjectiveZero.Copy()
+	for i, pk := range publicKeys {
+		tempG1 := pk.p
+		fmt.Println("NGMgo(AggPKs) addend:", tempG1.ToAffine().PP())
+		if secure {
+			tempG1 = tempG1.Mul(computedTs[i])
+		}
+		aggPk = aggPk.Add(tempG1)
+	}
+
+	return &PublicKey{p: aggPk}
 }
+
+// PkByBytes implements sort.Interface for []*PublicKey, and
+// sorts by serialized byte value
+type PkByBytes []*PublicKey
+
+func (s PkByBytes) Len() int           { return len(s) }
+func (s PkByBytes) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s PkByBytes) Less(i, j int) bool { return s[i].Less(s[j]) }
