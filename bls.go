@@ -132,7 +132,7 @@ func SecretKeyFromSeed(seed []byte) *SecretKey {
 
 	hashed := Hmac256(seed, hmacKey)
 	return &SecretKey{
-		NewFR(new(big.Int).Mod(new(big.Int).SetBytes(hashed), RFieldModulus)),
+		NewFR(new(big.Int).SetBytes(hashed)),
 	}
 }
 
