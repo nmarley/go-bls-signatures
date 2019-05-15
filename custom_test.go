@@ -1,7 +1,7 @@
 package bls_test
 
 import (
-	// "fmt"
+	"fmt"
 	"math/big"
 	"testing"
 
@@ -22,22 +22,8 @@ func makeFQ2(c0Hex, c1Hex string) *bls.FQ2 {
 // Custom testing for debugging shit
 func TestCustomNGM(t *testing.T) {
 	// NGM
-
-	// big7 := big.NewInt(7)
-	// big8 := big.NewInt(8)
-
-	// seven := bls.IntToBits(big7)
-	// eight := bls.IntToBits(big8)
-
-	// fmt.Println("seven:", seven)
-	// fmt.Println("eight:", eight)
-
-	//x := makeFQ("02a8d2aaa6a5e2e08d4b8d406aaf0121a2fc2088ed12431e6b0663028da9ac5922c9ea91cde7dd74b7d795580acc7a61")
-	//y := makeFQ("0145bcfef3c097722ea4994dc043be38a47ca15cf0f7622286ba6f85c4b5ddd412c43042938ab6a2eafcaae38119e305")
-	//z := bls.FQOne.Copy()
-	//g1p := bls.NewG1Projective(x, y, z)
-	//fmt.Println("NGMgo g1p: ", g1p)
-	//
-	//dbl := g1p.Double()
-	//fmt.Println("NGMgo dbl: ", dbl)
+	g1p0 := bls.G1ProjectiveZero.Copy()
+	g1p1 := bls.G1ProjectiveOne.Copy()
+	fmt.Println("NGMgo(custom) g1p0:", g1p0)
+	fmt.Println("NGMgo(custom) g1p1:", g1p1)
 }
