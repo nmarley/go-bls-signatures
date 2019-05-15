@@ -199,11 +199,12 @@ func KeyFromBig(i *big.Int) *SecretKey {
 // of these securely (with exponents.).  Finally, since each public key now
 // corresponds to a unique message (since we grouped them), we can verify using
 // the distinct verification procedure.
-func Verify(m []byte, pub *PublicKey, sig *Signature) bool {
-	h := Hash256(m)
+func (s *Signature) Verify() bool {
+	if s.ai == nil {
+		return false
+	}
 
-	mh := NewMessageHashFromBytes(h)
-	agginfo := AggregationInfoFromMsgHash(pub, mh)
+	agginfo := s.ai
 	messageHashes := agginfo.Hashes
 	publicKeys := agginfo.PublicKeys
 	if len(messageHashes) != len(publicKeys) {
@@ -259,9 +260,10 @@ func Verify(m []byte, pub *PublicKey, sig *Signature) bool {
 	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n)
 
 	// Gather a list of p's and q's to send to AtePairingMulti
+	// TODO: Could optimize here...
 	ps := []*G1Projective{g1}
 	ps = append(ps, finalPublicKeys...)
-	qs := []*G2Projective{sig.s}
+	qs := []*G2Projective{s.s}
 	qs = append(qs, mappedHashes...)
 
 	res := AtePairingMulti(ps, qs)
