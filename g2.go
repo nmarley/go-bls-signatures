@@ -409,58 +409,44 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 
 	// U1 = X1*Z2^2
 	u1 := g.x.Mul(other.z.Square())
-	// fmt.Println("NGMgo u1:", u1)
 
 	// U2 = X2*Z1^2
 	u2 := other.x.Mul(g.z.Square())
-	// 	fmt.Println("NGMgo u2:", u2)
 
 	// S1 = Y1*Z2^3
 	s1 := g.y.Mul(other.z.Square().Mul(other.z))
-	// fmt.Println("NGMgo s1:", s1)
 
 	// S2 = Y2*Z1^3
 	s2 := other.y.Mul(g.z.Square().Mul(g.z))
-	// fmt.Println("NGMgo s2:", s2)
 
 	if u1.Equals(u2) {
-		// fmt.Println("NGMgo u1.Equals(u2) (SIC)")
 		if !s1.Equals(s2) {
-			// fmt.Println("NGMgo NOT!!! s1.Equals(s2) (SIC)")
-			NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+			return NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 		} else {
-			// fmt.Println("NGMgo Else double g (GG)")
 			return g.Double()
 		}
 	}
 
 	// H = U2 - U1
 	h := u2.Sub(u1)
-	// fmt.Println("NGMgo h:", h)
 
 	// R = S2 - S1
 	r := s2.Sub(s1)
-	// fmt.Println("NGMgo r:", r)
 
 	//H_sq = H * H
 	h_sq := h.Square()
-	// fmt.Println("NGMgo h_sq:", h_sq)
 
 	//H_cu = H * H_sq
 	h_cu := h_sq.Mul(h)
-	// fmt.Println("NGMgo h_cu:", h_cu)
 
 	// X3 = R^2 - H^3 - 2*U1*H^2
 	x3 := r.Square().Sub(h_cu).Sub(u1.Mul(h_sq).MulInt(bigTwo))
-	// fmt.Println("NGMgo x3:", x3)
 
 	// Y3 = R*(U1*H^2 - X3) - S1*H^3
 	y3 := r.Mul(u1.Mul(h_sq).Sub(x3)).Sub(s1.Mul(h_cu))
-	// fmt.Println("NGMgo y3:", y3)
 
 	// Z3 = H*Z1*Z2
 	z3 := h.Mul(g.z).Mul(other.z)
-	// fmt.Println("NGMgo z3:", z3)
 
 	return NewG2Projective(x3, y3, z3)
 }
@@ -534,28 +520,27 @@ func (g G2Projective) AddAffine(other *G2Affine) *G2Projective {
 // Double and add:
 // https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
 func (g *G2Projective) Mul(n *big.Int) *G2Projective {
-	// if p1.infinity or c % ec.q == 0:
+	res := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 	if g.IsZero() || new(big.Int).Mod(n, QFieldModulus).Cmp(bigZero) == 0 {
-		return NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+		return res
 	}
 
 	addend := g.Copy()
-	result := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 
 	// while n > 0:
 	for n.Cmp(bigZero) > 0 {
 		// if n is odd
 		if n.Bit(0) == 1 {
-			//	result += addend
-			result = result.Add(addend)
+			// res += addend
+			res = res.Add(addend)
 		}
-		// double point
+		// Double point
 		addend = addend.Double()
-		// c = c >> 1
-		n = new(big.Int).Rsh(n, 1)
+		// Shift bits right to halve n
+		n.Rsh(n, 1)
 	}
 
-	return result
+	return res
 }
 
 var blsX, _ = new(big.Int).SetString("d201000000010000", 16)
@@ -1024,7 +1009,7 @@ func (g G2Projective) PP() string {
 		return g.String()
 	}
 
-	return fmt.Sprintf("G2Projective(\nx=%s, y=%s, z=%s\n)", g.x.PP(4), g.y.PP(4), g.z.PP(4))
+	return fmt.Sprintf("G2Projective(x=%s, y=%s, z=%s)", g.x.PP(4), g.y.PP(4), g.z.PP(4))
 }
 
 // PP ...

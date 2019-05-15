@@ -4,10 +4,12 @@ SHELL = bash
 COVERAGE_FILE ?= coverage.txt
 
 something:
-	go test
+	# go test -run TestG1ProjectiveMul
+	go test -run TestG1ProjectiveAdd
+	#go test
 	#go test -run TestVector
 	#go test -run TestDashCoreBLSCompatibility
-	#go test -run TestCustomNGM
+	# go test -run TestCustomNGM
 
 
 #.PHONY: default

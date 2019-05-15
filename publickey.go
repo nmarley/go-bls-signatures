@@ -78,22 +78,17 @@ func AggregatePublicKeys(publicKeys []*PublicKey, secure bool) *PublicKey {
 		panic("Number of public keys must be at least 1")
 	}
 
-	fmt.Println("NGMgo(AggPKs) publicKeys1:", publicKeys)
-
 	// Sort public keys
 	sort.Sort(PkByBytes(publicKeys))
-
-	fmt.Println("NGMgo(AggPKs) publicKeys2:", publicKeys)
 
 	// TODO: potential optimization:
 	// consider splitting this so these don't have to be calculated for non-secure
 	computedTs := HashPKs(len(publicKeys), publicKeys)
-	fmt.Println("NGMgo(AggPKs) computedTs:", computedTs)
 
-	aggPk := G1ProjectiveZero.Copy()
+	aggPk := NewG1Projective(FQOne, FQOne, FQZero)
+
 	for i, pk := range publicKeys {
-		tempG1 := pk.p
-		fmt.Println("NGMgo(AggPKs) addend:", tempG1.ToAffine().PP())
+		tempG1 := pk.p.Copy()
 		if secure {
 			tempG1 = tempG1.Mul(computedTs[i])
 		}
