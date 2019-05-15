@@ -9,13 +9,13 @@
   - [x] verify(sig2, AggregationInfo(pk2, [7,8,9]))
 
 - [ ] Aggregation
-  - [ ] aggregate([sig1, sig2])
+  - [x] aggregate([sig1, sig2])
   - [ ] verify(aggSig2, mergeInfos(sig1.aggInfo, sig2.aggInfo))
   - [ ] verify(sig1, AggregationInfo(pk2, [7,8,9]))
-  - [ ] sig3 = sign([1,2,3], sk1)
-  - [ ] sig4 = sign([1,2,3,4], sk1)
-  - [ ] sig5 = sign([1,2], sk2)
-  - [ ] aggregate([sig3, sig4, sig5])
+  - [x] sig3 = sign([1,2,3], sk1)
+  - [x] sig4 = sign([1,2,3,4], sk1)
+  - [x] sig5 = sign([1,2], sk2)
+  - [x] aggregate([sig3, sig4, sig5])
   - [ ] verify(aggSig2, mergeInfos(sig3.aggInfo, sig4.aggInfo, sig5.aggInfo))
   - [ ] sig1 = sk1.sign([1,2,3,40])
   - [ ] sig2 = sk2.sign([5,6,70,201])
