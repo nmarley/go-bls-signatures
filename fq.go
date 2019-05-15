@@ -91,7 +91,9 @@ func (f FQ) SubAssign(other *FQ) {
 
 // Exp exponentiates the field element to the given power.
 func (f FQ) Exp(n *big.Int) *FQ {
-	return &FQ{new(big.Int).Exp(f.n, n, QFieldModulus)}
+	return &FQ{
+		n: new(big.Int).Exp(f.n, n, QFieldModulus),
+	}
 }
 
 // ExpAssign exponentiates the field element to the given power.
@@ -129,6 +131,7 @@ func (f FQ) String() string {
 }
 
 // Serialize prints the full serialized value as a hex string.
+// TODO: Rename this to Hex() or something... serialize has the expectation of bytes
 func (f FQ) Serialize() string {
 	return fmt.Sprintf("%096x", f.n)
 }
