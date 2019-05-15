@@ -38,18 +38,7 @@ func TestVectorAggregation(t *testing.T) {
 				sigs = append(sigs, signature)
 			}
 			aggSig := bls.AggregateSignatures(sigs)
-
-			// Aggregate(sig1, sig2)
-			// fmt.Printf("NGMgo(test) aggSig: %x\n", aggSig.Serialize())
 			is.Equal(fmt.Sprintf("%096x", aggSig.Serialize()), tt.expectedSig)
-
-			//bls.Verify()
-			//verify(aggSig2, mergeInfos(sig1.aggInfo, sig2.aggInfo))
-			//true
-
-			// sig3 = sk1.sign(bytes([1, 2, 3]))
-			// sig4 = sk1.sign(bytes([1, 2, 3, 4]))
-			// sig5 = sk2.sign(bytes([1, 2]))
 
 			// TODO: Rename variables... sk1 => sk1Bytes, sk1o => sk1
 			sk1o := bls.DeserializeSecretKey(sk1)
@@ -59,11 +48,9 @@ func TestVectorAggregation(t *testing.T) {
 			sig4 := sk1o.Sign([]byte{1, 2, 3, 4})
 			sig5 := sk2o.Sign([]byte{1, 2})
 
-			// TODO: Define verify on signature obj...
 			aggSig2 := bls.AggregateSignatures([]*bls.Signature{sig3, sig4, sig5})
-			//aggSig2.Verify()
 			is.Equal(fmt.Sprintf("%096x", aggSig2.Serialize()), "8b11daf73cd05f2fe27809b74a7b4c65b1bb79cc1066bdf839d96b97e073c1a635d2ec048e0801b4a208118fdbbb63a516bab8755cc8d850862eeaa099540cd83621ff9db97b4ada857ef54c50715486217bd2ecb4517e05ab49380c041e159b")
-
+			is.True(aggSig2.Verify())
 		})
 	}
 }
