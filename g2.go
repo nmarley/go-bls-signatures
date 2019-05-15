@@ -266,10 +266,6 @@ var G2ProjectiveZero = &G2Projective{FQ2Zero, FQ2One, FQ2Zero}
 var G2ProjectiveOne = G2AffineOne.ToProjective()
 
 func (g G2Projective) String() string {
-	if g.IsZero() {
-		return "G2(Infinity)"
-	}
-
 	return fmt.Sprintf("G2Projective(x=%s, y=%s, z=%s)", g.x, g.y, g.z)
 }
 
