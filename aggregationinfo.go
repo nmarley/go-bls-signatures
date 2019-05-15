@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math/big"
+	"sort"
 )
 
 // AggregationInfo ... TODO
@@ -185,13 +186,130 @@ func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 }
 
 // SimpleMergeAggregationInfos ...
+//
+// Infos are just merged together with no addition of exponents, since they are
+// disjoint
 func SimpleMergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
-	return &AggregationInfo{}
+	newTree := make(AggregationTree)
+	for _, ai := range aggInfos {
+		for k, v := range ai.Tree {
+			newTree[k] = v
+		}
+	}
+
+	sortedMapKeys := make([]MapKey, len(newTree))
+	i := 0
+	for k, _ := range newTree {
+		sortedMapKeys[i] = k
+		i++
+	}
+
+	// Sort lexicographically binary, then split out pks / hashes
+	sort.Sort(By(sortedMapKeys))
+
+	// message_hashes = [message_hash for (message_hash, public_key) in mh_pubkeys]
+	// public_keys = [public_key for (message_hash, public_key) in mh_pubkeys]
+	messageHashes := make([]*MessageHash, len(sortedMapKeys))
+	pubKeys := make([]*PublicKey, len(sortedMapKeys))
+	for i, mk := range sortedMapKeys {
+		pk, mh := mk.Split()
+		messageHashes[i] = mh
+		pubKeys[i] = pk
+	}
+
+	return &AggregationInfo{
+		Tree:       newTree,
+		Hashes:     messageHashes,
+		PublicKeys: pubKeys,
+	}
 }
 
 // SecureMergeAggregationInfos ...
-func SecureMergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
-	return &AggregationInfo{}
+//
+// Infos are merged together with combination of exponents
+func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *AggregationInfo {
+	// Groups are sorted by message then pk then exponent
+	// Each info object (and all of it's exponents) will be
+	// exponentiated by one of the Ts
+
+	// Sort AIs
+	sort.Sort(ByAI(collidingInfos))
+
+	// sortedMapKeys := make([]MapKey, len(collidingInfos))
+	sortedMapKeys := make([]MapKey, len(collidingInfos))
+	for i, ai := range collidingInfos {
+		j := 0
+		for k, _ := range ai.Tree {
+			sortedMapKeys[i+j] = k
+			j++
+		}
+	}
+
+	// Sort lexicographically binary, then split out pks / hashes
+	sort.Sort(By(sortedMapKeys))
+	publicKeys := make([]*PublicKey, len(sortedMapKeys))
+	for i, mk := range sortedMapKeys {
+		pk, _ := mk.Split()
+		publicKeys[i] = pk
+	}
+
+	computedTs := HashPKs(len(collidingInfos), publicKeys)
+
+	// Group order, exponents can be reduced mod the order
+	// order := RFieldModulus
+
+	newTree := make(AggregationTree)
+	for i := 0; i < len(collidingInfos); i++ {
+		for k, v := range collidingInfos[i].Tree {
+
+			// TODO: REFACTOR. Esp. like the new(big.Int).Mul(v, computedTs[i]) can be extracted for both conditions
+
+			newVal, found := newTree[k]
+			if !found {
+				// This message & pk have not been included yet
+				newExp := new(big.Int).Mul(v, computedTs[i])
+				newExp.Mod(newExp, RFieldModulus)
+				newTree[k] = newExp
+			} else {
+				// This message and pk are already included, so multiply
+				addEnd := new(big.Int).Mul(v, computedTs[i])
+				addEnd.Add(addEnd, newVal)
+				addEnd.Mod(addEnd, RFieldModulus)
+				newTree[k] = addEnd
+			}
+		}
+	}
+
+	sortedMapKeys2 := make([]MapKey, len(newTree))
+	i := 0
+	for k, _ := range newTree {
+		sortedMapKeys2[i] = k
+		i++
+	}
+
+	// Sort lexicographically binary, then split out pks / hashes
+	sort.Sort(By(sortedMapKeys2))
+
+	messageHashes := make([]*MessageHash, len(sortedMapKeys2))
+	pubKeys := make([]*PublicKey, len(sortedMapKeys2))
+	for i, mk := range sortedMapKeys2 {
+		pk, mh := mk.Split()
+		messageHashes[i] = mh
+		pubKeys[i] = pk
+	}
+
+	return &AggregationInfo{
+		Tree:       newTree,
+		Hashes:     messageHashes,
+		PublicKeys: pubKeys,
+	}
 }
+
+// ByAI implements sort.Interface for []*AggregationInfo
+type ByAI []*AggregationInfo
+
+func (s ByAI) Len() int           { return len(s) }
+func (s ByAI) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s ByAI) Less(i, j int) bool { return s[i].Less(s[j]) }
 
 func Nothing() {}
