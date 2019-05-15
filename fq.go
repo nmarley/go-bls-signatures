@@ -24,9 +24,11 @@ var QFieldModulus, _ = new(big.Int).SetString("1a0111ea397fe69a4b1ba7b6434bacd76
 
 // NewFQ creates a new field element.
 func NewFQ(n *big.Int) *FQ {
-	return &FQ{
-		n: new(big.Int).Mod(n, QFieldModulus),
+	outN := n
+	if n.Cmp(QFieldModulus) >= 0 || n.Cmp(bigZero) < 0 {
+		outN.Mod(outN, QFieldModulus)
 	}
+	return &FQ{n: outN}
 }
 
 // Copy creates a copy of the field element.
