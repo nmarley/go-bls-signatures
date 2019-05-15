@@ -43,11 +43,9 @@ func primeFieldInv(a *big.Int, n *big.Int) *big.Int {
 
 // NewFQ creates a new field element.
 func NewFQ(n *big.Int) *FQ {
-	outN := n
-	if n.Cmp(QFieldModulus) >= 0 || n.Cmp(bigZero) < 0 {
-		outN.Mod(outN, QFieldModulus)
+	return &FQ{
+		n: new(big.Int).Mod(n, QFieldModulus),
 	}
-	return &FQ{n: outN}
 }
 
 // Copy creates a copy of the field element.
