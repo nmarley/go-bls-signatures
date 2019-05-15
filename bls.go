@@ -137,24 +137,31 @@ func SecretKeyFromSeed(seed []byte) *SecretKey {
 }
 
 // PublicKey returns the public key.
-func (s *SecretKey) PublicKey() *PublicKey {
-	return PrivToPub(s)
+func (k *SecretKey) PublicKey() *PublicKey {
+	return &PublicKey{
+		p: G1AffineOne.Mul(k.f.n),
+	}
 }
 
 // String implements the Stringer interface.
-func (s SecretKey) String() string {
-	return s.f.String()
+func (k SecretKey) String() string {
+	return k.f.String()
 }
 
-// Serialize serializes a secret key to bytes.
-func (s SecretKey) Serialize() []byte {
-	return s.f.n.Bytes()
+// Serialize serializes a secret key to a byte slice
+func (k *SecretKey) Serialize() []byte {
+	// Ensure we return 32 bytes with bits aligned to the right
+	buf := [SecretKeySize]byte{}
+	skBytes := k.f.n.Bytes()
+	copy(buf[SecretKeySize-len(skBytes):], skBytes)
+	return buf[0:SecretKeySize]
 }
 
-// DeserializeSecretKey deserializes a secret key from
-// bytes.
+// DeserializeSecretKey deserializes a secret key from bytes.
 func DeserializeSecretKey(b []byte) *SecretKey {
-	return &SecretKey{&FR{new(big.Int).SetBytes(b)}}
+	return &SecretKey{
+		NewFR(new(big.Int).SetBytes(b)),
+	}
 }
 
 // Sign signs a message with a secret key.
@@ -166,12 +173,7 @@ func (k *SecretKey) Sign(message []byte) *Signature {
 	return NewSignature(h.Mul(k.f.n), aggInfo)
 }
 
-// PrivToPub converts the private key into a public key.
-func PrivToPub(k *SecretKey) *PublicKey {
-	return &PublicKey{p: G1AffineOne.Mul(k.f.n)}
-}
-
-// RandKey generates a random secret key.
+// RandKey generates a random secret key
 func RandKey(r io.Reader) (*SecretKey, error) {
 	k, err := RandFR(r)
 	if err != nil {
