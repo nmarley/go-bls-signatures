@@ -272,3 +272,32 @@ func IntToBits(n *big.Int) []byte {
 
 	return newBits
 }
+
+// AtePairingMulti ...
+//
+// Computes multiple pairings at once. This is more efficient, since we can
+// multiply all the results of the miller loops, and perform just one final
+// exponentiation.
+func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
+	// t = default_ec.x + 1
+	// T = abs(t - 1)
+	negX := new(big.Int).Neg(blsX)
+	t := new(big.Int).Add(negX, bigOne)
+	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
+
+	// prod = Fq12.one(ec.q)
+	prod := FQ12One.Copy()
+
+	//for i in range(len(Qs)):
+	//     prod *= miller_loop(T, Ps[i], Qs[i], ec)
+	for i, q := range qs {
+		p := ps[i]
+		// TODO/NGM: Just inline this once finished w/debugging
+		xml := XMillerLoop(bigT, p, q)
+		prod = prod.Mul(xml)
+	}
+
+	// TODO/NGM: Inline this when done debugging
+	final := XFinalExponentiation(prod)
+	return final
+}
