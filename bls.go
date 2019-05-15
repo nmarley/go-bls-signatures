@@ -167,7 +167,7 @@ func DeserializeSecretKey(b []byte) *SecretKey {
 // Sign signs a message with a secret key.
 func (k *SecretKey) Sign(message []byte) *Signature {
 	h := HashG2(message)
-	mh := NewMessageHashFromBytes(message)
+	mh := NewMessageHashFromBytes(Hash256(message))
 	aggInfo := AggregationInfoFromMsgHash(k.PublicKey(), mh)
 
 	return NewSignature(h.Mul(k.f.n), aggInfo)
