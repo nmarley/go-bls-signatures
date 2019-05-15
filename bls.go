@@ -42,6 +42,11 @@ func (s *Signature) SetAggregationInfo(ai *AggregationInfo) {
 	s.ai = ai
 }
 
+// GetAggregationInnfo TEMP method to get AI for debugging...
+func (s *Signature) GetAggregationInfo() *AggregationInfo {
+	return s.ai
+}
+
 // Debug ...
 func (s *Signature) Debug() string {
 	return s.s.ToAffine().PP()
@@ -73,6 +78,12 @@ type PublicKey struct {
 // String ...
 func (p PublicKey) String() string {
 	return p.p.String()
+}
+
+// StringShort ...
+func (p PublicKey) StringShort() string {
+	hexStr := fmt.Sprintf("%096x", p.Serialize())
+	return hexStr[0:5] + ".." + hexStr[(len(hexStr)-5):]
 }
 
 // Debug ...

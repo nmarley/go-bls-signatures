@@ -23,6 +23,15 @@ func NewAggregationInfo(pubKeys []*PublicKey, hashes []*MessageHash) *Aggregatio
 	}
 }
 
+func (ai AggregationInfo) String() string {
+	return fmt.Sprintf(
+		"AggregationInfo(Tree: %v, MessageHashes: %v, PublicKeys: %v)",
+		ai.Tree,
+		ai.Hashes,
+		ai.PublicKeys,
+	)
+}
+
 // MapKeyLen ...
 const (
 	MessageHashSize = 32
@@ -66,6 +75,13 @@ func (mk *MapKey) Split() (*PublicKey, *MessageHash) {
 	return pk, &mh
 }
 
+// String
+func (mk *MapKey) String() string {
+	pk, mh := mk.Split()
+	pk.StringShort()
+	return fmt.Sprintf("PK(%s),MH(%s)", pk.StringShort(), mh)
+}
+
 func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo {
 	// Public key len + Message hash len (sha256 hash = 32 bytes)
 	var mk MapKey
@@ -91,6 +107,22 @@ type AggregationTree map[MapKey]*big.Int
 // Empty
 func (at *AggregationTree) Empty() bool {
 	return len(*at) == 0
+}
+
+// String ... this is actually just for debugging, so can be dropped later.
+// Don't waste time optimizing.
+func (at AggregationTree) String() string {
+	bigStr := ""
+	count := 0
+	for k, v := range at {
+		entryStr := fmt.Sprintf("%v:%v", k.String(), v.String())
+		if count != 0 {
+			bigStr += ","
+		}
+		bigStr += entryStr
+		count++
+	}
+	return bigStr
 }
 
 // Less compares two aggregation infos by the following process:
