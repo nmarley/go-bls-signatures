@@ -95,6 +95,48 @@ func TestG1ProjectiveAdd(t *testing.T) {
 				makeFQ(tt.p1z),
 			)
 			p2 := bls.NewG1Projective(
+				makeFQ(tt.p2x),
+				makeFQ(tt.p2y),
+				makeFQ(tt.p2z),
+			)
+
+			expected := bls.NewG1Projective(
+				makeFQ(tt.resX),
+				makeFQ(tt.resY),
+				makeFQ(tt.resZ),
+			)
+
+			res := p1.Add(p2)
+			is.Equal(res, expected)
+		})
+	}
+}
+
+func TestG1PDouble(t *testing.T) {
+	tests := []struct {
+		p1x  string
+		p1y  string
+		p1z  string
+		resX string
+		resY string
+		resZ string
+	}{
+		{
+			p1x: "01a89b5b9147007d2f6d05419c96928acbf319b5563c3f05a12ee0b11265d8d24e3fccd613ba5e4bc59d40d80d0cb734",
+			p1y: "14fa6c10f0b6a3691f19d01560a410081b16486f49f03f8bafb45c149c5664b610494be7c234e674d9e1e4c45dd3ac5d",
+			p1z: "028b79fde7812ee45d49329b80877c7148f942b9e1eec4450d74df0b896bbba82588608527156d45d5f955c70233c60a",
+
+			resX: "0ef5ad284432d0a5f4c1cecc515551729218c8c9c95da4d7e9811beee7f01a9bef91417129a23743c4b28d3339178812",
+			resY: "1561294136e1612f7b0061e3ee2e04ea5a586c882d4f0ecd0e1a7fba22fc835f03fe4d0a4a0a83d385b9d88b335de657",
+			resZ: "07b967b8c27e1e514acf46eedce8bb17628d6d0b7f84f26d9cd5d998b9ccb63f92405bdf50bad1cf8dd86a766800318f",
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
+			is := is.New(st)
+
+			p1 := bls.NewG1Projective(
 				makeFQ(tt.p1x),
 				makeFQ(tt.p1y),
 				makeFQ(tt.p1z),
@@ -106,7 +148,7 @@ func TestG1ProjectiveAdd(t *testing.T) {
 				makeFQ(tt.resZ),
 			)
 
-			res := p1.Add(p2)
+			res := p1.Double()
 			is.Equal(res, expected)
 		})
 	}
