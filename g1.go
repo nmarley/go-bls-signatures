@@ -571,6 +571,7 @@ func SWEncodeG1(t *FQ) *G1Affine {
 	return GetG1PointFromX(x3, parity)
 }
 
+// TODO: Replace this w/the real one
 // HashG1 converts a message to a point on the G2 curve.
 func HashG1(msg []byte, domain uint64) *G1Projective {
 	domainBytes := [8]byte{}
