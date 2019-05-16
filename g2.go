@@ -427,7 +427,7 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 		// fmt.Println("NGMgo u1.Equals(u2) (SIC)")
 		if !s1.Equals(s2) {
 			// fmt.Println("NGMgo NOT!!! s1.Equals(s2) (SIC)")
-			NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+			return NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 		} else {
 			// fmt.Println("NGMgo Else double g (GG)")
 			return g.Double()
@@ -452,15 +452,12 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 
 	// X3 = R^2 - H^3 - 2*U1*H^2
 	x3 := r.Square().Sub(h_cu).Sub(u1.Mul(h_sq).MulInt(bigTwo))
-	// fmt.Println("NGMgo x3:", x3)
 
 	// Y3 = R*(U1*H^2 - X3) - S1*H^3
 	y3 := r.Mul(u1.Mul(h_sq).Sub(x3)).Sub(s1.Mul(h_cu))
-	// fmt.Println("NGMgo y3:", y3)
 
 	// Z3 = H*Z1*Z2
 	z3 := h.Mul(g.z).Mul(other.z)
-	// fmt.Println("NGMgo z3:", z3)
 
 	return NewG2Projective(x3, y3, z3)
 }
