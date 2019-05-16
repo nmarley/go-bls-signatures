@@ -73,38 +73,27 @@ func DeserializePublicKey(b []byte) (*PublicKey, error) {
 // flag securely aggregates multiple public keys into one by exponentiating the
 // keys with the pubKey hashes first.
 func AggregatePublicKeys(publicKeys []*PublicKey, secure bool) *PublicKey {
-	//fmt.Println("NGMgo(AggPKs) secure:", secure)
 	if len(publicKeys) == 0 {
 		// TODO: don't panic
 		panic("Number of public keys must be at least 1")
 	}
 
-	//fmt.Println("NGMgo(AggPKs) publicKeys1:", publicKeys)
-
 	// Sort public keys
 	sort.Sort(PkByBytes(publicKeys))
-
-	//fmt.Println("NGMgo(AggPKs) publicKeys2:", publicKeys)
 
 	// TODO: potential optimization:
 	// consider splitting this so these don't have to be calculated for non-secure
 	computedTs := HashPKs(len(publicKeys), publicKeys)
-	fmt.Println("NGMgo(AggPKs) computedTs:", computedTs)
 
 	aggPk := NewG1Projective(FQOne, FQOne, FQZero)
-	fmt.Println("NGMgo(AggPKs) sum(initial):", aggPk.PP())
 
 	for i, pk := range publicKeys {
 		tempG1 := pk.p.Copy()
-		fmt.Println("NGMgo(AggPKs) tempG1-1:", tempG1.PP())
 		if secure {
 			tempG1 = tempG1.Mul(computedTs[i])
-			fmt.Println("NGMgo(AggPKs) tempG1-2:", tempG1.PP())
 		}
 		aggPk = aggPk.Add(tempG1)
-		fmt.Println("NGMgo(AggPKs) sum(+addend):", aggPk.PP())
 	}
-	fmt.Println("NGMgo(AggPKs) sum(final):", aggPk.PP())
 
 	return &PublicKey{p: aggPk}
 }

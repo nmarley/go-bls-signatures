@@ -349,47 +349,28 @@ func (g *G1Projective) Add(other *G1Projective) *G1Projective {
 
 	// U1 = X1*Z2^2
 	u1 := g.x.Mul(other.z.Square())
-	// fmt.Println("NGMgo u1:", u1)
-
 	// U2 = X2*Z1^2
 	u2 := other.x.Mul(g.z.Square())
-	// 	fmt.Println("NGMgo u2:", u2)
-
 	// S1 = Y1*Z2^3
 	s1 := g.y.Mul(other.z.Square().Mul(other.z))
-	// fmt.Println("NGMgo s1:", s1)
-
 	// S2 = Y2*Z1^3
 	s2 := other.y.Mul(g.z.Square().Mul(g.z))
-	// fmt.Println("NGMgo s2:", s2)
-
 	if u1.Equals(u2) {
-		// fmt.Println("NGMgo u1.Equals(u2) (SIC)")
 		if !s1.Equals(s2) {
-			// fmt.Println("NGMgo NOT!!! s1.Equals(s2) (SIC)")
 			return NewG1Projective(FQOne, FQOne, FQZero)
 		} else {
-			// fmt.Println("NGMgo Else double g (GG)")
 			return g.Double()
 		}
 	}
 
 	// H = U2 - U1
 	h := u2.Sub(u1)
-	// fmt.Println("NGMgo h:", h)
-
 	// R = S2 - S1
 	r := s2.Sub(s1)
-	// fmt.Println("NGMgo r:", r)
-
 	//H_sq = H * H
 	h_sq := h.Square()
-	// fmt.Println("NGMgo h_sq:", h_sq)
-
 	//H_cu = H * H_sq
 	h_cu := h_sq.Mul(h)
-	// fmt.Println("NGMgo h_cu:", h_cu)
-
 	// X3 = R^2 - H^3 - 2*U1*H^2
 	x3 := r.Square().Sub(h_cu).Sub(u1.Add(u1).Mul(h_sq))
 
@@ -478,26 +459,19 @@ func (g G1Projective) Mul(n *big.Int) *G1Projective {
 
 	addend := g.Copy()
 
-	fmt.Println("NGMgo res(initial):", res)
-	fmt.Println("NGMgo addend(initial):", addend)
-
 	// while n > 0:
 	for n.Cmp(bigZero) > 0 {
 		// if n is odd
 		if n.Bit(0) == 1 {
 			// res += addend
-			fmt.Println("NGMgo rbef:", res)
 			res = res.Add(addend)
-			fmt.Println("NGMgo r+a:", res)
 		}
 		// Double point
 		addend = addend.Double()
-		fmt.Println("NGMgo a+a:", addend)
 		// Shift bits right to halve n
 		n.Rsh(n, 1)
 	}
 
-	fmt.Println("NGMgo res(final):", res)
 	return res
 }
 

@@ -91,7 +91,6 @@ func (k *ExtendedSecretKey) PrivateChild(i uint32) *ExtendedSecretKey {
 	var b [4]byte
 	binary.BigEndian.PutUint32(b[:], i)
 	hmacInput = append(hmacInput, b[:]...)
-	//fmt.Printf("NGMgo(PrivateChild) hmacInput: %x\n", hmacInput)
 
 	cc := [32]byte{}
 	ccBytes := k.ChainCode.Bytes()
