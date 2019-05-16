@@ -337,7 +337,9 @@ func (g G1Projective) Double() *G1Projective {
 }
 
 // Add performs an EC Add operation with another point.
-func (g G1Projective) Add(other *G1Projective) *G1Projective {
+// Jacobian elliptic curve point addition
+// http://www.hyperelliptic.org/EFD/oldefd/jacobian.html
+func (g *G1Projective) Add(other *G1Projective) *G1Projective {
 	if g.IsZero() {
 		return other.Copy()
 	}
@@ -345,69 +347,59 @@ func (g G1Projective) Add(other *G1Projective) *G1Projective {
 		return g.Copy()
 	}
 
-	// Z1Z1 = Z1^2
-	z1z1 := g.z.Square()
+	// U1 = X1*Z2^2
+	u1 := g.x.Mul(other.z.Square())
+	// fmt.Println("NGMgo u1:", u1)
 
-	// Z2Z2 = Z2^2
-	z2z2 := other.z.Square()
+	// U2 = X2*Z1^2
+	u2 := other.x.Mul(g.z.Square())
+	// 	fmt.Println("NGMgo u2:", u2)
 
-	// U1 = X1*Z2Z2
-	u1 := g.x.Mul(z2z2)
+	// S1 = Y1*Z2^3
+	s1 := g.y.Mul(other.z.Square().Mul(other.z))
+	// fmt.Println("NGMgo s1:", s1)
 
-	// U2 = x2*Z1Z1
-	u2 := other.x.Mul(z1z1)
+	// S2 = Y2*Z1^3
+	s2 := other.y.Mul(g.z.Square().Mul(g.z))
+	// fmt.Println("NGMgo s2:", s2)
 
-	// S1 = Y1*Z2*Z2Z2
-	s1 := g.y.Mul(other.z)
-	s1.MulAssign(z2z2)
-
-	// S2 = Y2*Z1*Z1Z1
-	s2 := other.y.Mul(g.z)
-	s2.MulAssign(z1z1)
-
-	if u1.Equals(u2) && s1.Equals(s2) {
-		// points are equal
-		return g.Double()
+	if u1.Equals(u2) {
+		// fmt.Println("NGMgo u1.Equals(u2) (SIC)")
+		if !s1.Equals(s2) {
+			// fmt.Println("NGMgo NOT!!! s1.Equals(s2) (SIC)")
+			return NewG1Projective(FQOne, FQOne, FQZero)
+		} else {
+			// fmt.Println("NGMgo Else double g (GG)")
+			return g.Double()
+		}
 	}
 
-	// H = U2-U1
+	// H = U2 - U1
 	h := u2.Sub(u1)
+	// fmt.Println("NGMgo h:", h)
 
-	// I = (2*H)^2
-	i := h.Double()
-	i.SquareAssign()
+	// R = S2 - S1
+	r := s2.Sub(s1)
+	// fmt.Println("NGMgo r:", r)
 
-	// J = H * I
-	j := h.Mul(i)
+	//H_sq = H * H
+	h_sq := h.Square()
+	// fmt.Println("NGMgo h_sq:", h_sq)
 
-	// r = 2*(S2-S1)
-	s2.SubAssign(s1)
-	s2.DoubleAssign()
+	//H_cu = H * H_sq
+	h_cu := h_sq.Mul(h)
+	// fmt.Println("NGMgo h_cu:", h_cu)
 
-	// U1 = U1*I
-	u1.MulAssign(i)
+	// X3 = R^2 - H^3 - 2*U1*H^2
+	x3 := r.Square().Sub(h_cu).Sub(u1.Add(u1).Mul(h_sq))
 
-	// X3 = r^2 - J - 2*V
-	newX := s2.Square()
-	newX.SubAssign(j)
-	newX.SubAssign(u1)
-	newX.SubAssign(u1)
+	// Y3 = R*(U1*H^2 - X3) - S1*H^3
+	y3 := r.Mul(u1.Mul(h_sq).Sub(x3)).Sub(s1.Mul(h_cu))
 
-	// Y3 = r*(V - X3) - 2*S1*J
-	u1.SubAssign(newX)
-	u1.MulAssign(s2)
-	s1.MulAssign(j)
-	s1.DoubleAssign()
-	u1.SubAssign(s1)
+	// Z3 = H*Z1*Z2
+	z3 := h.Mul(g.z).Mul(other.z)
 
-	// Z3 = ((Z1+Z2)^2 - Z1Z1 - Z2Z2)*H
-	newZ := g.z.Add(other.z)
-	newZ.SquareAssign()
-	newZ.SubAssign(z1z1)
-	newZ.SubAssign(z2z2)
-	newZ.MulAssign(h)
-
-	return NewG1Projective(newX, u1, newZ)
+	return NewG1Projective(x3, y3, z3)
 }
 
 // AddAffine performs an EC Add operation with an affine point.
