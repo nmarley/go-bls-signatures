@@ -85,9 +85,10 @@ func AggregatePublicKeys(publicKeys []*PublicKey, secure bool) *PublicKey {
 	// consider splitting this so these don't have to be calculated for non-secure
 	computedTs := HashPKs(len(publicKeys), publicKeys)
 
-	aggPk := G1ProjectiveZero.Copy()
+	aggPk := NewG1Projective(FQOne, FQOne, FQZero)
+
 	for i, pk := range publicKeys {
-		tempG1 := pk.p
+		tempG1 := pk.p.Copy()
 		if secure {
 			tempG1 = tempG1.Mul(computedTs[i])
 		}
