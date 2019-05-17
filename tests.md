@@ -10,8 +10,8 @@
 
 - [ ] Aggregation
   - [x] aggregate([sig1, sig2])
-  - [ ] verify(aggSig2, mergeInfos(sig1.aggInfo, sig2.aggInfo))
-  - [ ] verify(sig1, AggregationInfo(pk2, [7,8,9]))
+  - [x] verify(aggSig2, mergeInfos(sig1.aggInfo, sig2.aggInfo))
+  - [x] verify(sig1, AggregationInfo(pk2, [7,8,9]))
   - [x] sig3 = sign([1,2,3], sk1)
   - [x] sig4 = sign([1,2,3,4], sk1)
   - [x] sig5 = sign([1,2], sk2)
