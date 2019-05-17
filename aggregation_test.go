@@ -132,7 +132,7 @@ func TestVectorAggregation2(t *testing.T) {
 	//sigL := bls.AggregateSignatures([]*bls.Signature{sig1, sig2})
 	//fmt.Printf("NGMgo(tv2) sigL: %x\n", sigL.Serialize())
 	sigR := bls.AggregateSignatures([]*bls.Signature{sig3, sig4, sig5})
-	//fmt.Printf("NGMgo(tv2) sigR: %x\n", sigR.Serialize())
+	fmt.Printf("NGMgo(tv2) sigR: %x\n", sigR.Serialize())
 
 	//is.True(sigL.Verify())
 	//is.True(sigR.Verify())
