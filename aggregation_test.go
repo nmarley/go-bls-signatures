@@ -67,7 +67,7 @@ func TestVectorAggregation(t *testing.T) {
 			is.Equal(fmt.Sprintf("%x", aggPk.Serialize()), "13ff74ea55952924e824c5a08825e3c36d928df7fba15bf492d00a6a112868625f772c9102f2d9e21b99bf99fdc627b6")
 
 			toMergeAIs := []*bls.AggregationInfo{sig1.GetAggregationInfo(), sig2.GetAggregationInfo()}
-			fmt.Println("NGMgo(aggTest) toMergeAIs:", toMergeAIs)
+			//fmt.Println("NGMgo(aggTest) toMergeAIs:", toMergeAIs)
 
 			ai := bls.MergeAggregationInfos(toMergeAIs)
 			aggSig2.SetAggregationInfo(ai)
