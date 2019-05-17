@@ -78,6 +78,14 @@ func TestVectorAggregation(t *testing.T) {
 			ai = bls.AggregationInfoFromMsgHash(pk2, mh)
 			sig1.SetAggregationInfo(ai)
 			is.Equal(sig1.Verify(), false)
+
+			toMergeAIs = []*bls.AggregationInfo{
+				sig3.GetAggregationInfo(),
+				sig4.GetAggregationInfo(),
+				sig5.GetAggregationInfo(),
+			}
+			aggSig2.SetAggregationInfo(bls.MergeAggregationInfos(toMergeAIs))
+			is.True(aggSig2.Verify())
 		})
 	}
 }
