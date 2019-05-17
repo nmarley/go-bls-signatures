@@ -297,3 +297,8 @@ func (s SigsByAI) Less(i, j int) bool { return s[i].ai.Less(s[j].ai) }
 func (s Signature) String() string {
 	return fmt.Sprintf("%096x", s.Serialize())
 }
+
+// DebugGetPoint ...
+func (s *Signature) DebugGetPoint() *G2Projective {
+	return s.s
+}
