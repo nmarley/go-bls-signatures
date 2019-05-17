@@ -421,7 +421,7 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 
 	if u1.Equals(u2) {
 		if !s1.Equals(s2) {
-			NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+			return NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 		} else {
 			return g.Double()
 		}
