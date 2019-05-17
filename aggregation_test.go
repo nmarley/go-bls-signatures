@@ -105,7 +105,7 @@ func TestVectorAggregation(t *testing.T) {
 
 // TODO: use strings, not bytes here (use serialize/deserialize methods)
 func TestVectorAggregation2(t *testing.T) {
-	//is := is.New(t)
+	is := is.New(t)
 
 	m1 := []byte{1, 2, 3, 40}
 	//m2 := []byte{5, 6, 70, 201}
@@ -135,7 +135,7 @@ func TestVectorAggregation2(t *testing.T) {
 	fmt.Printf("NGMgo(tv2) sigR: %x\n", sigR.Serialize())
 
 	//is.True(sigL.Verify())
-	//is.True(sigR.Verify())
+	is.True(sigR.Verify())
 
 	//sigFinal := bls.AggregateSignatures([]*bls.Signature{sigL, sigR, sig6})
 	//
