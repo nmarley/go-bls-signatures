@@ -308,6 +308,17 @@ func (s *Signature) DebugGetPoint() *G2Projective {
 // DivideBy divides the aggregate signature by a list of signatures. These
 // divisors can be single or aggregate signatures, but all msg/pk pairs in
 // these signatures must be distinct and unique.
+//
+// Signature division (elliptic curve subtraction). This is useful if you have
+// already verified parts of the tree, since verification of the resulting
+// quotient signature will be faster (less pairings have to be perfomed).
+//
+// This function Divides an aggregate signature by other signatures in the
+// aggregate trees. A signature can only be divided if it is part of the
+// subset, and all message/public key pairs in the aggregationInfo for the
+// divisor signature are unique. i.e you cannot divide s1 / s2, if s2 is an
+// aggregate signature containing m1,pk1, which is also present somewhere else
+// in s1's tree. Note, s2 itself does not have to be unique.
 func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 	if len(signatures) == 0 {
 		return NewSignature(s.s, s.ai)
