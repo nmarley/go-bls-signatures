@@ -52,14 +52,26 @@ func TestVectorAggregation(t *testing.T) {
 			is.Equal(fmt.Sprintf("%096x", aggSig2.Serialize()), "8b11daf73cd05f2fe27809b74a7b4c65b1bb79cc1066bdf839d96b97e073c1a635d2ec048e0801b4a208118fdbbb63a516bab8755cc8d850862eeaa099540cd83621ff9db97b4ada857ef54c50715486217bd2ecb4517e05ab49380c041e159b")
 			is.True(aggSig2.Verify())
 
-			//sig1, _ := bls.DeserializeSignature(sig1Bytes)
-
+			// TODO: optimize this or just drop table-driven tests and do what the python one does...
+			sig1, _ := bls.DeserializeSignature(sig1Bytes)
+			sig2, _ := bls.DeserializeSignature(sig2Bytes)
 			pk1, _ := bls.DeserializePublicKey(pk1Bytes)
 			pk2, _ := bls.DeserializePublicKey(pk2Bytes)
 
-			//agg_pk = PublicKey.aggregate([pk1, pk2], True)
+			mh := bls.NewMessageHashFromBytes(bls.Hash256(payload))
+			sig1.SetAggregationInfo(bls.AggregationInfoFromMsgHash(pk1, mh))
+			sig2.SetAggregationInfo(bls.AggregationInfoFromMsgHash(pk2, mh))
+
 			aggPk := bls.AggregatePublicKeys([]*bls.PublicKey{pk1, pk2}, true)
-			fmt.Println("NGMgo(aggTest) aggPk:", aggPk)
+			//fmt.Println("NGMgo(aggTest) aggPk:", aggPk)
+			is.Equal(fmt.Sprintf("%x", aggPk.Serialize()), "13ff74ea55952924e824c5a08825e3c36d928df7fba15bf492d00a6a112868625f772c9102f2d9e21b99bf99fdc627b6")
+
+			toMergeAIs := []*bls.AggregationInfo{sig1.GetAggregationInfo(), sig2.GetAggregationInfo()}
+			fmt.Println("NGMgo(aggTest) toMergeAIs:", toMergeAIs)
+
+			ai := bls.MergeAggregationInfos(toMergeAIs)
+			aggSig2.SetAggregationInfo(ai)
+			is.True(aggSig.Verify())
 
 			//aggPk2, _ := bls.DeserializePublicKey(pk2Bytes)
 			//mh := bls.NewMessageHashFromBytes(

@@ -177,6 +177,8 @@ func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 	collidingMessages := NewMessageSet()
 
 	for _, ai := range aggInfos {
+		// TODO: Add nil check here (prevents panic)
+		//       Maybe just continue instead of err
 		messagesLocal := NewMessageSet()
 		for k, _ := range ai.Tree {
 			_, mh := k.Split()
@@ -186,7 +188,6 @@ func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 			messages.AddMsg(mh)
 			messagesLocal.AddMsg(mh)
 		}
-
 	}
 
 	if collidingMessages.Len() == 0 {
