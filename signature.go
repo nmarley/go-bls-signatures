@@ -216,6 +216,8 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	var collidingPublicKeys []publicKeysList
 
 	for i, sig := range signatures {
+		fmt.Println("NGMgo(AggSig) sig:", sig)
+
 		groupCollides := false
 		for _, msg := range messageHashes[i] {
 			if collidingMessagesSet.HasMsg(msg) {
