@@ -359,6 +359,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 				// Makes sure the quotient is identical for each public key,
 				// which means message/pk pair is unique
 				newQuotient := NewFQ(dividend).Div(NewFQ(divisor))
+				//newQuotient := NewFQ(new(big.Int).Div(dividend, divisor))
 				if quotient != newQuotient {
 					// TODO: Don't panic
 					panic("Cannot divide by aggregate signature, msg/pk pairs are not unique")
@@ -372,25 +373,25 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 	}
 
 	// TODO: Deep copy?
-	copy := NewSignature(s.s.Add(prod), s.ai)
+	divSig := NewSignature(s.s.Add(prod), s.ai)
 
 	// TODO: is this really needed? Why not tree.RemoveMK(mk) above and save
 	// all these wasted cycles?
 
-	// Remove all the "to remove" entries from copy AI Tree
+	// Remove all the "to remove" entries from divSig AI Tree
 	for i, mh := range messageHashesToRemove {
 		a := mh
 		b := pubKeysToRemove[i]
 		mk := NewMapKey(b, a)
-		_, ok := copy.ai.Tree[mk]
+		_, ok := divSig.ai.Tree[mk]
 		if ok {
-			delete(copy.ai.Tree, mk)
+			delete(divSig.ai.Tree, mk)
 		}
 	}
 
-	sortedMapKeys := make([]MapKey, len(copy.ai.Tree))
+	sortedMapKeys := make([]MapKey, len(divSig.ai.Tree))
 	i := 0
-	for k, _ := range copy.ai.Tree {
+	for k, _ := range divSig.ai.Tree {
 		sortedMapKeys[i] = k
 		i++
 	}
@@ -408,7 +409,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 
 	// Sorted AI
 	ai := NewAggregationInfo(sortedPKs, sortedMHs)
-	copy.ai = ai
+	divSig.ai = ai
 
-	return copy
+	return divSig
 }
