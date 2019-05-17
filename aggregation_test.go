@@ -128,4 +128,9 @@ func TestVectorAggregation2(t *testing.T) {
 	// sigFinal, [sig2, sig5, sig6]
 	quotient := sigFinal.DivideBy([]*bls.Signature{sig2, sig5, sig6})
 	is.Equal(fmt.Sprintf("%096x", quotient.Serialize()), "8ebc8a73a2291e689ce51769ff87e517be6089fd0627b2ce3cd2f0ee1ce134b39c4da40928954175014e9bbe623d845d0bdba8bfd2a85af9507ddf145579480132b676f027381314d983a63842fcc7bf5c8c088461e3ebb04dcf86b431d6238f")
+	is.True(quotient.Verify())
+
+	// TODO: maybe remove the 2 and test against itself?
+	quotient2 := quotient.DivideBy([]*bls.Signature{})
+	is.Equal(quotient2, quotient)
 }
