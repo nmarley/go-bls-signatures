@@ -86,6 +86,51 @@ func TestVectorAggregation(t *testing.T) {
 			}
 			aggSig2.SetAggregationInfo(bls.MergeAggregationInfos(toMergeAIs))
 			is.True(aggSig2.Verify())
+
+			//- [ ] sig1 = sk1.sign([1,2,3,40])
+			//- [ ] sig2 = sk2.sign([5,6,70,201])
+			//- [ ] sig3 = sk2.sign([1,2,3,40])
+			//- [ ] sig4 = sk1.sign([9,10,11,12,13])
+			//- [ ] sig5 = sk1.sign([1,2,3,40])
+			//- [ ] sig6 = sk1.sign([15,63,244,92,0,1])
+			//- [ ] sigL = aggregate([sig1, sig2])
+			//- [ ] sigR = aggregate([sig3, sig4, sig5])
+			//- [ ] verify(sigL)
+			//- [ ] verify(sigR)
+			//- [ ] aggregate([sigL, sigR, sig6])
+			//- [ ] verify(sigFinal)
 		})
 	}
+}
+
+// TODO: use strings, not bytes here (use serialize/deserialize methods)
+func TestVectorAggregation2(t *testing.T) {
+	is := is.New(t)
+
+	// TODO: Rename variables... sk1 => sk1Bytes, sk1o => sk1
+	sk1 := bls.DeserializeSecretKey(sk1Bytes)
+	sk2 := bls.DeserializeSecretKey(sk2Bytes)
+
+	sig1 := sk1.Sign([]byte{1, 2, 3, 40})
+	sig2 := sk2.Sign([]byte{5, 6, 70, 201})
+	sig3 := sk2.Sign([]byte{1, 2, 3, 40})
+	sig4 := sk1.Sign([]byte{9, 10, 11, 12, 13})
+	sig5 := sk1.Sign([]byte{1, 2, 3, 40})
+	sig6 := sk1.Sign([]byte{15, 63, 244, 92, 0, 1})
+
+	sigL := bls.AggregateSignatures([]*bls.Signature{sig1, sig2})
+	sigR := bls.AggregateSignatures([]*bls.Signature{sig3, sig4, sig5})
+
+	is.True(sigL.Verify())
+	//is.True(sigR.Verify())
+
+	sigFinal := bls.AggregateSignatures([]*bls.Signature{sigL, sigR, sig6})
+
+	sigFinal.Serialize()
+	fmt.Printf("NGMgo - sigFinal: %096x\n", sigFinal.Serialize())
+	//is.Equal(fmt.Sprintf("%096x", sigFinal.Serialize()), "8b11daf73cd05f2fe27809b74a7b4c65b1bb79cc1066bdf839d96b97e073c1a635d2ec048e0801b4a208118fdbbb63a516bab8755cc8d850862eeaa099540cd83621ff9db97b4ada857ef54c50715486217bd2ecb4517e05ab49380c041e159b")
+
+	is.True(sigFinal.Verify())
+
+	// 0x07969958fbf82e65bd13ba0749990764cac81cf10d923af9fdd2723f1e3910c3fdb874a67f9d511bb7e4920f8c01232b12e2fb5e64a7c2d177a475dab5c3729ca1f580301ccdef809c57a8846890265d195b694fa414a2a3aa55c32837fddd80
 }

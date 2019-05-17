@@ -268,15 +268,16 @@ func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *Aggregation
 	// Sort AIs
 	sort.Sort(ByAI(collidingInfos))
 
-	// sortedMapKeys := make([]MapKey, len(collidingInfos))
-	sortedMapKeys := make([]MapKey, len(collidingInfos))
-	for i, ai := range collidingInfos {
-		j := 0
+	// Could try this: range over collidingInfos first and count all ai.Tree
+	// items to reduce allocations...
+	var sortedMapKeys []MapKey
+	fmt.Println("NGMgo(SMAI) begin loop1")
+	for _, ai := range collidingInfos {
 		for k, _ := range ai.Tree {
-			sortedMapKeys[i+j] = k
-			j++
+			sortedMapKeys = append(sortedMapKeys, k)
 		}
 	}
+	fmt.Println("NGMgo(SMAI) end loop1")
 
 	// Sort lexicographically binary, then split out pks / hashes
 	sort.Sort(By(sortedMapKeys))
