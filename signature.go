@@ -193,9 +193,6 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		// that every group is a valid aggregate signature. If an invalid
 		// or insecure signature is given, and invalid signature will
 		// be created. We don't verify for performance reasons.
-
-		// TODO: Test this!!!
-
 		aggInfos := make([]*AggregationInfo, len(signatures))
 		for i, sig := range signatures {
 			aggInfos[i] = sig.ai
