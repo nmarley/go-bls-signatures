@@ -337,7 +337,9 @@ func (g G1Projective) Double() *G1Projective {
 }
 
 // Add performs an EC Add operation with another point.
-func (g G1Projective) Add(other *G1Projective) *G1Projective {
+// Jacobian elliptic curve point addition
+// http://www.hyperelliptic.org/EFD/oldefd/jacobian.html
+func (g *G1Projective) Add(other *G1Projective) *G1Projective {
 	if g.IsZero() {
 		return other.Copy()
 	}
@@ -345,69 +347,40 @@ func (g G1Projective) Add(other *G1Projective) *G1Projective {
 		return g.Copy()
 	}
 
-	// Z1Z1 = Z1^2
-	z1z1 := g.z.Square()
-
-	// Z2Z2 = Z2^2
-	z2z2 := other.z.Square()
-
-	// U1 = X1*Z2Z2
-	u1 := g.x.Mul(z2z2)
-
-	// U2 = x2*Z1Z1
-	u2 := other.x.Mul(z1z1)
-
-	// S1 = Y1*Z2*Z2Z2
-	s1 := g.y.Mul(other.z)
-	s1.MulAssign(z2z2)
-
-	// S2 = Y2*Z1*Z1Z1
-	s2 := other.y.Mul(g.z)
-	s2.MulAssign(z1z1)
-
-	if u1.Equals(u2) && s1.Equals(s2) {
-		// points are equal
-		return g.Double()
+	// U1 = X1*Z2^2
+	u1 := g.x.Mul(other.z.Square())
+	// U2 = X2*Z1^2
+	u2 := other.x.Mul(g.z.Square())
+	// S1 = Y1*Z2^3
+	s1 := g.y.Mul(other.z.Square().Mul(other.z))
+	// S2 = Y2*Z1^3
+	s2 := other.y.Mul(g.z.Square().Mul(g.z))
+	if u1.Equals(u2) {
+		if !s1.Equals(s2) {
+			return NewG1Projective(FQOne, FQOne, FQZero)
+		} else {
+			return g.Double()
+		}
 	}
 
-	// H = U2-U1
+	// H = U2 - U1
 	h := u2.Sub(u1)
+	// R = S2 - S1
+	r := s2.Sub(s1)
+	//H_sq = H * H
+	h_sq := h.Square()
+	//H_cu = H * H_sq
+	h_cu := h_sq.Mul(h)
+	// X3 = R^2 - H^3 - 2*U1*H^2
+	x3 := r.Square().Sub(h_cu).Sub(u1.Add(u1).Mul(h_sq))
 
-	// I = (2*H)^2
-	i := h.Double()
-	i.SquareAssign()
+	// Y3 = R*(U1*H^2 - X3) - S1*H^3
+	y3 := r.Mul(u1.Mul(h_sq).Sub(x3)).Sub(s1.Mul(h_cu))
 
-	// J = H * I
-	j := h.Mul(i)
+	// Z3 = H*Z1*Z2
+	z3 := h.Mul(g.z).Mul(other.z)
 
-	// r = 2*(S2-S1)
-	s2.SubAssign(s1)
-	s2.DoubleAssign()
-
-	// U1 = U1*I
-	u1.MulAssign(i)
-
-	// X3 = r^2 - J - 2*V
-	newX := s2.Square()
-	newX.SubAssign(j)
-	newX.SubAssign(u1)
-	newX.SubAssign(u1)
-
-	// Y3 = r*(V - X3) - 2*S1*J
-	u1.SubAssign(newX)
-	u1.MulAssign(s2)
-	s1.MulAssign(j)
-	s1.DoubleAssign()
-	u1.SubAssign(s1)
-
-	// Z3 = ((Z1+Z2)^2 - Z1Z1 - Z2Z2)*H
-	newZ := g.z.Add(other.z)
-	newZ.SquareAssign()
-	newZ.SubAssign(z1z1)
-	newZ.SubAssign(z2z2)
-	newZ.MulAssign(h)
-
-	return NewG1Projective(newX, u1, newZ)
+	return NewG1Projective(x3, y3, z3)
 }
 
 // AddAffine performs an EC Add operation with an affine point.
@@ -477,18 +450,29 @@ func (g G1Projective) AddAffine(other *G1Affine) *G1Projective {
 
 // Mul performs a EC multiply operation on the point.
 func (g G1Projective) Mul(b *big.Int) *G1Projective {
-	bs := b.Bytes()
-	res := G1ProjectiveZero.Copy()
-	for i := uint(0); i < uint((b.BitLen()+7)/8)*8; i++ {
-		part := i / 8
-		bit := 7 - i%8
-		o := bs[part]&(1<<(bit)) > 0
-		res = res.Double()
-		if o {
-			res = res.Add(&g)
-		}
+	// if p1.infinity or c % ec.q == 0:
+	if g.IsZero() || new(big.Int).Mod(b, QFieldModulus).Cmp(bigZero) == 0 {
+		return NewG1Projective(FQOne, FQOne, FQZero)
 	}
-	return res
+
+	addend := g.Copy()
+	result := NewG1Projective(FQOne, FQOne, FQZero)
+
+	// while n > 0:
+	for b.Cmp(bigZero) > 0 {
+		// if n is odd
+		if b.Bit(0) == 1 {
+			//	result += addend
+			result = result.Add(addend)
+		}
+		// double point
+		addend = addend.Double()
+		// c = c >> 1
+		b = new(big.Int).Rsh(b, 1)
+	}
+
+	return result
+
 }
 
 // RandG1 generates a random G1 element.
