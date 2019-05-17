@@ -16,7 +16,7 @@
   - [x] sig4 = sign([1,2,3,4], sk1)
   - [x] sig5 = sign([1,2], sk2)
   - [x] aggregate([sig3, sig4, sig5])
-  - [ ] verify(aggSig2, mergeInfos(sig3.aggInfo, sig4.aggInfo, sig5.aggInfo))
+  - [x] verify(aggSig2, mergeInfos(sig3.aggInfo, sig4.aggInfo, sig5.aggInfo))
   - [ ] sig1 = sk1.sign([1,2,3,40])
   - [ ] sig2 = sk2.sign([5,6,70,201])
   - [ ] sig3 = sk2.sign([1,2,3,40])
