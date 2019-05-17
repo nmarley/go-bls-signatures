@@ -1,7 +1,6 @@
 package bls_test
 
 import (
-	"fmt"
 	"math/big"
 	"testing"
 
