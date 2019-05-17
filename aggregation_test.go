@@ -86,19 +86,6 @@ func TestVectorAggregation(t *testing.T) {
 			}
 			aggSig2.SetAggregationInfo(bls.MergeAggregationInfos(toMergeAIs))
 			is.True(aggSig2.Verify())
-
-			//- [ ] sig1 = sk1.sign([1,2,3,40])
-			//- [ ] sig2 = sk2.sign([5,6,70,201])
-			//- [ ] sig3 = sk2.sign([1,2,3,40])
-			//- [ ] sig4 = sk1.sign([9,10,11,12,13])
-			//- [ ] sig5 = sk1.sign([1,2,3,40])
-			//- [ ] sig6 = sk1.sign([15,63,244,92,0,1])
-			//- [ ] sigL = aggregate([sig1, sig2])
-			//- [ ] sigR = aggregate([sig3, sig4, sig5])
-			//- [ ] verify(sigL)
-			//- [ ] verify(sigR)
-			//- [ ] aggregate([sigL, sigR, sig6])
-			//- [ ] verify(sigFinal)
 		})
 	}
 }
