@@ -276,7 +276,7 @@ func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *Aggregation
 	// Could try this: range over collidingInfos first and count all ai.Tree
 	// items to reduce allocations...
 	//var sortedMapKeys []MapKey
-	fmt.Println("NGMgo(SMAI) begin loop1")
+	// fmt.Println("NGMgo(SMAI) begin loop1")
 
 	sortedMapKeys := make([]MapKey, total)
 	count := 0
@@ -287,7 +287,7 @@ func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *Aggregation
 			count++
 		}
 	}
-	fmt.Println("NGMgo(SMAI) end loop1")
+	// fmt.Println("NGMgo(SMAI) end loop1")
 
 	// Sort lexicographically binary, then split out pks / hashes
 	sort.Sort(By(sortedMapKeys))
@@ -306,7 +306,8 @@ func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *Aggregation
 	for i := 0; i < len(collidingInfos); i++ {
 		for k, v := range collidingInfos[i].Tree {
 
-			// TODO: REFACTOR. Esp. like the new(big.Int).Mul(v, computedTs[i]) can be extracted for both conditions
+			// TODO: REFACTOR. Esp. like the new(big.Int).Mul(v, computedTs[i])
+			// can be extracted for both conditions
 
 			newVal, found := newTree[k]
 			if !found {
