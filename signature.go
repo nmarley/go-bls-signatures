@@ -324,5 +324,91 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 		return NewSignature(s.s, s.ai)
 	}
 
-	return s
+	// TODO: Calculate max first & reduce allocations... remove appends() where
+	// possible
+	messageHashesToRemove := []*MessageHash{}
+	pubKeysToRemove := []*PublicKey{}
+
+	prod := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+
+	for _, sig := range signatures {
+		pks := sig.ai.PublicKeys
+		mhs := sig.ai.Hashes
+		if len(pks) != len(mhs) {
+			// TODO: Don't panic
+			panic("invalid aggregation info!")
+		}
+		var quotient *FQ
+		for i, pk := range pks {
+			mk := NewMapKey(pk, mhs[i])
+			divisor := sig.ai.Tree[mk]
+
+			// err if this key doesn't exist in s.ai.Tree
+			dividend, found := s.ai.Tree[mk]
+			if !found {
+				panic("Signature is not a subset")
+			}
+
+			// TODO: This is some screwy logic. There's a lot better way to do
+			// ensure unique MapKeys than this.
+
+			if i == 0 {
+				quotient = NewFQ(dividend).Div(NewFQ(divisor))
+				//quotient = NewFQ(new(big.Int).Div(dividend, divisor))
+			} else {
+				// Makes sure the quotient is identical for each public key,
+				// which means message/pk pair is unique
+				newQuotient := NewFQ(dividend).Div(NewFQ(divisor))
+				if quotient != newQuotient {
+					// TODO: Don't panic
+					panic("Cannot divide by aggregate signature, msg/pk pairs are not unique")
+				}
+			}
+			// TODO: do not append, reduce allocations
+			messageHashesToRemove = append(messageHashesToRemove, mhs[i])
+			pubKeysToRemove = append(pubKeysToRemove, pk)
+		}
+		prod = prod.Add(sig.s.Mul(quotient.Neg().n))
+	}
+
+	// TODO: Deep copy?
+	copy := NewSignature(s.s.Add(prod), s.ai)
+
+	// TODO: is this really needed? Why not tree.RemoveMK(mk) above and save
+	// all these wasted cycles?
+
+	// Remove all the "to remove" entries from copy AI Tree
+	for i, mh := range messageHashesToRemove {
+		a := mh
+		b := pubKeysToRemove[i]
+		mk := NewMapKey(b, a)
+		_, ok := copy.ai.Tree[mk]
+		if ok {
+			delete(copy.ai.Tree, mk)
+		}
+	}
+
+	sortedMapKeys := make([]MapKey, len(copy.ai.Tree))
+	i := 0
+	for k, _ := range copy.ai.Tree {
+		sortedMapKeys[i] = k
+		i++
+	}
+
+	// Sort lexicographically binary, then split out pks / hashes
+	sort.Sort(By(sortedMapKeys))
+	sortedMHs := make([]*MessageHash, len(sortedMapKeys))
+	sortedPKs := make([]*PublicKey, len(sortedMapKeys))
+	for i = 0; i < len(sortedMapKeys); i++ {
+		mk := sortedMapKeys[i]
+		pk, mh := mk.Split()
+		sortedMHs[i] = mh
+		sortedPKs[i] = pk
+	}
+
+	// Sorted AI
+	ai := NewAggregationInfo(sortedPKs, sortedMHs)
+	copy.ai = ai
+
+	return copy
 }
