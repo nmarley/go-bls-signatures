@@ -302,3 +302,12 @@ func (s Signature) String() string {
 func (s *Signature) DebugGetPoint() *G2Projective {
 	return s.s
 }
+
+// Signature division
+
+// DivideBy divides the aggregate signature by a list of signatures. These
+// divisors can be single or aggregate signatures, but all msg/pk pairs in
+// these signatures must be distinct and unique.
+func (s *Signature) DivideBy(signatures []*Signature) *Signature {
+	return s
+}
