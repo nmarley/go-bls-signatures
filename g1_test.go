@@ -13,7 +13,7 @@ func HexInt(hexStr string) *big.Int {
 	n, _ := new(big.Int).SetString(hexStr, 16)
 	return n
 }
-func TestG1ProjectiveMul(t *testing.T) {
+func TestG1PMul(t *testing.T) {
 	tests := []struct {
 		pointX string
 		pointY string
@@ -60,7 +60,7 @@ func TestG1ProjectiveMul(t *testing.T) {
 	}
 }
 
-func TestG1ProjectiveAdd(t *testing.T) {
+func TestG1PAdd(t *testing.T) {
 	tests := []struct {
 		p1x  string
 		p1y  string
