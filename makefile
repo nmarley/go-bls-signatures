@@ -4,7 +4,8 @@ SHELL = bash
 COVERAGE_FILE ?= coverage.txt
 
 something:
-	go test
+	go test -v -run TestVectorAggregation2
+	#go test
 	#go test -run TestVector
 	#go test -run TestDashCoreBLSCompatibility
 	#go test -run TestCustomNGM
