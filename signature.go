@@ -203,8 +203,6 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		return finalSig
 	}
 
-	// NGMgo start debugging HERE. Colliding messages, etc.
-
 	// There are groups that share messages, therefore we need
 	// to use a secure form of aggregation. First we find which
 	// groups collide, and securely aggregate these. Then, we
@@ -218,8 +216,6 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	var collidingPublicKeys []publicKeysList
 
 	for i, sig := range signatures {
-		fmt.Println("NGMgo(AggSig) sig:", sig)
-
 		groupCollides := false
 		for _, msg := range messageHashes[i] {
 			if collidingMessagesSet.HasMsg(msg) {
@@ -272,18 +268,19 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		aggSig = aggSig.Add(sig.s.Mul(computed_Ts[i]))
 	}
 
+	// Add non-colliding signatures...
+	for _, sig := range nonCollidingSigs {
+		aggSig = aggSig.Add(sig.s)
+	}
+
+	// Create final aggregation info
 	aggInfos := make([]*AggregationInfo, len(signatures))
 	for i, sig := range signatures {
 		aggInfos[i] = sig.ai
 	}
-
-	//fmt.Println("NGMgo(AggSig) aggInfos:", aggInfos)
-
 	finalAggInfo := MergeAggregationInfos(aggInfos)
-	fmt.Println("NGMgo(AggSig) finalAggInfo:", finalAggInfo)
 
 	finalSig := NewSignature(aggSig, finalAggInfo)
-	fmt.Println("NGMgo(AggSig) finalSig:", finalSig)
 
 	return finalSig
 }
