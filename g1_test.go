@@ -34,6 +34,8 @@ func TestG1ProjectiveMul(t *testing.T) {
 		},
 	}
 
+	// NGMpy res: JacobianPoint(x=Fq(173ff35c6432c796bc1ebd58f1b40f77a56495c4bb5424de9dce8c0a6a24882457773340ee9fb80daa6d8620cc219407), y=Fq(0b8bb2cd7c096e369ab0c95c051b7b48e2e1beefbe2d865f222d5aa5301c42774c43aa8377bf05f069a89a22472e3b10), z=Fq(03ad295d408411f54397ecd48518f0d8b769dbba5acecdae7d220a1b57653569384d85122455578264e2cc63a9b672a6), i=False)
+
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("%d", i), func(st *testing.T) {
 			is := is.New(st)
