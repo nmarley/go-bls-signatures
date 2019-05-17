@@ -74,14 +74,10 @@ func TestVectorAggregation(t *testing.T) {
 			is.True(aggSig.Verify())
 
 			//aggPk2, _ := bls.DeserializePublicKey(pk2Bytes)
-			//mh := bls.NewMessageHashFromBytes(
-			//	bls.Hash256([]byte{7, 8, 9})
-			//	)
-			//
-			//ai := bls.AggregationInfoFromMsgHash(pk2, mh)
-			//
-			//sig1.SetAggregationInfo(ai)
-			//is.Equal(sig1.Verify(), false)
+			mh = bls.NewMessageHashFromBytes([]byte{7, 8, 9})
+			ai = bls.AggregationInfoFromMsgHash(pk2, mh)
+			sig1.SetAggregationInfo(ai)
+			is.Equal(sig1.Verify(), false)
 		})
 	}
 }
