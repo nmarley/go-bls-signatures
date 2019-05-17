@@ -472,7 +472,6 @@ func (g G1Projective) Mul(b *big.Int) *G1Projective {
 	}
 
 	return result
-
 }
 
 // RandG1 generates a random G1 element.
