@@ -119,18 +119,12 @@ func TestVectorAggregation2(t *testing.T) {
 	is.Equal(fmt.Sprintf("%096x", sigFinal.Serialize()), "07969958fbf82e65bd13ba0749990764cac81cf10d923af9fdd2723f1e3910c3fdb874a67f9d511bb7e4920f8c01232b12e2fb5e64a7c2d177a475dab5c3729ca1f580301ccdef809c57a8846890265d195b694fa414a2a3aa55c32837fddd80")
 	is.True(sigFinal.Verify())
 
-	// begin division...
+	// Begin Signature Division
 
-	// ### Signature division
-	// * divide(sigFinal, [sig2, sig5, sig6])
-	//   * quotient: 0x8ebc8a73a2291e689ce51769ff87e517be6089fd0627b2ce3cd2f0ee1ce134b39c4da40928954175014e9bbe623d845d0bdba8bfd2a85af9507ddf145579480132b676f027381314d983a63842fcc7bf5c8c088461e3ebb04dcf86b431d6238f
-
-	// sigFinal, [sig2, sig5, sig6]
 	quotient := sigFinal.DivideBy([]*bls.Signature{sig2, sig5, sig6})
 	is.Equal(fmt.Sprintf("%096x", quotient.Serialize()), "8ebc8a73a2291e689ce51769ff87e517be6089fd0627b2ce3cd2f0ee1ce134b39c4da40928954175014e9bbe623d845d0bdba8bfd2a85af9507ddf145579480132b676f027381314d983a63842fcc7bf5c8c088461e3ebb04dcf86b431d6238f")
 	is.True(quotient.Verify())
 
-	// TODO: maybe remove the 2 and test against itself?
-	quotient2 := quotient.DivideBy([]*bls.Signature{})
-	is.Equal(quotient2, quotient)
+	// Ensure that dividing by an empty list returns the same signature
+	is.Equal(quotient.DivideBy([]*bls.Signature{}), quotient)
 }

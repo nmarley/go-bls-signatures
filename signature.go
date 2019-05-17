@@ -309,5 +309,9 @@ func (s *Signature) DebugGetPoint() *G2Projective {
 // divisors can be single or aggregate signatures, but all msg/pk pairs in
 // these signatures must be distinct and unique.
 func (s *Signature) DivideBy(signatures []*Signature) *Signature {
+	if len(signatures) == 0 {
+		return NewSignature(s.s, s.ai)
+	}
+
 	return s
 }
