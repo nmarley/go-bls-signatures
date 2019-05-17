@@ -18,9 +18,9 @@ type PublicKey struct {
 	p *G1Projective
 }
 
-// String ...
+// String implements the Stringer interface
 func (p PublicKey) String() string {
-	return p.p.String()
+	return fmt.Sprintf("%096x", p.Serialize())
 }
 
 // StringShort ...
