@@ -1,6 +1,7 @@
 package bls_test
 
 import (
+	"fmt"
 	"math/big"
 	"testing"
 
@@ -38,4 +39,25 @@ func TestCustomNGM(t *testing.T) {
 
 	// res := jp.Mul(n)
 	// fmt.Println("NGMgo(custom) res:", res)
+
+	n, _ := new(big.Int).SetString("10746187394710803858902583717267488142852834263096407882503604572766712790196", 10)
+	fmt.Println("NGMgo(custom) n:", n)
+
+	//n.Neg(n)
+	//fmt.Println("NGMgo(custom) n:", n)
+
+	//n.Neg(n).ModInverse()
+	//fmt.Println("NGMgo(custom) n:", n)
+
+	mi := new(big.Int).ModInverse(n, bls.QFieldModulus)
+	fmt.Println("NGMgo(custom) mi:", mi)
+
+	x := new(big.Int).Mod(n, bls.QFieldModulus)
+	fmt.Println("NGMgo(custom) x:", x)
+
+	myfq := bls.NewFQ(n)
+	fmt.Println("NGMgo(custom) myfq:", myfq)
+
+	myfq2 := bls.NewFQ(x)
+	fmt.Println("NGMgo(custom) myfq2:", myfq2)
 }
