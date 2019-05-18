@@ -114,6 +114,13 @@ func (s *Signature) Verify() bool {
 		for _, k := range keys {
 			mk := NewMapKey(k, mh)
 			exponent := agginfo.Tree[mk]
+			if exponent == nil {
+
+				// TODO/NGM: Fix this ASAP! What is going on here??....
+				// Why is the mk not found in the map?
+
+				panic("MOTHER FUCKIER")
+			}
 			sum := k.p.Mul(exponent)
 			publicKeySum = publicKeySum.Add(sum)
 		}
