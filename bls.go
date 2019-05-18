@@ -6,6 +6,9 @@ import (
 	"math/big"
 )
 
+// Debug ...
+var Debug = false
+
 // Sizes of g1/g2 elements
 // TODO: Probably move these somewhere else...
 const (
