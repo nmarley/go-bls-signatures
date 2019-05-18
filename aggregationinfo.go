@@ -101,6 +101,9 @@ func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo
 	return ai
 }
 
+// TODO: Tighter rules around access to tree & re-shuffling of pubkeys / hashes
+// Tree should not ever have invalid info
+
 // AggregationTree ...
 type AggregationTree map[MapKey]*big.Int
 
