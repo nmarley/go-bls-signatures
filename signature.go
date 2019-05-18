@@ -164,6 +164,11 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	var messageHashes []messageHashesList
 
 	for _, sig := range signatures {
+		if Debug {
+			fmt.Printf("NGMgo(AggSigs) initial sig debug, sig: %x\n", sig.Serialize())
+			fmt.Println("\tNGMgo(AggSigs) AI:", sig.ai.Tree)
+		}
+
 		if sig.ai == nil {
 			// TODO: error, do not panic
 			panic("Each signature must have a valid aggregation info")
@@ -188,6 +193,15 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 			messagesSetLocal.AddMsg(msg)
 		}
 	}
+
+	// NGMNGMNGM
+	//if Debug {
+	//	fmt.Println("NGMgo(AggSigs) collidingMessagesSet.Len():", collidingMessagesSet.Len())
+	//	fmt.Println("NGMgo(AggSigs) collidingMessagesSet:", collidingMessagesSet)
+	//	for k := range *collidingMessagesSet {
+	//		fmt.Printf("NGMgo(AggSigs) key collidingMessagesSet: %x\n", k)
+	//	}
+	//}
 
 	if collidingMessagesSet.Len() == 0 {
 		// There are no colliding messages between the groups, so we
@@ -233,8 +247,36 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		}
 	}
 
+	// NGMNGMNGM
+	//if Debug {
+	//	fmt.Println("NGMgo(AggSigs) collidingSigs", collidingSigs)
+	//	for _, sig := range collidingSigs {
+	//		fmt.Printf("NGMgo(AggSigs) collidingSig: %x\n", sig.Serialize())
+	//	}
+	//
+	//	fmt.Println("NGMgo(AggSigs) nonCollidingSigs", nonCollidingSigs)
+	//	for _, sig := range nonCollidingSigs {
+	//		fmt.Printf("NGMgo(AggSigs) nonCollidingSig: %x\n", sig.Serialize())
+	//	}
+	//}
+
 	// Sort signatures by their aggregation info
 	sort.Sort(SigsByAI(collidingSigs))
+
+	////NGMNGMNGM
+	//if Debug {
+	//	fmt.Println("NGMgo(AggSigs) collidingSigs", collidingSigs)
+	//	for _, sig := range collidingSigs {
+	//		fmt.Printf("NGMgo(AggSigs) collidingSig: %x\n", sig.Serialize())
+	//		fmt.Println("NGMgo(AggSigs) collidingSig AI:", sig.ai.Tree)
+	//	}
+	//
+	//	fmt.Println("NGMgo(AggSigs) nonCollidingSigs", nonCollidingSigs)
+	//	for _, sig := range nonCollidingSigs {
+	//		fmt.Printf("NGMgo(AggSigs) nonCollidingSig: %x\n", sig.Serialize())
+	//		fmt.Println("NGMgo(AggSigs) nonCollidingSig AI:", sig.ai.Tree)
+	//	}
+	//}
 
 	var sortKeysSorted []MapKey
 
@@ -377,7 +419,11 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 		prod = prod.Add(sig.s.Mul(quotient.Neg().n))
 	}
 
-	// TODO: Deep copy?
+	// TODO: DEEP COPY!!!
+	//
+	// NGM THIS IS FUCKING IT. God dammit, mother fucker. This is the root of
+	// all issues. Shit. Fucking pointers. Of course nathan, you should have
+	// known better.
 	divSig := NewSignature(s.s.Add(prod), s.ai)
 
 	// TODO: is this really needed? Why not tree.RemoveMK(mk) above and save
