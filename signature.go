@@ -106,9 +106,12 @@ func (s *Signature) Verify() bool {
 		}
 	}
 
-	var finalPublicKeys []*G1Projective
-	var mappedHashes []*G2Projective
+	//var finalPublicKeys []*G1Projective
+	//var mappedHashes []*G2Projective
+	finalPublicKeys := make([]*G1Projective, len(hashToPublicKeys))
+	mappedHashes := make([]*G2Projective, len(hashToPublicKeys))
 
+	count := 0
 	for mh, keys := range hashToPublicKeys {
 		publicKeySum := NewG1Projective(FQOne, FQOne, FQZero)
 		for _, k := range keys {
@@ -124,8 +127,11 @@ func (s *Signature) Verify() bool {
 			sum := k.p.Mul(exponent)
 			publicKeySum = publicKeySum.Add(sum)
 		}
-		finalPublicKeys = append(finalPublicKeys, publicKeySum)
-		mappedHashes = append(mappedHashes, HashG2PreHashed(mh[:]))
+		//finalPublicKeys = append(finalPublicKeys, publicKeySum)
+		//mappedHashes = append(mappedHashes, HashG2PreHashed(mh[:]))
+		finalPublicKeys[count] = publicKeySum
+		mappedHashes[count] = HashG2PreHashed(mh[:])
+		count++
 	}
 
 	fq := NewFQ(new(big.Int).Sub(RFieldModulus, bigOne))
