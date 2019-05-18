@@ -326,16 +326,21 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 		return NewSignature(s.s, s.ai)
 	}
 
-	// TODO: Calculate max first & reduce allocations... remove appends() where
+	// TODO: Calculate max first & reduce allocations... remove append()s where
 	// possible
 	messageHashesToRemove := []*MessageHash{}
 	pubKeysToRemove := []*PublicKey{}
 
 	prod := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 
+	//fmt.Println("NGMgo s.ai.Tree: ", s.ai.Tree)
+
 	for _, sig := range signatures {
 		pks := sig.ai.PublicKeys
 		mhs := sig.ai.Hashes
+
+		//fmt.Println("NGMgo sig.ai.Tree: ", sig.ai.Tree)
+
 		if len(pks) != len(mhs) {
 			// TODO: Don't panic
 			panic("invalid aggregation info!")

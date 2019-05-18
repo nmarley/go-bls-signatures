@@ -115,15 +115,17 @@ func (at *AggregationTree) Empty() bool {
 // String ... this is actually just for debugging, so can be dropped later.
 // Don't waste time optimizing.
 func (at AggregationTree) String() string {
-	bigStr := ""
-	count := 0
+	bigStr := "AI Tree:"
+	//count := 0
 	for k, v := range at {
-		entryStr := fmt.Sprintf("%v:%v", k.String(), v.String())
-		if count != 0 {
-			bigStr += ","
-		}
+		//if count != 0 {
+		//	bigStr += ","
+		//}
+
+		entryStr := fmt.Sprintf("\n\tMapKey=%v,Exponent=%v", k.String(), v.String())
 		bigStr += entryStr
-		count++
+
+		//count++
 	}
 	return bigStr
 }

@@ -110,7 +110,10 @@ func TestVectorAggregation2(t *testing.T) {
 	sig6 := sk1.Sign(m4)
 
 	sigL := bls.AggregateSignatures([]*bls.Signature{sig1, sig2})
+	//fmt.Println("NGMgo sigL ai.Tree:", sigL.GetAggregationInfo().Tree)
+
 	sigR := bls.AggregateSignatures([]*bls.Signature{sig3, sig4, sig5})
+	//fmt.Println("NGMgo sigR ai.Tree:", sigR.GetAggregationInfo().Tree)
 
 	is.True(sigL.Verify())
 	is.True(sigR.Verify())
@@ -119,46 +122,50 @@ func TestVectorAggregation2(t *testing.T) {
 	is.Equal(fmt.Sprintf("%096x", sigFinal.Serialize()), "07969958fbf82e65bd13ba0749990764cac81cf10d923af9fdd2723f1e3910c3fdb874a67f9d511bb7e4920f8c01232b12e2fb5e64a7c2d177a475dab5c3729ca1f580301ccdef809c57a8846890265d195b694fa414a2a3aa55c32837fddd80")
 	is.True(sigFinal.Verify())
 
+	//fmt.Println("NGMgo sigFinal ai.Tree:", sigFinal.GetAggregationInfo().Tree)
+
 	// Begin Signature Division
 
 	quotient := sigFinal.DivideBy([]*bls.Signature{sig2, sig5, sig6})
 	is.Equal(fmt.Sprintf("%096x", quotient.Serialize()), "8ebc8a73a2291e689ce51769ff87e517be6089fd0627b2ce3cd2f0ee1ce134b39c4da40928954175014e9bbe623d845d0bdba8bfd2a85af9507ddf145579480132b676f027381314d983a63842fcc7bf5c8c088461e3ebb04dcf86b431d6238f")
-
-	// TODO: This is failing...
-	// Actually choking due to a missing MapKey in AI.Tree... figure this out.
-	//is.True(quotient.Verify())
+	is.True(quotient.Verify())
 
 	// Ensure that dividing by an empty list returns the same signature
 	is.Equal(quotient.DivideBy([]*bls.Signature{}), quotient)
 
 	// TODO: ERR (not a subset)
-	// WORKING. This is throwing as expected...
+	//// WORKING. This is throwing as expected...
 	//quotient.DivideBy([]*bls.Signature{sig6})
 
-	// Does not throw...
-	// BREAKING! This is actually throwing...
+	//// Does not throw...
+	//// BREAKING! This is actually throwing...
 	//sigFinal.DivideBy([]*bls.Signature{sig1})
-
-	// Does throw due to not unique
-	// BREAKING: Does not throw the right error
+	//
+	//// Does throw due to not unique
+	//// BREAKING: Does not throw the right error
 	//sigFinal.DivideBy([]*bls.Signature{sigL})
-
-	// Divide by aggregate
+	//
+	//// Divide by aggregate
 	sig7 := sk2.Sign(m3)
-	fmt.Printf("NGMgo sig7: %096x\n", sig7.Serialize())
+	//fmt.Printf("NGMgo sig7: %096x\n", sig7.Serialize())
 
 	sig8 := sk2.Sign(m4)
-	fmt.Printf("NGMgo sig8: %096x\n", sig8.Serialize())
+	//fmt.Printf("NGMgo sig8: %096x\n", sig8.Serialize())
 
 	sigR2 := bls.AggregateSignatures([]*bls.Signature{sig7, sig8})
-	fmt.Printf("NGMgo sigR2: %096x\n", sigR2.Serialize())
+	//fmt.Printf("NGMgo sigR2: %096x\n", sigR2.Serialize())
+
+	//fmt.Println("NGMgo sigFinal ai.Tree:", sigFinal.GetAggregationInfo().Tree)
+	//fmt.Println("NGMgo sigR2 ai.Tree:", sigR2.GetAggregationInfo().Tree)
 
 	sigFinal2 := bls.AggregateSignatures([]*bls.Signature{sigFinal, sigR2})
-	fmt.Printf("NGMgo sigFinal2: %096x\n", sigFinal2.Serialize())
+	//fmt.Printf("NGMgo sigFinal2: %096x\n", sigFinal2.Serialize())
 
-	quotient2 := sigFinal2.DivideBy([]*bls.Signature{sigR2})
-	fmt.Printf("q2: %096x\n", quotient2.Serialize())
+	fmt.Println("NGMgo sigFinal2 ai.Tree:", sigFinal2.GetAggregationInfo().Tree)
 
-	//is.Equal(fmt.Sprintf("%096x", quotient2.Serialize()), "06af6930bd06838f2e4b00b62911fb290245cce503ccf5bfc2901459897731dd08fc4c56dbde75a11677ccfbfa61ab8b14735fddc66a02b7aeebb54ab9a41488f89f641d83d4515c4dd20dfcf28cbbccb1472c327f0780be3a90c005c58a47d3")
-	//is.True(quotient2.Verify())
+	//quotient2 := sigFinal2.DivideBy([]*bls.Signature{sigR2})
+	//fmt.Printf("q2: %096x\n", quotient2.Serialize())
+
+	////is.Equal(fmt.Sprintf("%096x", quotient2.Serialize()), "06af6930bd06838f2e4b00b62911fb290245cce503ccf5bfc2901459897731dd08fc4c56dbde75a11677ccfbfa61ab8b14735fddc66a02b7aeebb54ab9a41488f89f641d83d4515c4dd20dfcf28cbbccb1472c327f0780be3a90c005c58a47d3")
+	////is.True(quotient2.Verify(false))
 }
