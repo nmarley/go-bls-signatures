@@ -407,7 +407,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 				// Makes sure the quotient is identical for each public key,
 				// which means message/pk pair is unique
 				newQuotient := NewFR(dividend).Div(NewFR(divisor))
-				if quotient != newQuotient {
+				if !quotient.Equals(newQuotient) {
 					// TODO: Don't panic
 					panic("Cannot divide by aggregate signature, msg/pk pairs are not unique")
 				}
