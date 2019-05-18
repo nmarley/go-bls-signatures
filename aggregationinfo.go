@@ -32,6 +32,34 @@ func (ai AggregationInfo) String() string {
 	)
 }
 
+// Copy performs a deep copy of the AggregationInfo structure
+func (ai *AggregationInfo) Copy() *AggregationInfo {
+	// Determine size of AI
+	size := len(ai.Hashes)
+
+	// Allocate new hashes, publickeys pointer slices
+	newMHs := make([]*MessageHash, size)
+	newPKs := make([]*PublicKey, size)
+	for i := 0; i < size; i++ {
+		// the "New" methods should create copies (not return same pointers)
+		newMHs[i] = NewMessageHashFromBytes(ai.Hashes[i][:])
+		newPKs[i] = NewPublicKey(ai.PublicKeys[i].p)
+	}
+
+	// Allocate new AggregationTree and copy entries
+	at := make(AggregationTree)
+	for k, v := range ai.Tree {
+		at[k] = v
+	}
+
+	// Return a new copy of this object
+	return &AggregationInfo{
+		Tree:       at,
+		Hashes:     newMHs,
+		PublicKeys: newPKs,
+	}
+}
+
 // MapKeyLen ...
 const (
 	MessageHashSize = 32
