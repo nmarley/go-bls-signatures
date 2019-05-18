@@ -387,7 +387,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 			// TODO: Don't panic
 			panic("invalid aggregation info!")
 		}
-		var quotient *FR
+		quotient := NewFR(bigZero)
 		for i, pk := range pks {
 			mk := NewMapKey(pk, mhs[i])
 			divisor := sig.ai.Tree[mk]
