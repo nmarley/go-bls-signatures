@@ -37,7 +37,6 @@ func main() {
 	fmt.Printf("public: %x\n", publicKey.Serialize())
 	// public: 816782edc8f6815af5e256899d028c2dd2b6b243629262ea98da8df4b5755b24f85f78f5b124f2629b3fbdd2691cfb43
 }
-
 ```
 
 ## Contributing
