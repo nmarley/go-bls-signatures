@@ -424,7 +424,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 	// NGM THIS IS FUCKING IT. God dammit, mother fucker. This is the root of
 	// all issues. Shit. Fucking pointers. Of course nathan, you should have
 	// known better.
-	divSig := NewSignature(s.s.Add(prod), s.ai)
+	divSig := NewSignature(s.s.Add(prod), s.ai.Copy())
 
 	// TODO: is this really needed? Why not tree.RemoveMK(mk) above and save
 	// all these wasted cycles?
