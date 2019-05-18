@@ -106,8 +106,6 @@ func (s *Signature) Verify() bool {
 		}
 	}
 
-	//var finalPublicKeys []*G1Projective
-	//var mappedHashes []*G2Projective
 	finalPublicKeys := make([]*G1Projective, len(hashToPublicKeys))
 	mappedHashes := make([]*G2Projective, len(hashToPublicKeys))
 
@@ -117,18 +115,9 @@ func (s *Signature) Verify() bool {
 		for _, k := range keys {
 			mk := NewMapKey(k, mh)
 			exponent := agginfo.Tree[mk]
-			if exponent == nil {
-
-				// TODO/NGM: Fix this ASAP! What is going on here??....
-				// Why is the mk not found in the map?
-
-				panic("MOTHER FUCKIER")
-			}
 			sum := k.p.Mul(exponent)
 			publicKeySum = publicKeySum.Add(sum)
 		}
-		//finalPublicKeys = append(finalPublicKeys, publicKeySum)
-		//mappedHashes = append(mappedHashes, HashG2PreHashed(mh[:]))
 		finalPublicKeys[count] = publicKeySum
 		mappedHashes[count] = HashG2PreHashed(mh[:])
 		count++
@@ -419,7 +408,9 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 	}
 
 	// Sorted AI
-	ai := NewAggregationInfo(sortedPKs, sortedMHs)
+	ai := NewAggregationInfo(sortedPKs, sortedMHs) // <-- TODO: possibly load Tree in NewAggregationInfo...
+	// Copy tree over from divSig before replacing...
+	ai.Tree = divSig.ai.Tree
 	divSig.ai = ai
 
 	return divSig
