@@ -49,12 +49,12 @@ func TestFQ2Ordering(t *testing.T) {
 
 func TestFQ2Basics(t *testing.T) {
 	f := bls.NewFQ2(bls.FQZero, bls.FQZero)
-	if !f.Equals(bls.FQ2Zero) {
+	if !f.Equal(bls.FQ2Zero) {
 		t.Error("FQ2Zero != FQ2(0, 0)")
 	}
 
 	f = bls.NewFQ2(bls.FQOne, bls.FQZero)
-	if !f.Equals(bls.FQ2One) {
+	if !f.Equal(bls.FQ2One) {
 		t.Error("FQ2One != FQ2(1, 0)")
 	}
 
@@ -73,7 +73,7 @@ func TestFQ2Basics(t *testing.T) {
 func TestFQ2Squaring(t *testing.T) {
 	a := bls.NewFQ2(bls.FQOne, bls.FQOne).Square()
 	expected := bls.NewFQ2(bls.FQZero, bls.NewFQ(bigTwo))
-	if !a.Equals(expected) {
+	if !a.Equal(expected) {
 		t.Log(a)
 		t.Error("FQ(1, 1).Square() != FQ(0, 2)")
 	}
@@ -81,7 +81,7 @@ func TestFQ2Squaring(t *testing.T) {
 	a = bls.NewFQ2(bls.FQZero, bls.FQOne).Square()
 	neg1 := bls.FQOne.Neg()
 	expected = bls.NewFQ2(neg1, bls.FQZero)
-	if !a.Equals(expected) {
+	if !a.Equal(expected) {
 		t.Error("FQ(0, 1).Square() != FQ(-1, 0)")
 	}
 
@@ -91,7 +91,7 @@ func TestFQ2Squaring(t *testing.T) {
 	expected0, _ := new(big.Int).SetString("7eac81369c433614cf17b5893c3d327cb674157618da1760dc46ab8fad67ae0b9f2a66eae1073baf262c28c538bcf68", 16)
 	expected1, _ := new(big.Int).SetString("1542a61c8a8db994739c983042779a6538d0d7275a9689e1e75138bce4cec7aaa23eb7e12dd54d98c1579cf58e980cf8", 16)
 	expected = bls.NewFQ2(bls.NewFQ(expected0), bls.NewFQ(expected1))
-	if !a.Equals(expected) {
+	if !a.Equal(expected) {
 		t.Error("adding FQ2s together not giving expected result")
 	}
 }
@@ -106,7 +106,7 @@ func TestFQ2Mul(t *testing.T) {
 	o0, _ := new(big.Int).SetString("3589136112018482378111625145859346905296349062557304864057134187313531783880863512355763193523645312504462844151780", 10)
 	o1, _ := new(big.Int).SetString("297668880544309439220785639618566999376775158493905442186353189401526493115249312794616596981510685741636811493754", 10)
 	o := bls.NewFQ2(bls.NewFQ(o0), bls.NewFQ(o1))
-	if !a.Mul(b).Equals(o) {
+	if !a.Mul(b).Equal(o) {
 		t.Error("FQ2 Mul not working properly")
 	}
 }
@@ -122,7 +122,7 @@ func TestFQ2Inverse(t *testing.T) {
 	o0, _ := new(big.Int).SetString("2973628342543885151746258559273164780300946315949957485732289400047711856966246507651218645021769655299729012680084", 10)
 	o1, _ := new(big.Int).SetString("2498621830671500058873354492670308521035465162737562150317014095994530700756690595853342128497677859200322409409716", 10)
 	o := bls.NewFQ2(bls.NewFQ(o0), bls.NewFQ(o1))
-	if !a.Inverse().Equals(o) {
+	if !a.Inverse().Equal(o) {
 		t.Error("FQ2 Inv not working properly")
 	}
 }
@@ -137,7 +137,7 @@ func TestFQ2Addition(t *testing.T) {
 	o0, _ := new(big.Int).SetString("3197977163940080762958009789663025044787365462715437957461204574073501724672681252378504259284666769425426845208249", 10)
 	o1, _ := new(big.Int).SetString("2926742669024788240740727831667279901593764337752150720908161880718213702916397600862029174885519475199268964768404", 10)
 	o := bls.NewFQ2(bls.NewFQ(o0), bls.NewFQ(o1))
-	if !a.Add(b).Equals(o) {
+	if !a.Add(b).Equal(o) {
 		t.Error("FQ2 add not working properly")
 	}
 }
@@ -152,7 +152,7 @@ func TestFQ2Subtraction(t *testing.T) {
 	o0, _ := new(big.Int).SetString("1103630068826969376520526540521399883187726227758155889401237372170643210636257205147128662438197179156460707027840", 10)
 	o1, _ := new(big.Int).SetString("1437686353534801195723535232512111425634016913682166757902286816998231123612288876359889641991575339010497965314509", 10)
 	o := bls.NewFQ2(bls.NewFQ(o0), bls.NewFQ(o1))
-	if !a.Sub(b).Equals(o) {
+	if !a.Sub(b).Equal(o) {
 		t.Error("FQ2 sub not working properly")
 	}
 }
@@ -164,7 +164,7 @@ func TestFQ2Negation(t *testing.T) {
 	o0, _ := new(big.Int).SetString("3852810716448976020387416573511643770847778384671714904566866231063975008081787567901214982832091521765897632721636", 10)
 	o1, _ := new(big.Int).SetString("3821399821552706371894553206514160571221433604191353088592862855327825062471913558053072035254976088951957943798224", 10)
 	o := bls.NewFQ2(bls.NewFQ(o0), bls.NewFQ(o1))
-	if !a.Neg().Equals(o) {
+	if !a.Neg().Equal(o) {
 		t.Error("FQ2 negation not working properly")
 	}
 }
@@ -176,7 +176,7 @@ func TestFQ2Doubling(t *testing.T) {
 	o0, _ := new(big.Int).SetString("299197677545382746060746504448520771418208870534585961530383810120113284818100593082945292593848284543993279676302", 10)
 	o1, _ := new(big.Int).SetString("362019467337922043046473238443487170670898431495309593478390561592413176037848612779231187748079150171872657523126", 10)
 	o := bls.NewFQ2(bls.NewFQ(o0), bls.NewFQ(o1))
-	if !a.Double().Equals(o) {
+	if !a.Double().Equal(o) {
 		t.Error("FQ2 double not working properly")
 	}
 }
@@ -190,28 +190,28 @@ func TestFQ2FrobeniusMap(t *testing.T) {
 	o01, _ := new(big.Int).SetString("181009733668961021523236619221743585335449215747654796739195280796206588018924306389615593874039575085936328761563", 10)
 	o0 := bls.NewFQ2(bls.NewFQ(o00), bls.NewFQ(o01))
 	a = a.FrobeniusMap(0)
-	if !a.Equals(o0) {
+	if !a.Equal(o0) {
 		t.Error("FQ2 frobenius map not working properly")
 	}
 	o10, _ := new(big.Int).SetString("149598838772691373030373252224260385709104435267292980765191905060056642409050296541472646296924142271996639838151", 10)
 	o11, _ := new(big.Int).SetString("3821399821552706371894553206514160571221433604191353088592862855327825062471913558053072035254976088951957943798224", 10)
 	o1 := bls.NewFQ2(bls.NewFQ(o10), bls.NewFQ(o11))
 	a = a.FrobeniusMap(1)
-	if !a.Equals(o1) {
+	if !a.Equal(o1) {
 		t.Error("FQ2 frobenius map not working properly")
 	}
 	o20, _ := new(big.Int).SetString("149598838772691373030373252224260385709104435267292980765191905060056642409050296541472646296924142271996639838151", 10)
 	o21, _ := new(big.Int).SetString("181009733668961021523236619221743585335449215747654796739195280796206588018924306389615593874039575085936328761563", 10)
 	o2 := bls.NewFQ2(bls.NewFQ(o20), bls.NewFQ(o21))
 	a = a.FrobeniusMap(1)
-	if !a.Equals(o2) {
+	if !a.Equal(o2) {
 		t.Error("FQ2 frobenius map not working properly")
 	}
 	o30, _ := new(big.Int).SetString("149598838772691373030373252224260385709104435267292980765191905060056642409050296541472646296924142271996639838151", 10)
 	o31, _ := new(big.Int).SetString("181009733668961021523236619221743585335449215747654796739195280796206588018924306389615593874039575085936328761563", 10)
 	o3 := bls.NewFQ2(bls.NewFQ(o30), bls.NewFQ(o31))
 	a = a.FrobeniusMap(2)
-	if !a.Equals(o3) {
+	if !a.Equal(o3) {
 		t.Error("FQ2 frobenius map not working properly")
 	}
 }
@@ -223,14 +223,14 @@ func TestFQ2Sqrt(t *testing.T) {
 	o0, _ := new(big.Int).SetString("2610880034315515246135455194558180576521075490930523809216746350127301781195091608845140759868139294094360490170565", 10)
 	o1, _ := new(big.Int).SetString("1361064970384811010963395494397997021963412519774828006120608106648478662746078959841022528364671568910239381710674", 10)
 	o := bls.NewFQ2(bls.NewFQ(o0), bls.NewFQ(o1))
-	if !a.Sqrt().Equals(o) {
+	if !a.Sqrt().Equal(o) {
 		t.Error("FQ2 sqrt not working properly")
 	}
 	a0, _ = new(big.Int).SetString("4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015661931409599199851", 10)
 	a = bls.NewFQ2(bls.NewFQ(a0), bls.FQZero)
 	o1, _ = new(big.Int).SetString("4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894226663331", 10)
 	o = bls.NewFQ2(bls.FQZero, bls.NewFQ(o1))
-	if !a.Sqrt().Equals(o) {
+	if !a.Sqrt().Equal(o) {
 		t.Error("FQ2 sqrt not working properly")
 	}
 }
@@ -262,7 +262,7 @@ func TestFQ2MulNonresidue(t *testing.T) {
 		a = a.MultiplyByNonresidue()
 		b = b.Mul(nqr)
 
-		if !a.Equals(b) {
+		if !a.Equal(b) {
 			t.Error("a != b")
 		}
 	}

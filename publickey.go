@@ -52,8 +52,8 @@ func (p *PublicKey) Fingerprint() uint32 {
 	return binary.BigEndian.Uint32(buf[:4])
 }
 
-// Equals checks if two public keys are equal
-func (p PublicKey) Equals(other PublicKey) bool {
+// Equal checks if two public keys are equal
+func (p PublicKey) Equal(other PublicKey) bool {
 	return p.p.Equal(other.p)
 }
 

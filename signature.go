@@ -135,7 +135,7 @@ func (s *Signature) Verify() bool {
 
 	res := AtePairingMulti(ps, qs)
 
-	return FQ12One.Equals(res)
+	return FQ12One.Equal(res)
 }
 
 // AggregateSignaturesSimple aggregate signatures by multiplying them together.
@@ -400,7 +400,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 				// Makes sure the quotient is identical for each public key,
 				// which means message/pk pair is unique
 				newQuotient := NewFR(dividend).Div(NewFR(divisor))
-				if !quotient.Equals(newQuotient) {
+				if !quotient.Equal(newQuotient) {
 					// TODO: Don't panic
 					panic("Cannot divide by aggregate signature, msg/pk pairs are not unique")
 				}

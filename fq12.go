@@ -64,9 +64,9 @@ var FQ12Zero = NewFQ12(FQ6Zero, FQ6Zero)
 // FQ12One is the one element of FQ12.
 var FQ12One = NewFQ12(FQ6One, FQ6Zero)
 
-// Equals checks if two FQ12 elements are equal.
-func (f FQ12) Equals(other *FQ12) bool {
-	return f.c0.Equals(other.c0) && f.c1.Equals(other.c1)
+// Equal checks if two FQ12 elements are equal.
+func (f FQ12) Equal(other *FQ12) bool {
+	return f.c0.Equal(other.c0) && f.c1.Equal(other.c1)
 }
 
 // Double doubles each coefficient in an FQ12 element.

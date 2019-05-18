@@ -98,7 +98,7 @@ func (g G1Affine) IsOnCurve() bool {
 	y2 := g.y.Square()
 	x3b := g.x.Square().Mul(g.x).Add(NewFQ(BCoeff))
 
-	return y2.Equals(x3b)
+	return y2.Equal(x3b)
 }
 
 var frChar, _ = new(big.Int).SetString("73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001", 16)
@@ -117,9 +117,9 @@ func (g G1Affine) ScaleByCofactor() *G1Projective {
 	return g.Mul(g1Cofactor)
 }
 
-// Equals checks if two affine points are equal.
-func (g G1Affine) Equals(other *G1Affine) bool {
-	return (g.infinity == other.infinity) || (g.x.Equals(other.x) && g.y.Equals(other.y))
+// Equal checks if two affine points are equal.
+func (g G1Affine) Equal(other *G1Affine) bool {
+	return (g.infinity == other.infinity) || (g.x.Equal(other.x) && g.y.Equal(other.y))
 }
 
 // DecompressG1 decompresses the big int into an affine point and checks
@@ -266,11 +266,11 @@ func (g G1Projective) Equal(other *G1Projective) bool {
 
 	tmp1 := g.x.Mul(z2)
 	tmp2 := other.x.Mul(z1)
-	if !tmp1.Equals(tmp2) {
+	if !tmp1.Equal(tmp2) {
 		return false
 	}
 
-	return z1.Mul(g.z).Mul(other.y).Equals(z2.Mul(other.z).Mul(g.y))
+	return z1.Mul(g.z).Mul(other.y).Equal(z2.Mul(other.z).Mul(g.y))
 }
 
 // ToAffine converts a G1Projective point to affine form.
@@ -355,8 +355,8 @@ func (g *G1Projective) Add(other *G1Projective) *G1Projective {
 	s1 := g.y.Mul(other.z.Square().Mul(other.z))
 	// S2 = Y2*Z1^3
 	s2 := other.y.Mul(g.z.Square().Mul(g.z))
-	if u1.Equals(u2) {
-		if !s1.Equals(s2) {
+	if u1.Equal(u2) {
+		if !s1.Equal(s2) {
 			return NewG1Projective(FQOne, FQOne, FQZero)
 		} else {
 			return g.Double()
@@ -401,7 +401,7 @@ func (g G1Projective) AddAffine(other *G1Affine) *G1Projective {
 	// S2 = Y2*Z1*Z1Z1
 	s2 := other.y.Mul(g.z).Mul(z1z1)
 
-	if g.x.Equals(u2) && g.y.Equals(s2) {
+	if g.x.Equal(u2) && g.y.Equal(s2) {
 		// points are equal
 		return g.Double()
 	}

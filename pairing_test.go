@@ -53,7 +53,7 @@ func TestResultAgainstRelic(t *testing.T) {
 		),
 	)
 
-	if !out.Equals(expected) {
+	if !out.Equal(expected) {
 		t.Fatal("pairing result is wrong")
 	}
 }

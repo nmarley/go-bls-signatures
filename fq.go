@@ -132,8 +132,8 @@ func (f *FQ) ExpAssign(n *big.Int) {
 	f.n.Exp(f.n, n, QFieldModulus)
 }
 
-// Equals checks equality of two field elements.
-func (f FQ) Equals(other *FQ) bool {
+// Equal checks equality of two field elements.
+func (f FQ) Equal(other *FQ) bool {
 	return f.n.Cmp(other.n) == 0
 }
 
@@ -210,7 +210,7 @@ func (f FQ) Sqrt() *FQ {
 	a0 := a1.Square()
 	a0.MulAssign(&f)
 
-	if a0.Equals(negativeOneFQ) {
+	if a0.Equal(negativeOneFQ) {
 		return nil
 	}
 	a1.MulAssign(&f)
@@ -311,7 +311,7 @@ func (f *FQ) Legendre() LegendreSymbol {
 	o := f.Exp(qMinus1Over2)
 	if o.IsZero() {
 		return LegendreZero
-	} else if o.Equals(FQOne) {
+	} else if o.Equal(FQOne) {
 		return LegendreQuadraticResidue
 	} else {
 		return LegendreQuadraticNonResidue

@@ -132,14 +132,14 @@ var FQ6Zero = NewFQ6(FQ2Zero, FQ2Zero, FQ2Zero)
 // FQ6One represents the one value of FQ6.
 var FQ6One = NewFQ6(FQ2One, FQ2Zero, FQ2Zero)
 
-// Equals checks if two FQ6 elements are equal.
-func (f FQ6) Equals(other *FQ6) bool {
-	return f.c0.Equals(other.c0) && f.c1.Equals(other.c1) && f.c2.Equals(other.c2)
+// Equal checks if two FQ6 elements are equal.
+func (f FQ6) Equal(other *FQ6) bool {
+	return f.c0.Equal(other.c0) && f.c1.Equal(other.c1) && f.c2.Equal(other.c2)
 }
 
 // IsZero checks if the FQ6 element is zero.
 func (f FQ6) IsZero() bool {
-	return f.Equals(FQ6Zero)
+	return f.Equal(FQ6Zero)
 }
 
 // Double doubles the coefficients of the FQ6 element.

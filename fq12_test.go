@@ -31,7 +31,7 @@ func TestFQ12MulBy014(t *testing.T) {
 		))
 		a = a.MulBy014(c0, c1, c5)
 
-		if !a.Equals(b) {
+		if !a.Equal(b) {
 			t.Error("MulBy014 is broken.")
 		}
 	}

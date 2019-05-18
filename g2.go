@@ -105,7 +105,7 @@ func (g G2Affine) IsOnCurve() bool {
 	y2 := g.y.Square()
 	x3b := g.x.Square().Mul(g.x).Add(BCoeffFQ2)
 
-	return y2.Equals(x3b)
+	return y2.Equal(x3b)
 }
 
 // G2 cofactor = (x^8 - 4 x^7 + 5 x^6) - (4 x^4 + 6 x^3 - 4 x^2 - 4 x + 13) // 9
@@ -116,9 +116,9 @@ func (g G2Affine) ScaleByCofactor() *G2Projective {
 	return g.Mul(g2Cofactor)
 }
 
-// Equals checks if two affine points are equal.
-func (g G2Affine) Equals(other *G2Affine) bool {
-	return (g.infinity == other.infinity) || (g.x.Equals(other.x) && g.y.Equals(other.y))
+// Equal checks if two affine points are equal.
+func (g G2Affine) Equal(other *G2Affine) bool {
+	return (g.infinity == other.infinity) || (g.x.Equal(other.x) && g.y.Equal(other.y))
 }
 
 // GetG2PointFromX attempts to reconstruct an affine point given
@@ -293,11 +293,11 @@ func (g G2Projective) Equal(other *G2Projective) bool {
 
 	tmp1 := g.x.Mul(z2)
 	tmp2 := other.x.Mul(z1)
-	if !tmp1.Equals(tmp2) {
+	if !tmp1.Equal(tmp2) {
 		return false
 	}
 
-	return z1.Mul(g.z).Mul(other.y).Equals(z2.Mul(other.z).Mul(g.y))
+	return z1.Mul(g.z).Mul(other.y).Equal(z2.Mul(other.z).Mul(g.y))
 }
 
 // ToAffine converts a G2Projective point to affine form.
@@ -419,8 +419,8 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 	// S2 = Y2*Z1^3
 	s2 := other.y.Mul(g.z.Square().Mul(g.z))
 
-	if u1.Equals(u2) {
-		if !s1.Equals(s2) {
+	if u1.Equal(u2) {
+		if !s1.Equal(s2) {
 			return NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 		} else {
 			return g.Double()
@@ -469,7 +469,7 @@ func (g G2Projective) AddAffine(other *G2Affine) *G2Projective {
 	// S2 = Y2*Z1*Z1Z1
 	s2 := other.y.Mul(g.z).Mul(z1z1)
 
-	if g.x.Equals(u2) && g.y.Equals(s2) {
+	if g.x.Equal(u2) && g.y.Equal(s2) {
 		// points are equal
 		return g.Double()
 	}
@@ -979,7 +979,7 @@ func (f *Fq12Pair) Conjugate() *Fq12Pair {
 
 // Equal returns whether the Fq12Pair is equal
 func (f *Fq12Pair) Equal(other *Fq12Pair) bool {
-	return f.x.Equals(other.x) && f.y.Equals(other.y)
+	return f.x.Equal(other.x) && f.y.Equal(other.y)
 }
 
 // End Fq12Pair

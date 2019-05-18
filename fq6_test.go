@@ -17,7 +17,7 @@ func TestFQ6MultiplyByNonresidue(t *testing.T) {
 		}
 		b := a.Mul(nqr)
 		a = a.MulByNonresidue()
-		if !a.Equals(b) {
+		if !a.Equal(b) {
 			t.Error("FQ6.MulByNonresidue not working properly")
 		}
 	}
@@ -36,7 +36,7 @@ func TestFQ6MultiplyBy1(t *testing.T) {
 		b := a.Mul(bls.NewFQ6(bls.FQ2Zero, c1, bls.FQ2Zero))
 		a = a.MulBy1(c1)
 
-		if !a.Equals(b) {
+		if !a.Equal(b) {
 			t.Error("FQ6.MulBy1 not working")
 		}
 	}
@@ -59,7 +59,7 @@ func TestFQ6MultiplyBy01(t *testing.T) {
 		b := a.Mul(bls.NewFQ6(c0, c1, bls.FQ2Zero))
 		a = a.MulBy01(c0, c1)
 
-		if !a.Equals(b) {
+		if !a.Equal(b) {
 			t.Error("FQ6.MulBy1 not working")
 		}
 	}

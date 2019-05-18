@@ -321,8 +321,8 @@ func (f *FQ2) ExpAssign(n *big.Int) {
 // -(2**384 mod q) mod q
 var negativeOne, _ = new(big.Int).SetString("4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559786", 10)
 
-// Equals checks if this FQ2 equals another one.
-func (f FQ2) Equals(other *FQ2) bool {
+// Equal checks if this FQ2 equals another one.
+func (f FQ2) Equal(other *FQ2) bool {
 	return f.Cmp(other) == 0
 }
 
@@ -341,12 +341,12 @@ func (f FQ2) Sqrt() *FQ2 {
 		c1: FQZero,
 	}
 
-	if a0.Equals(neg1) {
+	if a0.Equal(neg1) {
 		return nil
 	}
 	a1 = a1.Mul(&f)
 
-	if alpha.Equals(neg1) {
+	if alpha.Equal(neg1) {
 		return a1.Mul(&FQ2{
 			c0: FQZero,
 			c1: FQOne,

@@ -193,7 +193,7 @@ func TestG1Generator(t *testing.T) {
 					t.Fatal("point is not in correct subgroup")
 				}
 
-				if !g1.Equals(bls.G1AffineOne) {
+				if !g1.Equal(bls.G1AffineOne) {
 					t.Fatal("point is not equal to generator point")
 				}
 				break

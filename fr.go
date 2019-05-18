@@ -83,8 +83,8 @@ func (f FR) Exp(n *big.Int) *FR {
 	}
 }
 
-// Equals checks equality of two field elements.
-func (f FR) Equals(other *FR) bool {
+// Equal checks equality of two field elements.
+func (f FR) Equal(other *FR) bool {
 	return f.n.Cmp(other.n) == 0
 }
 
@@ -125,7 +125,7 @@ func (f FR) Sqrt() *FR {
 	a1 := f.Exp(qMinus3Over4)
 	a0 := a1.Square().Mul(&f)
 
-	if a0.Equals(NewFR(negativeOne)) {
+	if a0.Equal(NewFR(negativeOne)) {
 		return nil
 	}
 	return a1.Mul(&f)
@@ -183,7 +183,7 @@ func (f *FR) Legendre() LegendreSymbol {
 	o := f.Exp(rMinus1Over2)
 	if o.IsZero() {
 		return LegendreZero
-	} else if o.Equals(FROne) {
+	} else if o.Equal(FROne) {
 		return LegendreQuadraticResidue
 	} else {
 		return LegendreQuadraticNonResidue
