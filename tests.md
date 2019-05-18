@@ -32,15 +32,15 @@
 
 - [ ] Signature division
   - [x] divide(sigFinal, [sig2, sig5, sig6])
-  - [ ] verify(quotient)
+  - [x] verify(quotient)
   - [x] divide(quotient, [sig6])
   - [x] divide(sigFinal, [sig1])
-  - [ ] divide(sigFinal, [sigL])
+  - [x] divide(sigFinal, [sigL])
   - [x] sig7 = sign([9,10,11,12,13], sk2)
   - [x] sig8 = sign([15,63,244,92,0,1], sk2)
   - [x] sigFinal2 = aggregate([sigFinal, aggregate([sig7, sig8])])
-  - [ ] divide(sigFinal2, aggregate([sig7, sig8]))
-  - [ ] verify(quotient2)
+  - [x] divide(sigFinal2, aggregate([sig7, sig8]))
+  - [x] verify(quotient2)
 
 - [x] HD keys
   - [x] esk = ExtendedPrivateKey([1, 50, 6, 244, 24, 199, 1, 25])
