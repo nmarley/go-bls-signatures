@@ -122,7 +122,7 @@ func TestVectorAggregation2(t *testing.T) {
 	is.Equal(fmt.Sprintf("%096x", sigFinal.Serialize()), "07969958fbf82e65bd13ba0749990764cac81cf10d923af9fdd2723f1e3910c3fdb874a67f9d511bb7e4920f8c01232b12e2fb5e64a7c2d177a475dab5c3729ca1f580301ccdef809c57a8846890265d195b694fa414a2a3aa55c32837fddd80")
 	is.True(sigFinal.Verify())
 
-	//fmt.Println("NGMgo sigFinal ai.Tree:", sigFinal.GetAggregationInfo().Tree)
+	fmt.Println("NGMgo sigFinal ai.Tree:", sigFinal.GetAggregationInfo().Tree)
 
 	// Begin Signature Division
 
@@ -158,7 +158,11 @@ func TestVectorAggregation2(t *testing.T) {
 	//fmt.Println("NGMgo sigFinal ai.Tree:", sigFinal.GetAggregationInfo().Tree)
 	//fmt.Println("NGMgo sigR2 ai.Tree:", sigR2.GetAggregationInfo().Tree)
 
+	bls.Debug = true
+
 	sigFinal2 := bls.AggregateSignatures([]*bls.Signature{sigFinal, sigR2})
+
+	bls.Debug = false
 	//fmt.Printf("NGMgo sigFinal2: %096x\n", sigFinal2.Serialize())
 
 	fmt.Println("NGMgo sigFinal2 ai.Tree:", sigFinal2.GetAggregationInfo().Tree)
