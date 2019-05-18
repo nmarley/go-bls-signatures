@@ -19,8 +19,27 @@ var bigOne = big.NewInt(1)
 var bigTwo = big.NewInt(2)
 
 // QFieldModulus is the modulus of the field.
-// 381 bit prime defining the field Fq. q = (x - 1)2 ((x4 - x2 + 1) / 3) + x
-var QFieldModulus, _ = new(big.Int).SetString("1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaaab", 16)
+var QFieldModulus, _ = new(big.Int).SetString("4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787", 10)
+
+func primeFieldInv(a *big.Int, n *big.Int) *big.Int {
+	if a.Cmp(bigZero) == 0 {
+		return big.NewInt(0)
+	}
+	lm := big.NewInt(1)
+	hm := big.NewInt(0)
+	low := new(big.Int).Mod(a, n)
+	high := new(big.Int).Set(n)
+	for low.Cmp(bigOne) > 0 {
+		r := new(big.Int).Div(high, low)
+		lm.Mul(lm, r)
+		hm.Sub(hm, lm)
+		r.Mul(r, low)
+		high.Sub(high, r)
+		lm, low, hm, high = hm, high, lm, low
+	}
+	lm.Mod(lm, n)
+	return lm
+}
 
 // NewFQ creates a new field element.
 func NewFQ(n *big.Int) *FQ {
@@ -91,11 +110,21 @@ func (f FQ) SubAssign(other *FQ) {
 	}
 }
 
+// Div divides one field element by another.
+func (f FQ) Div(other *FQ) *FQ {
+	otherInverse := &FQ{n: primeFieldInv(other.n, QFieldModulus)}
+	return f.Mul(otherInverse)
+}
+
+// DivAssign divides one field element by another.
+func (f FQ) DivAssign(other *FQ) {
+	otherInverse := &FQ{n: primeFieldInv(other.n, QFieldModulus)}
+	f.MulAssign(otherInverse)
+}
+
 // Exp exponentiates the field element to the given power.
 func (f FQ) Exp(n *big.Int) *FQ {
-	return &FQ{
-		n: new(big.Int).Exp(f.n, n, QFieldModulus),
-	}
+	return &FQ{new(big.Int).Exp(f.n, n, QFieldModulus)}
 }
 
 // ExpAssign exponentiates the field element to the given power.
