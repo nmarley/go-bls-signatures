@@ -18,6 +18,13 @@ type PublicKey struct {
 	p *G1Projective
 }
 
+// NewPublicKey constructs a new PublicKey
+func NewPublicKey(p *G1Projective) *PublicKey {
+	return &PublicKey{
+		p: p.Copy(),
+	}
+}
+
 // String implements the Stringer interface
 func (p PublicKey) String() string {
 	return fmt.Sprintf("%096x", p.Serialize())
