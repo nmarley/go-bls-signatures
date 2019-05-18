@@ -396,7 +396,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 
 	sortedMapKeys := make([]MapKey, len(divSig.ai.Tree))
 	i := 0
-	for k, _ := range divSig.ai.Tree {
+	for k := range divSig.ai.Tree {
 		sortedMapKeys[i] = k
 		i++
 	}
