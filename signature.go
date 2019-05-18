@@ -375,13 +375,9 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 
 	prod := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 
-	//fmt.Println("NGMgo s.ai.Tree: ", s.ai.Tree)
-
 	for _, sig := range signatures {
 		pks := sig.ai.PublicKeys
 		mhs := sig.ai.Hashes
-
-		//fmt.Println("NGMgo sig.ai.Tree: ", sig.ai.Tree)
 
 		if len(pks) != len(mhs) {
 			// TODO: Don't panic
@@ -397,9 +393,6 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 			if !found {
 				panic("Signature is not a subset")
 			}
-
-			// TODO: This is some screwy logic. There's a lot better way to do
-			// ensure unique MapKeys than this.
 
 			if i == 0 {
 				quotient = NewFR(dividend).Div(NewFR(divisor))
