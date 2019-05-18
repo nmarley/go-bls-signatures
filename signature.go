@@ -419,11 +419,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 		prod = prod.Add(sig.s.Mul(quotient.Neg().n))
 	}
 
-	// TODO: DEEP COPY!!!
-	//
-	// NGM THIS IS FUCKING IT. God dammit, mother fucker. This is the root of
-	// all issues. Shit. Fucking pointers. Of course nathan, you should have
-	// known better.
+	// Create a new signature object to return
 	divSig := NewSignature(s.s.Add(prod), s.ai.Copy())
 
 	// TODO: is this really needed? Why not tree.RemoveMK(mk) above and save
