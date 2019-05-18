@@ -153,8 +153,8 @@ func TestVectorAggregation2(t *testing.T) {
 	//fmt.Printf("NGMgo sig8: %096x\n", sig8.Serialize())
 
 	sigR2 := bls.AggregateSignatures([]*bls.Signature{sig7, sig8})
-	fmt.Printf("NGMgo sigR2: %096x\n", sigR2.Serialize())
-	fmt.Println("NGMgo sigR2 ai.Tree:", sigR2.GetAggregationInfo().Tree)
+	//fmt.Printf("NGMgo sigR2: %096x\n", sigR2.Serialize())
+	//fmt.Println("NGMgo sigR2 ai.Tree:", sigR2.GetAggregationInfo().Tree)
 
 	//fmt.Println("NGMgo sigFinal ai.Tree:", sigFinal.GetAggregationInfo().Tree)
 	//fmt.Println("NGMgo sigR2 ai.Tree:", sigR2.GetAggregationInfo().Tree)
@@ -168,6 +168,6 @@ func TestVectorAggregation2(t *testing.T) {
 	bls.Debug = false
 	fmt.Printf("q2: %096x\n", quotient2.Serialize())
 
-	//is.Equal(fmt.Sprintf("%096x", quotient2.Serialize()), "06af6930bd06838f2e4b00b62911fb290245cce503ccf5bfc2901459897731dd08fc4c56dbde75a11677ccfbfa61ab8b14735fddc66a02b7aeebb54ab9a41488f89f641d83d4515c4dd20dfcf28cbbccb1472c327f0780be3a90c005c58a47d3")
-	//is.True(quotient2.Verify())
+	is.Equal(fmt.Sprintf("%096x", quotient2.Serialize()), "06af6930bd06838f2e4b00b62911fb290245cce503ccf5bfc2901459897731dd08fc4c56dbde75a11677ccfbfa61ab8b14735fddc66a02b7aeebb54ab9a41488f89f641d83d4515c4dd20dfcf28cbbccb1472c327f0780be3a90c005c58a47d3")
+	is.True(quotient2.Verify())
 }
