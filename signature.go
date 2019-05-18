@@ -338,7 +338,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 			// TODO: Don't panic
 			panic("invalid aggregation info!")
 		}
-		var quotient *FQ
+		var quotient *FR
 		for i, pk := range pks {
 			mk := NewMapKey(pk, mhs[i])
 			divisor := sig.ai.Tree[mk]
@@ -353,13 +353,11 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 			// ensure unique MapKeys than this.
 
 			if i == 0 {
-				quotient = NewFQ(dividend).Div(NewFQ(divisor))
-				//quotient = NewFQ(new(big.Int).Div(dividend, divisor))
+				quotient = NewFR(dividend).Div(NewFR(divisor))
 			} else {
 				// Makes sure the quotient is identical for each public key,
 				// which means message/pk pair is unique
-				newQuotient := NewFQ(dividend).Div(NewFQ(divisor))
-				//newQuotient := NewFQ(new(big.Int).Div(dividend, divisor))
+				newQuotient := NewFR(dividend).Div(NewFR(divisor))
 				if quotient != newQuotient {
 					// TODO: Don't panic
 					panic("Cannot divide by aggregate signature, msg/pk pairs are not unique")
