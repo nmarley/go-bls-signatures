@@ -130,4 +130,28 @@ func TestVectorAggregation2(t *testing.T) {
 
 	// Ensure that dividing by an empty list returns the same signature
 	is.Equal(quotient.DivideBy([]*bls.Signature{}), quotient)
+
+	// TODO: ERR (not a subset)
+	// WORKING. This is throwing as expected...
+	//quotient.DivideBy([]*bls.Signature{sig6})
+
+	// Does not throw...
+	// BREAKING! This is actually throwing...
+	//sigFinal.DivideBy([]*bls.Signature{sig1})
+
+	// Does throw due to not unique
+	// BREAKING: Does not throw the right error
+	//sigFinal.DivideBy([]*bls.Signature{sigL})
+
+	// Divide by aggregate
+	sig7 := sk2.Sign(m3)
+	sig8 := sk2.Sign(m4)
+
+	sigR2 := bls.AggregateSignatures([]*bls.Signature{sig7, sig8})
+	sigFinal2 := bls.AggregateSignatures([]*bls.Signature{sigFinal, sigR2})
+	quotient2 := sigFinal2.DivideBy([]*bls.Signature{sigR2})
+	fmt.Printf("q2: %096x\n", quotient2.Serialize())
+
+	is.Equal(fmt.Sprintf("%096x", quotient2.Serialize()), "06af6930bd06838f2e4b00b62911fb290245cce503ccf5bfc2901459897731dd08fc4c56dbde75a11677ccfbfa61ab8b14735fddc66a02b7aeebb54ab9a41488f89f641d83d4515c4dd20dfcf28cbbccb1472c327f0780be3a90c005c58a47d3")
+	//is.True(quotient2.Verify())
 }
