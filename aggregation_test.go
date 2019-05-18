@@ -10,6 +10,9 @@ import (
 
 // TODO: use strings, not bytes here (use serialize/deserialize methods)
 func TestVectorAggregation(t *testing.T) {
+    // TODO: Remove table-driven tests for vectors... doesn't make sense due to
+    // how test vectors are laid out. See also Python tests for a clean
+    // version.
 	tests := []struct {
 		sigs        [][]byte
 		pubkeys     [][]byte
