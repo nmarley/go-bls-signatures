@@ -17,9 +17,11 @@ func ThresholdVerifySecretFragment(thresholdParameter, numPlayer int, secretFrag
 	// TODO: Can hard-code this as g1 generator point
 	if thresholdParameter <= 0 {
 		// "T must be a positive integer"
+		panic("T must be a positive integer")
 		return false
 	} else if numPlayer <= 0 {
 		// "Player index must be positive"
+		panic("Player index must be positive")
 		return false
 	}
 
@@ -28,16 +30,16 @@ func ThresholdVerifySecretFragment(thresholdParameter, numPlayer int, secretFrag
 	lhs := g1.Mul(secretFragment.f.ToBig())
 	rhs := commitments[0].p.Copy()
 
-	for i := 0; i < len(commitments); i++ {
+	for i := 1; i < len(commitments); i++ {
 		factor := new(big.Int).Exp(
 			big.NewInt(int64(numPlayer)),
 			big.NewInt(int64(i)),
 			RFieldModulus,
 		)
-		rhs = rhs.Add(commitments[i+1].p.Mul(factor))
+		rhs = rhs.Add(commitments[i].p.Mul(factor))
 	}
 
-	return lhs == rhs
+	return lhs.ToAffine().Equal(rhs.ToAffine())
 }
 
 // ThresholdCreate returns a new private key with associated data suitable for T of N
