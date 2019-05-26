@@ -107,17 +107,27 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 func ThresholdInterpolateAtZero(x []int, y []*FR) *FR {
 	ans := FRZero.Copy()
 
-	//if T <= 0 {
-	//	// "T must be a positive integer"
-	//	panic("T must be a positive integer")
-	//}
+	// TODO: Check for len(x) == len(y) ?
 
-	coeffs := LagrangeCoeffsAtZero()
+	coeffs := LagrangeCoeffsAtZero(x)
 
-	// LagrangeCoeffsAtZero(x []int) []*FR
+	for i := 0; i < len(x); i++ {
+		ans.AddAssign(coeffs[i].Mul(y[i]))
+	}
 
-	return FRZero
+	return ans
 }
+
+//def interpolate_at_zero(X: List[int], Y: List[Fq], ec=default_ec) -> Fq:
+//    """
+//    The k+1 points (X[i], Y[i]) interpolate into P(X),
+//    a degree k polynomial.
+//    Returns P(0).
+//    """
+//    ans = Fq(ec.n, 0)
+//    for lamb, y in zip(Threshold.lagrange_coeffs_at_zero(X, ec), Y):
+//        ans += lamb * y
+//    return ans
 
 // LagrangeCoeffsAtZero returns lagrange coefficients of a polynomial
 // evaluated at zero.
