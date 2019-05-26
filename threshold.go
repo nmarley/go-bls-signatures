@@ -123,7 +123,7 @@ func ThresholdInterpolateAtZero(T int) *FQ {
 // res[i] * P(players[i]).
 //
 // TODO/NGM: Assume this should be a slice of *FRs and then the mod check below not needed.
-func LagrangeCoeffsAtZero(x []int) []*FQ {
+func LagrangeCoeffsAtZero(x []int) []*FR {
 	lenX := len(x)
 
 	// Ensure each value in X is unique.
@@ -162,7 +162,26 @@ func LagrangeCoeffsAtZero(x []int) []*FQ {
 		return ans.Inverse()
 	}
 
-	return []*FQ{}
+	// Using the second barycentric form,
+	// P(0) = (sum_j (y_j * w_j / x_j)) / (sum_j w_j/x_j)
+	// If desired, the weights can be precomputed.
+	ans := make([]*FR, lenX)
+	denom := FRZero.Copy()
+
+	for j := 0; j < lenX; j++ {
+		bigJ := big.NewInt(int64(x[j]))
+		jFR := NewFR(bigJ)
+		shift := weight(j).Mul(jFR.Neg().Inverse())
+		ans[j] = shift
+		denom.AddAssign(shift)
+	}
+	denom = denom.Inverse()
+
+	for i := 0; i < lenX; i++ {
+		ans[i].MulAssign(denom)
+	}
+
+	return ans
 }
 
 // The points (X[i], Y[i]) for i = 0...T-1 interpolate into P,
