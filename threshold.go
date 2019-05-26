@@ -9,9 +9,36 @@ import (
 // TODO: Godoc. Threshold Namespace?
 // Utility functions for threshold signatures
 
-// VerifySecretFragment ...
-//func VerifySecretFragment(T, player int, secretFragment *FQ, commitments []*PublicKey) {
-//}
+// ThresholdVerifySecretFragment returns true iff the secretFragment from the
+// given player matches their given commitment to a polynomial.
+func ThresholdVerifySecretFragment(thresholdParameter, numPlayer int, secretFragment *SecretKey, commitments []*PublicKey) bool {
+	// TODO: s/numPlayer/player(Index)?/
+
+	// TODO: Can hard-code this as g1 generator point
+	if thresholdParameter <= 0 {
+		// "T must be a positive integer"
+		return false
+	} else if numPlayer <= 0 {
+		// "Player index must be positive"
+		return false
+	}
+
+	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY))
+
+	lhs := g1.Mul(secretFragment.f.ToBig())
+	rhs := commitments[0].p.Copy()
+
+	for i := 0; i < len(commitments); i++ {
+		factor := new(big.Int).Exp(
+			big.NewInt(int64(numPlayer)),
+			big.NewInt(int64(i)),
+			RFieldModulus,
+		)
+		rhs = rhs.Add(commitments[i+1].p.Mul(factor))
+	}
+
+	return lhs == rhs
+}
 
 // ThresholdCreate returns a new private key with associated data suitable for T of N
 // threshold signatures under a Joint-Feldman scheme.
@@ -30,6 +57,7 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 		return nil, nil, nil, fmt.Errorf("threshold parameter must be between 1 and number of players")
 	}
 
+	// TODO: Can hard-code this as g1 generator point
 	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY))
 
 	// There are T polynomials / commitments
