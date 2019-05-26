@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	bls "gitlab.com/nmarley/go-bls-signatures"
+	"gitlab.com/nmarley/go-bls-signatures"
 )
 
 func main() {
