@@ -99,3 +99,78 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 
 	return NewSecretKey(poly[0]), commitments, secretFragments, nil
 }
+
+// ThresholdInterpolateAtZero ...
+//
+// The points (X[i], Y[i]) for i = 0...T-1 interpolate into P,
+// a degree T-1 polynomial.  Returns P(0).
+func ThresholdInterpolateAtZero(T int) *FQ {
+	ans := FQZero.Copy()
+
+	//if (T <= 0) {
+	//	throw std::string("T must be a positive integer");
+	//}
+
+	return FQZero
+}
+
+/**
+ * The points (X[i], Y[i]) for i = 0...T-1 interpolate into P,
+ * a degree T-1 polynomial.  Returns P(0).
+ *
+ * @param[out] res          - the value P(0).
+ * @param[in] X             - the X coordinates,
+ * @param[in] Y             - the Y coordinates.
+ * @param[in] T             - the number of points.
+ */
+//static void InterpolateAtZero(bn_t res, size_t *X, bn_t *Y, size_t T);
+
+//def (X: List[int], Y: List[Fq], ec=default_ec) -> Fq:
+//    """
+//    The k+1 points (X[i], Y[i]) interpolate into P(X),
+//    a degree k polynomial.
+//    Returns P(0).
+//    """
+//    ans = Fq(ec.n, 0)
+//    for lamb, y in zip(Threshold.lagrange_coeffs_at_zero(X, ec), Y):
+//        ans += lamb * y
+//    return ans
+
+// returns lagrange coefficients of a polynomial
+// evaluated at zero.
+//
+// If we have T points (players[i], P(players[i])), it interpolates to a degree
+// T-1 polynomial P.  The returned coefficients are such that P(0) = sum_i
+// res[i] * P(players[i]).
+//def lagrange_coeffs_at_zero(X: List[int], ec=default_ec) -> List[Fq]:
+//    """
+//    We have k+1 integers X[i], all less than ec.n and non-zero.
+//    The points (X[i], P(X[i])) interpolate into P(X), a degree k polynomial.
+//    Returns coefficients L_i such that P(0) = sum L_i * P(X[i]).
+//    """
+//    N = len(X)
+//
+//    # Check all x values are different, less than ec.n, and non-zero.
+//    assert len(set(X)) == N and all(0 != x < ec.n for x in X)
+//
+//    def weight(j):
+//        ans = Fq(ec.n, 1)
+//        for i in range(N):
+//            if i != j:
+//                ans *= Fq(ec.n, X[j] - X[i])
+//        return ~ans
+//
+//    # Using the second barycentric form,
+//    # P(0) = (sum_j (y_j * w_j / x_j)) / (sum_j w_j/x_j)
+//    # If desired, the weights can be precomputed.
+//
+//    ans = []
+//    denominator = Fq(ec.n, 0)
+//    for j in range(N):
+//        shift = weight(j) * ~Fq(ec.n, -X[j])
+//        ans.append(shift)
+//        denominator += shift
+//    denominator = ~denominator
+//    for i in range(len(ans)):
+//        ans[i] *= denominator
+//    return ans
