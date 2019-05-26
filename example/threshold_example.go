@@ -7,7 +7,10 @@ import (
 )
 
 func main() {
-	sk, commitments, fragments, err := bls.ThresholdCreate(4, 6)
+	T := 4
+	N := 6
+
+	sk, commitments, fragments, err := bls.ThresholdCreate(T, N)
 	if err != nil {
 		panic(err)
 	}
@@ -23,4 +26,7 @@ func main() {
 	for _, sk := range fragments {
 		fmt.Printf("\t sk: %x\n", sk.Serialize())
 	}
+
+	verified := bls.ThresholdVerifySecretFragment(T, 1, sk, commitments)
+	fmt.Printf("My fragment verified? : %v\n", verified)
 }
