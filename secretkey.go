@@ -15,6 +15,13 @@ type SecretKey struct {
 	f *FR
 }
 
+// NewSecretKey initializes a new BLS secret key from a *FR.
+func NewSecretKey(f *FR) *SecretKey {
+	return &SecretKey{
+		f: f,
+	}
+}
+
 // SecretKeyFromSeed generates a private key from a seed, similar to HD key
 // generation (hashes the seed), and reduces it mod the group order.
 func SecretKeyFromSeed(seed []byte) *SecretKey {
