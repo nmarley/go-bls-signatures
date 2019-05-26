@@ -107,7 +107,7 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 func ThresholdInterpolateAtZero(T int) *FQ {
 	ans := FQZero.Copy()
 
-	if (T <= 0) {
+	if T <= 0 {
 		// "T must be a positive integer"
 		panic("T must be a positive integer")
 	}
@@ -115,6 +115,55 @@ func ThresholdInterpolateAtZero(T int) *FQ {
 	return FQZero
 }
 
+// LagrangeCoeffsAtZero returns lagrange coefficients of a polynomial
+// evaluated at zero.
+//
+// If we have T points (players[i], P(players[i])), it interpolates to a degree
+// T-1 polynomial P.  The returned coefficients are such that P(0) = sum_i
+// res[i] * P(players[i]).
+//
+// TODO/NGM: Assume this should be a slice of *FRs and then the mod check below not needed.
+func LagrangeCoeffsAtZero(x []int) []*FQ {
+	lenX := len(x)
+
+	// Ensure each value in X is unique.
+	mapSeenX := make(map[int]struct{}, lenX)
+	for i := 0; i < lenX; i++ {
+		val := x[i]
+		_, found := mapSeenX[val]
+		if found {
+			// TODO: Don't panic
+			panic("must not have duplicate player indices")
+		}
+		mapSeenX[val] = struct{}{}
+
+		// Also ensure value is less than RFieldModulus
+		if big.NewInt(int64(val)).Cmp(RFieldModulus) != -1 {
+			// TODO: Don't panic
+			panic("player index must be less then n (RFieldModulus)")
+		}
+
+		// ... and > 0
+		if val <= 0 {
+			// TODO: Don't panic
+			panic("player index must be positive")
+		}
+	}
+
+	weight := func(j int) *FR {
+		ans := FROne.Copy()
+		for i := 0; i < lenX; i++ {
+			if i != j {
+				bigJ := big.NewInt(int64(x[j]))
+				bigI := big.NewInt(int64(x[i]))
+				ans.MulAssign(NewFR(new(big.Int).Sub(bigJ, bigI)))
+			}
+		}
+		return ans.Inverse()
+	}
+
+	return []*FQ{}
+}
 
 // The points (X[i], Y[i]) for i = 0...T-1 interpolate into P,
 // a degree T-1 polynomial.  Returns P(0).
@@ -123,8 +172,6 @@ func ThresholdInterpolateAtZero(T int) *FQ {
 // param[in] X             - the X coordinates
 // param[in] Y             - the Y coordinates
 // param[in] T             - the number of points
-
-//static void InterpolateAtZero(bn_t res, size_t *X, bn_t *Y, size_t T);
 
 //def (X: List[int], Y: List[Fq], ec=default_ec) -> Fq:
 //    """
@@ -137,12 +184,6 @@ func ThresholdInterpolateAtZero(T int) *FQ {
 //        ans += lamb * y
 //    return ans
 
-// returns lagrange coefficients of a polynomial
-// evaluated at zero.
-//
-// If we have T points (players[i], P(players[i])), it interpolates to a degree
-// T-1 polynomial P.  The returned coefficients are such that P(0) = sum_i
-// res[i] * P(players[i]).
 //def lagrange_coeffs_at_zero(X: List[int], ec=default_ec) -> List[Fq]:
 //    """
 //    We have k+1 integers X[i], all less than ec.n and non-zero.
