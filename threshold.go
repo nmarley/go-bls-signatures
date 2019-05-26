@@ -107,22 +107,23 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 func ThresholdInterpolateAtZero(T int) *FQ {
 	ans := FQZero.Copy()
 
-	//if (T <= 0) {
-	//	throw std::string("T must be a positive integer");
-	//}
+	if (T <= 0) {
+		// "T must be a positive integer"
+		panic("T must be a positive integer")
+	}
 
 	return FQZero
 }
 
-/**
- * The points (X[i], Y[i]) for i = 0...T-1 interpolate into P,
- * a degree T-1 polynomial.  Returns P(0).
- *
- * @param[out] res          - the value P(0).
- * @param[in] X             - the X coordinates,
- * @param[in] Y             - the Y coordinates.
- * @param[in] T             - the number of points.
- */
+
+// The points (X[i], Y[i]) for i = 0...T-1 interpolate into P,
+// a degree T-1 polynomial.  Returns P(0).
+//
+// param[out] res          - the value P(0)
+// param[in] X             - the X coordinates
+// param[in] Y             - the Y coordinates
+// param[in] T             - the number of points
+
 //static void InterpolateAtZero(bn_t res, size_t *X, bn_t *Y, size_t T);
 
 //def (X: List[int], Y: List[Fq], ec=default_ec) -> Fq:
