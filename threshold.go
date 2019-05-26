@@ -67,5 +67,5 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 		secretFragments[x] = NewSecretKey(sf)
 	}
 
-	return &SecretKey{f: poly[0]}, commitments, secretFragments, nil
+	return NewSecretKey(poly[0]), commitments, secretFragments, nil
 }
