@@ -31,9 +31,13 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 	}
 
 	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY))
+
+	// There are T polynomials / commitments
 	poly := make([]*FR, thresholdParameter)
 	commitments := make([]*PublicKey, thresholdParameter)
-	secretFragments := make([]*SecretKey, thresholdParameter)
+
+	// There are N secret fragments
+	secretFragments := make([]*SecretKey, numPlayers)
 
 	// Range over T, e.g. thresholdParameter
 	for i := 0; i < thresholdParameter; i++ {
@@ -51,7 +55,7 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 		sf := NewFR(bigZero)
 		for i, c := range poly {
 			// Add to the fragment
-			sf.Add(
+			sf.AddAssign(
 				// Multiply c by x^i % n
 				c.Mul(
 					// NewFR not needed as Exp mods by the RFieldModulus already
