@@ -13,7 +13,7 @@ import (
 //func VerifySecretFragment(T, player int, secretFragment *FQ, commitments []*PublicKey) {
 //}
 
-// Create returns a new private key with associated data suitable for T of N
+// ThresholdCreate returns a new private key with associated data suitable for T of N
 // threshold signatures under a Joint-Feldman scheme.
 //
 // After the dealing phase, one needs cooperation of T players out of N in
@@ -25,7 +25,7 @@ import (
 // - secret_fragments[j] = P(j), to be sent to player j
 //
 // (All N secret_fragments[j] can be combined to make a secret share.)
-func Create(thresholdParameter, numPlayers int) (*SecretKey, []*PublicKey, []*SecretKey, error) {
+func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicKey, []*SecretKey, error) {
 	if thresholdParameter < 1 || thresholdParameter > numPlayers {
 		return nil, nil, nil, fmt.Errorf("threshold parameter must be between 1 and number of players")
 	}
