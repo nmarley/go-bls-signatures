@@ -106,11 +106,13 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 	// TODO: Finish here...
 
 	// Check that the signature actually verifies the message
-	//aggInfo := Aggreg
-	//agg_info = AggregationInfo.from_msg(master_pubkey, msg)
-	//signature_actual.set_aggregation_info(agg_info)
-	//assert signature_actual.verify()
-	//
+	mh := bls.NewMessageHashFromBytes(msg)
+	aggInfo := bls.AggregationInfoFromMsgHash(masterPubKey, mh)
+	signatureActual.SetAggregationInfo(aggInfo)
+	if !signatureActual.Verify() {
+		t.Error("sig did not verify")
+	}
+
 	//# Step 4b : Alternatively, we can add the lagrange coefficients
 	//# to 'unit' signatures.
 	//for X in combinations(range(1, N+1), T):
