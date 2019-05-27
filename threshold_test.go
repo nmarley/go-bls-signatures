@@ -79,8 +79,8 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 	Combinations(N, T, func(X []int) {
 		lenX := len(X)
 		listShares := make([]*bls.FR, lenX)
-		for x := range X {
-			listShares[x] = secretShares[x].GetValue()
+		for i, x := range X {
+			listShares[i] = secretShares[x].GetValue()
 		}
 		r := bls.ThresholdInterpolateAtZero(X, listShares)
 		secretCand := bls.NewSecretKey(r)
@@ -91,8 +91,8 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 		// TODO: Combine this w/the above, no need to run the same loop twice.
 		// Check signatures
 		signatureShares := make([]*bls.Signature, lenX)
-		for x := range X {
-			signatureShares[x] = secretShares[x].SignThreshold(msg, x, X)
+		for i, x := range X {
+			signatureShares[i] = secretShares[x].SignWithCoefficent(msg, x, X)
 		}
 	})
 
