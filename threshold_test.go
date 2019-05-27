@@ -106,7 +106,7 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 	// TODO: Finish here...
 
 	// Check that the signature actually verifies the message
-	mh := bls.NewMessageHashFromBytes(msg)
+	mh := bls.NewMessageHashFromBytes(bls.Hash256(msg))
 	aggInfo := bls.AggregationInfoFromMsgHash(masterPubKey, mh)
 	signatureActual.SetAggregationInfo(aggInfo)
 	if !signatureActual.Verify() {
