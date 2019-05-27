@@ -86,15 +86,20 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 
 		for i, x := range X {
 			listShares[i] = secretShares[x].GetValue()
-
-			// Check signatures
 			signatureShares[i] = secretShares[x].SignWithCoefficent(msg, x+1, X1)
 		}
 
+		// Check underlying secret key is correct
 		r := bls.ThresholdInterpolateAtZero(X1, listShares)
 		secretCand := bls.NewSecretKey(r)
 		if bytes.Compare(secretCand.Serialize(), masterSecretKey.Serialize()) != 0 {
-			t.Error("secret candidate does not match master secret key")
+			t.Error("candidate secret key does not match master secret key")
+		}
+
+		// Check signatures
+		signatureCand := bls.AggregateSignaturesSimple(signatureShares)
+		if bytes.Compare(signatureCand.Serialize(), signatureActual.Serialize()) != 0 {
+			t.Error("candidate signature does not match actual signature")
 		}
 	})
 
