@@ -85,3 +85,30 @@ func RandKey(r io.Reader) (*SecretKey, error) {
 func KeyFromBig(i *big.Int) *SecretKey {
 	return &SecretKey{f: NewFR(i)}
 }
+
+// AggregateSecretKeys aggregates multiple secret keys into one. The secure
+// flag securely aggregates multiple secret keys into one by exponentiating the
+// keys with the pubKey hashes first.
+func AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secure bool) *SecretKey {
+	sumKeys := new(big.Int)
+	if !secure {
+		for _, sk := range secretKeys {
+			sumKeys.Add(sumKeys, sk.f.ToBig())
+		}
+		sumKeys.Mod(sumKeys, RFieldModulus)
+	} else {
+		if len(publicKeys) == 0 {
+			// TODO: Don't panic
+			panic("must include public keys in secure aggregation")
+		}
+		if len(publicKeys) != len(secretKeys) {
+			// TODO: Don't panic
+			panic("invalid number of keys")
+		}
+
+		//secPubKeys
+		// TODO: finish this...
+	}
+
+	return KeyFromBig(sumKeys)
+}
