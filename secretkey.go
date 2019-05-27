@@ -78,16 +78,18 @@ func (k *SecretKey) Sign(message []byte) *Signature {
 // can be multiplied together to create a final signature for that message.
 func (k *SecretKey) SignWithCoefficent(message []byte, playerIndex int, players []int) *Signature {
 	h := HashG2(message)
-
-	h.Mul()
+	i := getIndex(playerIndex, players)
 	lambs := LagrangeCoeffsAtZero(players)
+	return NewSignature(h.Mul(lambs[i].ToBig()).Mul(k.f.n), nil)
+}
 
-	//mh := NewMessageHashFromBytes(Hash256(message))
-	//aggInfo := AggregationInfoFromMsgHash(k.PublicKey(), mh)
-	//
-	//return NewSignature(h.Mul(k.f.n), aggInfo)
-
-	return &Signature{}
+func getIndex(elem int, iSlice []int) int {
+	for i := 0; i < len(iSlice); i++ {
+		if elem == iSlice[i] {
+			return i
+		}
+	}
+	return -1
 }
 
 // RandKey generates a random secret key
