@@ -1,6 +1,7 @@
 package bls_test
 
 import (
+	"fmt"
 	//"fmt"
 	"testing"
 
@@ -54,13 +55,18 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 	for i, cpoly := range commitments {
 		pksToAggregate[i] = cpoly[0]
 	}
-	//masterPubkey := bls.AggregatePublicKeys(pksToAggregate, false)
-	//
-	//for i, row := range fragments {
-	//	//AggregateS
-	//	//ss :=
-	//}
-	//secretShares :=
+	//masterPubKey := bls.AggregatePublicKeys(pksToAggregate, false)
+
+	secretShares := make([]*bls.SecretKey, len(fragments))
+	for i, row := range fragments {
+		ss := bls.AggregateSecretKeys([]*bls.SecretKey(row), nil, false)
+		secretShares[i] = ss
+	}
+
+	masterSecretKey := bls.AggregateSecretKeys([]*bls.SecretKey(secrets), nil, false)
+	msg := []byte("Test")
+	signatureActual := masterSecretKey.Sign(msg)
+	fmt.Println(signatureActual)
 
 }
 
