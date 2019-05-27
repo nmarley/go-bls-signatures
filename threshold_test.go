@@ -2,7 +2,6 @@ package bls_test
 
 import (
 	"bytes"
-	"fmt"
 	//"fmt"
 	"testing"
 
@@ -57,7 +56,7 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 		pksToAggregate[i] = cpoly[0]
 	}
 	masterPubKey := bls.AggregatePublicKeys(pksToAggregate, false)
-	fmt.Printf("masterPubKey: %x\n", masterPubKey.Serialize())
+	//fmt.Printf("masterPubKey: %x\n", masterPubKey.Serialize())
 
 	secretShares := make([]*bls.SecretKey, len(fragments))
 	for i, row := range fragments {
@@ -68,7 +67,7 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 	masterSecretKey := bls.AggregateSecretKeys([]*bls.SecretKey(secrets), nil, false)
 	msg := []byte("Test")
 	signatureActual := masterSecretKey.Sign(msg)
-	fmt.Printf("signatureActual: %x\n", signatureActual.Serialize())
+	//fmt.Printf("signatureActual: %x\n", signatureActual.Serialize())
 
 	//if !signatureActual.Verify() {
 	//	t.Error("sig did not verify")
@@ -76,7 +75,7 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 
 	// Step 4 : sigShare = secretShare.SignThreshold(...)
 	// Check every combination of T players
-	Combinations(N, T, func(X []int) {
+	combinations(N, T, func(X []int) {
 		// Add one to each value of X
 		X1 := plusOne(X)
 
@@ -103,8 +102,6 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 		}
 	})
 
-	// TODO: Finish here...
-
 	// Check that the signature actually verifies the message
 	mh := bls.NewMessageHashFromBytes(bls.Hash256(msg))
 	aggInfo := bls.AggregationInfoFromMsgHash(masterPubKey, mh)
@@ -115,8 +112,11 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 
 	// Step 4b : Alternatively, we can add the lagrange coefficients
 	// to 'unit' signatures.
-	Combinations(N, T, func(X []int) {
+	combinations(N, T, func(X []int) {
 		// X: a list of T indices like [1, 2, 5]
+
+		// Add one to each value of X
+		X1 := plusOne(X)
 
 		lenX := len(X)
 		// Check signatures
@@ -124,7 +124,7 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 		for i, x := range X {
 			signatureShares[i] = secretShares[x].Sign(msg)
 		}
-		signatureCand := bls.ThresholdAggregateUnitSigs(signatureShares, X, T)
+		signatureCand := bls.ThresholdAggregateUnitSigs(signatureShares, X1)
 
 		if bytes.Compare(signatureCand.Serialize(), signatureActual.Serialize()) != 0 {
 			t.Error("candidate signature does not match actual signature")
@@ -151,7 +151,7 @@ func TestThreshold(t *testing.T) {
 
 // from Filippo Valsorda:
 // https://filippo.io/callback-based-combinations-in-go/
-func Combinations(n, m int, f func([]int)) {
+func combinations(n, m int, f func([]int)) {
 	// For each combination of m elements out of n
 	// call the function f passing a list of m integers in 0-n
 	// without repetitions

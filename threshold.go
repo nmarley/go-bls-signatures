@@ -231,13 +231,14 @@ func LagrangeCoeffsAtZero(x []int) []*FR {
 	return ans
 }
 
-// ThresholdAggregateUnitSigs
-func ThresholdAggregateUnitSigs(signatures []*Signature, players []int, thresholdParameter int) *Signature {
+// ThresholdAggregateUnitSigs ...
+func ThresholdAggregateUnitSigs(signatures []*Signature, players []int) *Signature {
 	lambs := LagrangeCoeffsAtZero(players)
 	agg := NewG2Projective(FQ2Zero, FQ2Zero, FQ2Zero)
 
 	for i, sig := range signatures {
-		agg.Add(sig.s.Mul(lambs[i].ToBig()))
+		agg = agg.Add(sig.s.Mul(lambs[i].ToBig()))
 	}
+
 	return NewSignature(agg, nil)
 }
