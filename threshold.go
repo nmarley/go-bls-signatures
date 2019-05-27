@@ -6,8 +6,52 @@ import (
 	"math/big"
 )
 
-// TODO: Godoc. Threshold Namespace?
-// Utility functions for threshold signatures
+// TODO: Threshold Namespace?
+/*
+Utility functions for threshold signatures.
+
+The end result of initializing a T of N Joint-Feldman scheme is
+that each of N players has a secret share (private key) they can
+use to sign messages; and there is a master secret and public key.
+
+The signatures of any T players (along with the indices of those
+players) can be combined to form a valid signature for that master
+key pair.
+
+To initialize a T of N threshold key under a Joint-Feldman scheme:
+
+1. Each player calls PrivateKey.new_threshold(T, N)
+   to create a secret key, commitment to a polynomial, and
+   secret fragments.
+   They send everyone the commitment, and send player j
+   secret_fragments[j].
+
+2. Each player calls Threshold.verify_secret_fragment
+   on all secret fragments they receive.  If any verify False,
+   they complain to abort the scheme.  (Note that repeatedly
+   aborting or 'speaking' last, can bias the master public key.)
+
+3. Each player computes the shared, master public key:
+   master_pubkey = BLS.aggregate_pub_keys(
+       [PublicKey.from_g1(cpoly[0].to_jacobian())
+        for cpoly in commitments],
+       False)
+
+   They also create their secret share from all secret
+   fragments received (now verified):
+   secret_share = BLS.aggregate_priv_keys(
+       [PrivateKey(frag) for frag in share_fragments],
+       None,
+       False)
+
+4. Player P may create a signature share with respect to T players:
+   sig_share = secret_share.sign_threshold(message, P, players),
+   where 'players' is a list of T different player indices
+   participating.
+
+   These signature shares can be combined to sign the message:
+   signature = BLS.aggregate_sigs_simple(sig_shares).
+*/
 
 // ThresholdVerifySecretFragment returns true iff the secretFragment from the
 // given player matches their given commitment to a polynomial.
@@ -118,17 +162,6 @@ func ThresholdInterpolateAtZero(x []int, y []*FR) *FR {
 	return ans
 }
 
-//def interpolate_at_zero(X: List[int], Y: List[Fq], ec=default_ec) -> Fq:
-//    """
-//    The k+1 points (X[i], Y[i]) interpolate into P(X),
-//    a degree k polynomial.
-//    Returns P(0).
-//    """
-//    ans = Fq(ec.n, 0)
-//    for lamb, y in zip(Threshold.lagrange_coeffs_at_zero(X, ec), Y):
-//        ans += lamb * y
-//    return ans
-
 // LagrangeCoeffsAtZero returns lagrange coefficients of a polynomial
 // evaluated at zero.
 //
@@ -196,4 +229,15 @@ func LagrangeCoeffsAtZero(x []int) []*FR {
 	}
 
 	return ans
+}
+
+// ThresholdAggregateUnitSigs
+func ThresholdAggregateUnitSigs(signatures []*Signature, players []int, thresholdParameter int) *Signature {
+	lambs := LagrangeCoeffsAtZero(players)
+	agg := NewG2Projective(FQ2Zero, FQ2Zero, FQ2Zero)
+
+	for i, sig := range signatures {
+		agg.Add(sig.s.Mul(lambs[i].ToBig()))
+	}
+	return NewSignature(agg, nil)
 }
