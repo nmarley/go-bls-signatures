@@ -1,8 +1,10 @@
 package bls
 
 import (
+	"bytes"
 	"io"
 	"math/big"
+	"sort"
 )
 
 // ...
@@ -80,9 +82,9 @@ func RandKey(r io.Reader) (*SecretKey, error) {
 	return s, nil
 }
 
-// KeyFromBig returns a new key based on a big int in
+// SecretKeyFromBig returns a new key based on a big int in
 // FR.
-func KeyFromBig(i *big.Int) *SecretKey {
+func SecretKeyFromBig(i *big.Int) *SecretKey {
 	return &SecretKey{f: NewFR(i)}
 }
 
@@ -95,6 +97,7 @@ func AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secur
 		for _, sk := range secretKeys {
 			sumKeys.Add(sumKeys, sk.f.ToBig())
 		}
+		// not necessary b/c NewFR does this already, but might be a nice safety
 		sumKeys.Mod(sumKeys, RFieldModulus)
 	} else {
 		if len(publicKeys) == 0 {
@@ -106,9 +109,46 @@ func AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secur
 			panic("invalid number of keys")
 		}
 
-		//secPubKeys
 		// TODO: finish this...
+
+		//priv_pub_keys = sorted(zip(public_keys, private_keys))
+		secPubKeys := make([]*KeyPair, len(publicKeys))
+		for i := 0; i < len(publicKeys); i++ {
+			secPubKeys[i] = &KeyPair{
+				public: publicKeys[i],
+				secret: secretKeys[i],
+			}
+		}
+		// Sort keypairs by pub key
+		sort.Sort(ByKeyPair(secPubKeys))
+
+		computedTs := HashPKs(len(publicKeys), publicKeys)
+
+		for i, kp := range secPubKeys {
+			sumKeys.Add(sumKeys, new(big.Int).Mul(kp.secret.f.n, computedTs[i]))
+			sumKeys.Mod(sumKeys, RFieldModulus)
+		}
 	}
 
-	return KeyFromBig(sumKeys)
+	return SecretKeyFromBig(sumKeys)
 }
+
+// TODO: Move all this where it makes sense
+
+// KeyPair is a public/secret key pair.
+type KeyPair struct {
+	public *PublicKey
+	secret *SecretKey
+}
+
+// Less compares two keypairs
+func (kp *KeyPair) Less(other *KeyPair) bool {
+	return bytes.Compare(kp.public.Serialize(), other.public.Serialize()) == -1
+}
+
+// ByKeyPair implements sort.Interface for []*KeyPair
+type ByKeyPair []*KeyPair
+
+func (s ByKeyPair) Len() int           { return len(s) }
+func (s ByKeyPair) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
+func (s ByKeyPair) Less(i, j int) bool { return s[i].Less(s[j]) }
