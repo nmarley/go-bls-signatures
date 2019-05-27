@@ -133,6 +133,11 @@ func AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secur
 	return SecretKeyFromBig(sumKeys)
 }
 
+// GetValue returns a copy of the underlying *FR
+func (k *SecretKey) GetValue() *FR {
+	return k.f.Copy()
+}
+
 // TODO: Move all this where it makes sense
 
 // KeyPair is a public/secret key pair.
