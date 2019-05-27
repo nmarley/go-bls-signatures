@@ -72,6 +72,24 @@ func (k *SecretKey) Sign(message []byte) *Signature {
 	return NewSignature(h.Mul(k.f.n), aggInfo)
 }
 
+// SignWithCoefficient signs a message with lagrange coefficients.
+//
+// The T signatures signed this way (with the same parameters players and T)
+// can be multiplied together to create a final signature for that message.
+func (k *SecretKey) SignWithCoefficent(message []byte, playerIndex int, players []int) *Signature {
+	h := HashG2(message)
+
+	h.Mul()
+	lambs := LagrangeCoeffsAtZero(players)
+
+	//mh := NewMessageHashFromBytes(Hash256(message))
+	//aggInfo := AggregationInfoFromMsgHash(k.PublicKey(), mh)
+	//
+	//return NewSignature(h.Mul(k.f.n), aggInfo)
+
+	return &Signature{}
+}
+
 // RandKey generates a random secret key
 func RandKey(r io.Reader) (*SecretKey, error) {
 	k, err := RandFR(r)
