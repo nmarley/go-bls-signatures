@@ -63,8 +63,8 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 		ss := bls.AggregateSecretKeys([]*bls.SecretKey(row), nil, false)
 		secretShares[i] = ss
 	}
-
 	masterSecretKey := bls.AggregateSecretKeys([]*bls.SecretKey(secrets), nil, false)
+
 	msg := []byte("Test")
 	signatureActual := masterSecretKey.Sign(msg)
 	//fmt.Printf("signatureActual: %x\n", signatureActual.Serialize())
