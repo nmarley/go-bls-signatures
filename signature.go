@@ -160,17 +160,18 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 	type publicKeysList []*PublicKey
 	type messageHashesList []*MessageHash
 
-	// TODO: Reduce allocations
-	var publicKeys []publicKeysList
-	var messageHashes []messageHashesList
+	lenSigs := len(signatures)
 
-	for _, sig := range signatures {
+	publicKeys := make([]publicKeysList, lenSigs)
+	messageHashes := make([]messageHashesList, lenSigs)
+
+	for i, sig := range signatures {
 		if sig.ai == nil {
 			// TODO: error, do not panic
 			panic("Each signature must have a valid aggregation info")
 		}
-		publicKeys = append(publicKeys, sig.ai.PublicKeys)
-		messageHashes = append(messageHashes, sig.ai.Hashes)
+		publicKeys[i] = sig.ai.PublicKeys
+		messageHashes[i] = sig.ai.Hashes
 	}
 
 	// Find colliding vectors, save colliding messages
@@ -196,7 +197,7 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		// that every group is a valid aggregate signature. If an invalid
 		// or insecure signature is given, and invalid signature will
 		// be created. We don't verify for performance reasons.
-		aggInfos := make([]*AggregationInfo, len(signatures))
+		aggInfos := make([]*AggregationInfo, lenSigs)
 		for i, sig := range signatures {
 			aggInfos[i] = sig.ai
 		}
@@ -250,8 +251,8 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 
 	// Sort lexicographically binary, then split out pks / hashes
 	sort.Sort(By(sortKeysSorted))
-	var sortedPublicKeys []*PublicKey
-	for _, mk := range sortKeysSorted {
+	sortedPublicKeys := make([]*PublicKey, len(sortKeysSorted))
+	for i, mk := range sortKeysSorted {
 		buf := [PublicKeySize]byte{}
 		copy(buf[:], mk[MessageHashSize:])
 		pk, err := DeserializePublicKey(buf[:])
@@ -259,7 +260,7 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 			// todo: don't panic
 			panic("oh shit")
 		}
-		sortedPublicKeys = append(sortedPublicKeys, pk)
+		sortedPublicKeys[i] = pk
 	}
 
 	computed_Ts := HashPKs(len(collidingSigs), sortedPublicKeys)
