@@ -168,8 +168,6 @@ func ThresholdInterpolateAtZero(x []int, y []*FR) *FR {
 // If we have T points (players[i], P(players[i])), it interpolates to a degree
 // T-1 polynomial P.  The returned coefficients are such that P(0) = sum_i
 // res[i] * P(players[i]).
-//
-// TODO/NGM: Assume this should be a slice of *FRs and then the mod check below not needed.
 func LagrangeCoeffsAtZero(x []int) []*FR {
 	lenX := len(x)
 
