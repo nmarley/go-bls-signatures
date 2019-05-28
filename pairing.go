@@ -273,12 +273,11 @@ func IntToBits(n *big.Int) []byte {
 	return newBits
 }
 
-// AtePairingMulti ...
-//
-// Computes multiple pairings at once. This is more efficient, since we can
-// multiply all the results of the miller loops, and perform just one final
-// exponentiation.
+// AtePairingMulti computes multiple pairings at once. This is more efficient,
+// since we can multiply all the results of the miller loops, and perform just
+// one final exponentiation.
 func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
+	// TODO: These should be constant / pre-computed
 	negX := new(big.Int).Neg(blsX)
 	t := new(big.Int).Add(negX, bigOne)
 	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
@@ -293,7 +292,14 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 	return XFinalExponentiation(prod)
 }
 
-// AtePairing ...
+// AtePairing performs one ate pairing.
 func AtePairing(p *G1Projective, q *G2Projective) *FQ12 {
-	return FQ12Zero
+	// TODO: These should be constant / pre-computed
+	negX := new(big.Int).Neg(blsX)
+	t := new(big.Int).Add(negX, bigOne)
+	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
+
+	elem := XMillerLoop(bigT, p, q)
+
+	return XFinalExponentiation(elem)
 }
