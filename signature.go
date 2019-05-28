@@ -127,11 +127,13 @@ func (s *Signature) Verify() bool {
 	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n)
 
 	// Gather a list of p's and q's to send to AtePairingMulti
-	// TODO: Could optimize here...
-	ps := []*G1Projective{g1}
-	ps = append(ps, finalPublicKeys...)
-	qs := []*G2Projective{s.s}
-	qs = append(qs, mappedHashes...)
+	ps := make([]*G1Projective, len(finalPublicKeys)+1)
+	copy(ps[1:], finalPublicKeys)
+	ps[0] = g1
+
+	qs := make([]*G2Projective, len(mappedHashes)+1)
+	copy(qs[1:], mappedHashes)
+	qs[0] = s.s
 
 	res := AtePairingMulti(ps, qs)
 
