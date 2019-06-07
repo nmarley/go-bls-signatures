@@ -289,12 +289,12 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 		prod = prod.Mul(XMillerLoop(bigT, p, q))
 	}
 
-	return XFinalExponentiation(prod)
+	return FinalExponentiation(prod)
 }
 
 // AtePairing performs one ate pairing.
 func AtePairing(p *G1Projective, q *G2Projective) *FQ12 {
 	elem := XMillerLoop(bigT, p, q)
 
-	return XFinalExponentiation(elem)
+	return FinalExponentiation(elem)
 }
