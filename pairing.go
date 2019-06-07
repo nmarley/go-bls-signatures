@@ -4,6 +4,11 @@ import (
 	"math/big"
 )
 
+// These should be constant / pre-computed
+var negX = new(big.Int).Neg(blsX)
+var littleT = new(big.Int).Add(negX, bigOne)
+var bigT = new(big.Int).Abs(new(big.Int).Sub(littleT, bigOne))
+
 // MillerLoopItem are the inputs to the miller loop.
 type MillerLoopItem struct {
 	P *G1Affine
@@ -277,11 +282,6 @@ func IntToBits(n *big.Int) []byte {
 // since we can multiply all the results of the miller loops, and perform just
 // one final exponentiation.
 func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
-	// TODO: These should be constant / pre-computed
-	negX := new(big.Int).Neg(blsX)
-	t := new(big.Int).Add(negX, bigOne)
-	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
-
 	prod := FQ12One.Copy()
 
 	for i, q := range qs {
@@ -294,11 +294,6 @@ func AtePairingMulti(ps []*G1Projective, qs []*G2Projective) *FQ12 {
 
 // AtePairing performs one ate pairing.
 func AtePairing(p *G1Projective, q *G2Projective) *FQ12 {
-	// TODO: These should be constant / pre-computed
-	negX := new(big.Int).Neg(blsX)
-	t := new(big.Int).Add(negX, bigOne)
-	bigT := new(big.Int).Abs(new(big.Int).Sub(t, bigOne))
-
 	elem := XMillerLoop(bigT, p, q)
 
 	return XFinalExponentiation(elem)
