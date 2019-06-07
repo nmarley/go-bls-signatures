@@ -30,7 +30,7 @@
   - [x] aggregate([sigL, sigR, sig6])
   - [x] verify(sigFinal)
 
-- [ ] Signature division
+- [x] Signature division
   - [x] divide(sigFinal, [sig2, sig5, sig6])
   - [x] verify(quotient)
   - [x] divide(quotient, [sig6])
