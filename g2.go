@@ -709,66 +709,47 @@ var swencSqrtNegThreeMinusOneDivTwoFQ2 = NewFQ2(NewFQ(swencSqrtNegThreeMinusOneD
 
 // SWEncodeG2 implements the Shallue-van de Woestijne encoding.
 func SWEncodeG2(t *FQ2) *G2Affine {
-	// fmt.Println("NGM in SWEncodeG2")
 	if t.IsZero() {
-		// fmt.Println("NGM t.IsZero(), see-ya")
 		return G2AffineZero.Copy()
 	}
 
 	parity := t.Parity()
-	// fmt.Println("NGM parity:", parity)
 
 	// w = t^2 + b + 1
 	w := t.Square()
 	w.AddAssign(BCoeffFQ2)
 	w.AddAssign(FQ2One)
 
-	// fmt.Println("NGM w:", w)
-
 	// TODO: Look into this case... (differs from Python impl)
 	if w.IsZero() {
-		// fmt.Println("NGM w.IsZero()")
 		ret := G2AffineOne.Copy()
 		if parity {
-			// NGM here
-			// fmt.Println("here1")
 			ret.NegAssign()
-			// fmt.Println("here2")
 		}
 		return ret
 	}
 
-	// fmt.Println("NGM AFTER w.IsZero()")
 	// w = ~w * sqrt(-3) * t
 	w.InverseAssign()
-	// fmt.Println("NGM ~w:", w)
-
 	w.MulAssign(swencSqrtNegThreeFQ2)
 	w.MulAssign(t)
-	// fmt.Println("NGM w post sqrt(-3):", w)
 
 	x1 := w.Mul(t)
 	x1.NegAssign()
 	x1.AddAssign(swencSqrtNegThreeMinusOneDivTwoFQ2)
-	// fmt.Println("NGM x1:", x1)
 	if p := GetG2PointFromX(x1, parity); p != nil {
-		// fmt.Println("NGM returning point from x1")
 		return p
 	}
 
 	x2 := x1.Neg()
 	x2.SubAssign(FQ2One)
-	// fmt.Println("NGM x2:", x2)
 	if p := GetG2PointFromX(x2, parity); p != nil {
-		// fmt.Println("NGM returning point from x2")
 		return p
 	}
 
 	x3 := w.Square()
 	x3.InverseAssign()
 	x3.AddAssign(FQ2One)
-	// fmt.Println("NGM x3:", x3)
-	// fmt.Println("NGM returning point from x3")
 	return GetG2PointFromX(x3, parity)
 }
 
@@ -808,7 +789,6 @@ func SWEncodeG2(t *FQ2) *G2Affine {
 
 // HashG2 maps any string to a deterministic random point in G2.
 func HashG2(msg []byte) *G2Projective {
-	// h <- hash256(m)
 	h := Hash256(msg)
 	return HashG2PreHashed(h)
 }
@@ -820,90 +800,58 @@ func HashG2PreHashed(h []byte) *G2Projective {
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_0_c0")...))),
 		QFieldModulus,
 	)
-	//fmt.Printf("NGM t00 = %096x\n", t00)
 
 	//t01 <- hash512(h + b"G2_0_c1") % q
 	t01 := new(big.Int).Mod(
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_0_c1")...))),
 		QFieldModulus,
 	)
-	//fmt.Printf("NGM t01 = %096x\n", t01)
 
 	//t10 <- hash512(h + b"G2_1_c0") % q
 	t10 := new(big.Int).Mod(
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_1_c0")...))),
 		QFieldModulus,
 	)
-	//fmt.Printf("NGM t10 = %096x\n", t10)
 
 	//t11 <- hash512(h + b"G2_1_c1") % q
 	t11 := new(big.Int).Mod(
 		new(big.Int).SetBytes(Hash512(append(h, []byte("G2_1_c1")...))),
 		QFieldModulus,
 	)
-	//fmt.Printf("NGM t11 = %096x\n", t11)
 
 	//t0 <- Fq2(t00, t01)
 	t0 := NewFQ2(NewFQ(t00), NewFQ(t01))
-	//fmt.Println("NGM t0 = ", t0.Serialize())
 
 	//t1 <- Fq2(t10, t11)
 	t1 := NewFQ2(NewFQ(t10), NewFQ(t11))
-	//fmt.Println("NGM t1 = ", t1.Serialize())
 
 	//p <- swEncode(t0) * swEncode(t1)
 	t0Affine := SWEncodeG2(t0)
-	//fmt.Println("NGM t0Affine:", t0Affine)
-	//fmt.Printf("NGM t0Affine: %0192x\n", t0Affine.SerializeBytes())
-
 	t1Affine := SWEncodeG2(t1)
-	//fmt.Printf("NGM t1Affine: %0192x\n", t1Affine.SerializeBytes())
 
 	p := t0Affine.ToProjective()
-	// fmt.Println("NGM res", res)
 	p = p.AddAffine(t1Affine)
-	// fmt.Println("NGM res2", res)
 
 	// Map to the r-torsion by raising to cofactor power
 	// Described in page 11 of "Efficient hash maps to G2 on BLS curves" by Budroni and Pintore.
 	//x <- abs(x)
 
-	//x := blsX
-	//fmt.Println("NGM(XHashG2) x:", x)
-
 	p2 := p.Double()
-	//fmt.Println("NGM(XHashG2) p2:", p2)
-
 	innerPsi := p2.ToAffine().Psi()
-	//fmt.Println("NGM(XHashG2) inner_psi:", inner_psi)
-
 	psi2P := innerPsi.Psi()
-	//fmt.Println("NGM(hash) outer_psi:", psi2P)
 
-	// Mul performs a EC multiply operation on the point.
-	// func (g G2Affine) Mul(b *big.Int) *G2Projective
 	// t0_ := x * p
 	t0_ := p.Mul(blsX)
-	//fmt.Println("NGM(XHashG2) t0_:", t0_)
-
-	// x.Exp(x, 2, nil).Add(x).Sub(1)
-	//return p ^ (x^2 + x - 1) - psi(p ^ (x + 1)) + psi(psi(p ^ 2))
 	t1_ := t0_.Mul(blsX)
-	//fmt.Println("NGM(XHashG2) t1_:", t1_)
-
 	t2_ := t0_.Add(t1_).AddAffine(p.ToAffine().Neg())
-	//fmt.Println("NGM(XHashG2) t2_:", t2_)
 
 	//t3 = psi((x+1) * P, ec)
 	x1 := new(big.Int).Add(blsX, bigOne)
 	t3_ := p.Mul(x1).ToAffine().Psi().ToProjective()
-	//fmt.Println("NGM(XHashG2) t3_:", t3_)
 
 	//rv = t2 - t3 + psi2P
 	rv := t2_.AddAffine(t3_.ToAffine().Neg()).AddAffine(psi2P)
-	//fmt.Println("NGM(XHashG2) rv:", rv.ToAffine())
 
-	// Map to the r-torsion by raising to cofactor power
 	return rv
 }
 
@@ -915,9 +863,9 @@ func HashG2PreHashed(h []byte) *G2Projective {
 func (g *G2Affine) Untwist() *Fq12Pair {
 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
 
+	// TODO: these are constant ...
 	wsq := NewFQ12(FQ12OneRoot, FQ6Zero)
 	nwsq := wsq.Inverse()
-
 	wcu := NewFQ12(FQ6Zero, FQ12OneRoot)
 	nwcu := wcu.Inverse()
 
@@ -989,7 +937,6 @@ func (f *Fq12Pair) Equal(other *Fq12Pair) bool {
 // Given an untwisted point, this converts it's
 // coordinates to a point on the twisted curve. See Craig Costello
 // book, look up twists.
-// func Twist(pair *Fq12Pair) []*FQ2 {
 func Twist(pair *Fq12Pair) *G2Affine {
 	// TODO: Could move this to FQ12 also
 	FQ12OneRoot := NewFQ6(FQ2Zero, FQ2One, FQ2Zero)
