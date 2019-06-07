@@ -3,12 +3,12 @@ SHELL = bash
 
 COVERAGE_FILE ?= coverage.txt
 
-something:
-	go test -v -run TestVectorAggregation2
-	#go test
-	#go test -run TestVector
-	#go test -run TestDashCoreBLSCompatibility
-	#go test -run TestCustomNGM
+benchdebug:
+	go test -run=none -bench=Pairing -cpuprofile=cprof
+#BenchmarkMillerLoop-8            	     200	   6762679 ns/op
+#BenchmarkFinalExponentiation-8   	      50	  25503728 ns/op
+#BenchmarkPairingNew-8            	      20	  91929707 ns/op
+#BenchmarkPairingOld-8            	      50	  34889294 ns/op
 
 
 #.PHONY: default
@@ -23,8 +23,8 @@ cicheck:  ## Run basic code checks
 	go vet ./...
 
 test:  ## Run a basic test suite
-	go test
-	#go test -v
+	#go test
+	go test -v
 
 cover:  ## Run tests and generate test coverage file, output coverage results and HTML coverage file.
 	go test -coverprofile $(COVERAGE_FILE)
