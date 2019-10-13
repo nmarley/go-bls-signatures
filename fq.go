@@ -333,7 +333,7 @@ var FQZero = NewFQ(bigZero)
 // FQOne is the FQ at 1.
 var FQOne = NewFQ(bigOne)
 
-// PP
+// PP ...
 func (f FQ) PP(indent int) string {
 	spc := bytes.Repeat([]byte{' '}, indent)
 	return fmt.Sprintf("%s%s\n", spc, f.String())

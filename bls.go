@@ -51,17 +51,24 @@ func HashPKs(numOutputs int, publicKeys []*PublicKey) []*big.Int {
 // MessageSet and associate funcs are a syntactic sugar wrapper around a map
 type MessageSet map[MessageHash]struct{}
 
+// NewMessageSet ...
 func NewMessageSet() *MessageSet {
 	ms := make(MessageSet)
 	return &ms
 }
+
+// AddMsg ...
 func (ms *MessageSet) AddMsg(msg *MessageHash) {
 	(*ms)[*msg] = struct{}{}
 }
+
+// HasMsg ...
 func (ms *MessageSet) HasMsg(msg *MessageHash) bool {
 	_, found := (*ms)[*msg]
 	return found
 }
+
+// Len ...
 func (ms *MessageSet) Len() int {
 	return len(*ms)
 }

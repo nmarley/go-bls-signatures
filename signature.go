@@ -30,7 +30,7 @@ func (s *Signature) SetAggregationInfo(ai *AggregationInfo) {
 	s.ai = ai
 }
 
-// GetAggregationInnfo TEMP method to get AI for debugging...
+// GetAggregationInfo TEMP method to get AI for debugging...
 func (s *Signature) GetAggregationInfo() *AggregationInfo {
 	return s.ai
 }
@@ -265,13 +265,13 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		sortedPublicKeys[i] = pk
 	}
 
-	computed_Ts := HashPKs(len(collidingSigs), sortedPublicKeys)
+	computedTs := HashPKs(len(collidingSigs), sortedPublicKeys)
 
 	// Raise each sig to a power of each t,
 	// and multiply all together into agg_sig
 	aggSig := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
 	for i, sig := range collidingSigs {
-		aggSig = aggSig.Add(sig.s.Mul(computed_Ts[i]))
+		aggSig = aggSig.Add(sig.s.Mul(computedTs[i]))
 	}
 
 	// Add non-colliding signatures...

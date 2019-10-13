@@ -72,12 +72,12 @@ type MapKey [MapKeyLen]byte
 // MessageHash represents ... and is required because ...
 type MessageHash [MessageHashSize]byte
 
-// String
+// String ...
 func (mh *MessageHash) String() string {
 	return fmt.Sprintf("%064x", *mh)
 }
 
-// NewMessageHash initializes a new message hash from a byte slice
+// NewMessageHashFromBytes initializes a new message hash from a byte slice
 func NewMessageHashFromBytes(b []byte) *MessageHash {
 	mh := &MessageHash{}
 	copy(mh[MessageHashSize-len(b):], b)
@@ -110,6 +110,7 @@ func (mk *MapKey) String() string {
 	return fmt.Sprintf("PK(%s),MH(%s)", pk.StringShort(), mh)
 }
 
+// AggregationInfoFromMsgHash ...
 func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo {
 	// Public key len + Message hash len (sha256 hash = 32 bytes)
 	var mk MapKey
@@ -135,7 +136,7 @@ func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo
 // AggregationTree ...
 type AggregationTree map[MapKey]*big.Int
 
-// Empty
+// Empty ...
 func (at *AggregationTree) Empty() bool {
 	return len(*at) == 0
 }
@@ -213,7 +214,7 @@ func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 		// TODO: Add nil check here (prevents panic)
 		//       Maybe just continue instead of err
 		messagesLocal := NewMessageSet()
-		for k, _ := range ai.Tree {
+		for k := range ai.Tree {
 			_, mh := k.Split()
 			if messages.HasMsg(mh) && !messagesLocal.HasMsg(mh) {
 				collidingMessages.AddMsg(mh)
@@ -232,7 +233,7 @@ func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 
 	for _, ai := range aggInfos {
 		infoCollides := false
-		for k, _ := range ai.Tree {
+		for k := range ai.Tree {
 			_, mh := k.Split()
 			if collidingMessages.HasMsg(mh) {
 				infoCollides = true
@@ -265,7 +266,7 @@ func SimpleMergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 
 	sortedMapKeys := make([]MapKey, len(newTree))
 	i := 0
-	for k, _ := range newTree {
+	for k := range newTree {
 		sortedMapKeys[i] = k
 		i++
 	}
@@ -309,7 +310,7 @@ func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *Aggregation
 	sortedMapKeys := make([]MapKey, total)
 	count := 0
 	for _, ai := range collidingInfos {
-		for k, _ := range ai.Tree {
+		for k := range ai.Tree {
 			sortedMapKeys[count] = k
 			count++
 		}
@@ -353,7 +354,7 @@ func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *Aggregation
 
 	sortedMapKeys2 := make([]MapKey, len(newTree))
 	i := 0
-	for k, _ := range newTree {
+	for k := range newTree {
 		sortedMapKeys2[i] = k
 		i++
 	}
@@ -383,4 +384,5 @@ func (s ByAI) Len() int           { return len(s) }
 func (s ByAI) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 func (s ByAI) Less(i, j int) bool { return s[i].Less(s[j]) }
 
+// Nothing ... does nothing.
 func Nothing() {}

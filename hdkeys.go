@@ -21,8 +21,8 @@ const (
 	ExtendedSecretKeySize    = 77
 )
 
-// SecretKeyFromSeed generates a private key from a seed, similar to HD key
-// generation (hashes the seed), and reduces it mod the group order.
+// ExtendedSecretKeyFromSeed generates a private key from a seed, similar to HD
+// key generation (hashes the seed), and reduces it mod the group order.
 func ExtendedSecretKeyFromSeed(seed []byte) *ExtendedSecretKey {
 	// TODO: Comment me later
 	hmacKey := []byte("BLS HD seed")

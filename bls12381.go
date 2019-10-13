@@ -5,6 +5,8 @@ import (
 )
 
 var bigFour = big.NewInt(4)
+
+// FQFour represents an Fq element initialized with bigint 4
 var FQFour = NewFQ(bigFour)
 
 // a,b and a2, b2, define the elliptic curve and twisted curve.

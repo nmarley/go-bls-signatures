@@ -26,10 +26,12 @@ func NewFQ6(c0 *FQ2, c1 *FQ2, c2 *FQ2) *FQ6 {
 	}
 }
 
+// String ...
 func (f FQ6) String() string {
 	return fmt.Sprintf("Fq6(%s + %s*v + %s*v^2)", f.c0, f.c1, f.c2)
 }
 
+// Serialize ...
 func (f FQ6) Serialize() string {
 	return fmt.Sprintf(
 		"Fq6(%s + %s*v + %s*v^2)",

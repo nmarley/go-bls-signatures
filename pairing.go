@@ -209,10 +209,10 @@ func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 	r12 := r.ToAffine().Untwist()
 
 	// slope = (3 * pow(R12.x, 2) + ec.a) / (2 * R12.y)
-	r12_sq := r12.x.Mul(r12.x)
-	r12_sq_3x := r12_sq.Add(r12_sq).Add(r12_sq)
-	r12_y_2 := r12.y.Add(r12.y)
-	slope := r12_sq_3x.Mul(r12_y_2.Inverse())
+	r12sq := r12.x.Mul(r12.x)
+	r12sq3x := r12sq.Add(r12sq).Add(r12sq)
+	r12y2 := r12.y.Add(r12.y)
+	slope := r12sq3x.Mul(r12y2.Inverse())
 
 	// v = R12.y - slope * R12.x
 	v := r12.y.Sub(slope.Mul(r12.x))
@@ -222,7 +222,7 @@ func DoubleLineEval(r *G2Projective, p *G1Projective) *FQ12 {
 	return xSlope.Neg().AddFQ(p.ToAffine().y).Sub(v)
 }
 
-// AddLineEval...
+// AddLineEval ...
 //
 // Creates an equation for a line between R and Q, and evaluates this at the
 // point P. f(x) = y - sv - v.  f(P).
@@ -250,6 +250,8 @@ func AddLineEval(r, q *G2Projective, p *G1Projective) *FQ12 {
 	return slope.MulFQ(p.ToAffine().x).Neg().AddFQ(p.ToAffine().y).Sub(v)
 }
 
+// IntToBits ...
+//
 // []big.Word
 // TODO: optimize this
 func IntToBits(n *big.Int) []byte {

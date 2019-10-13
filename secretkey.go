@@ -72,7 +72,7 @@ func (k *SecretKey) Sign(message []byte) *Signature {
 	return NewSignature(h.Mul(k.f.n), aggInfo)
 }
 
-// SignWithCoefficient signs a message with lagrange coefficients.
+// SignWithCoefficent signs a message with lagrange coefficients.
 //
 // The T signatures signed this way (with the same parameters players and T)
 // can be multiplied together to create a final signature for that message.

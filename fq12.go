@@ -269,6 +269,7 @@ func (f *FQ12) AddFQ(fq *FQ) *FQ12 {
 	return f.Add(tempFQ12)
 }
 
+// PP ...
 func (f FQ12) PP() string {
 	return fmt.Sprintf("\nFq12(\n%s,\n%s\n)", f.c0.PP(4), f.c1.PP(4))
 }

@@ -220,14 +220,14 @@ func CompressG2(affine *G2Affine) []byte {
 	buf := [G2ElementSize]byte{}
 
 	// Convert x-coord to byte slice
-	x_C0 := affine.x.c0.n.Bytes()
-	x_C1 := affine.x.c1.n.Bytes()
+	xC0 := affine.x.c0.n.Bytes()
+	xC1 := affine.x.c1.n.Bytes()
 
 	// Copy c0 value into byte buffer
 	// There is a more detailed explanation in CompressG1
-	copy(buf[G1ElementSize-len(x_C0):], x_C0)
+	copy(buf[G1ElementSize-len(xC0):], xC0)
 	// Copy c1 value into byte buffer
-	copy(buf[G2ElementSize-len(x_C1):], x_C1)
+	copy(buf[G2ElementSize-len(xC1):], xC1)
 
 	// Right shift the Q bits once to get Half Q
 	halfQ := new(big.Int).Rsh(QFieldModulus, 1)
@@ -422,9 +422,8 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 	if u1.Equal(u2) {
 		if !s1.Equal(s2) {
 			return NewG2Projective(FQ2One, FQ2One, FQ2Zero)
-		} else {
-			return g.Double()
 		}
+		return g.Double()
 	}
 
 	// H = U2 - U1
@@ -434,16 +433,16 @@ func (g *G2Projective) Add(other *G2Projective) *G2Projective {
 	r := s2.Sub(s1)
 
 	//H_sq = H * H
-	h_sq := h.Square()
+	hSq := h.Square()
 
 	//H_cu = H * H_sq
-	h_cu := h_sq.Mul(h)
+	hCu := hSq.Mul(h)
 
 	// X3 = R^2 - H^3 - 2*U1*H^2
-	x3 := r.Square().Sub(h_cu).Sub(u1.Mul(h_sq).MulInt(bigTwo))
+	x3 := r.Square().Sub(hCu).Sub(u1.Mul(hSq).MulInt(bigTwo))
 
 	// Y3 = R*(U1*H^2 - X3) - S1*H^3
-	y3 := r.Mul(u1.Mul(h_sq).Sub(x3)).Sub(s1.Mul(h_cu))
+	y3 := r.Mul(u1.Mul(hSq).Sub(x3)).Sub(s1.Mul(hCu))
 
 	// Z3 = H*Z1*Z2
 	z3 := h.Mul(g.z).Mul(other.z)
@@ -841,16 +840,17 @@ func HashG2PreHashed(h []byte) *G2Projective {
 	psi2P := innerPsi.Psi()
 
 	// t0_ := x * p
-	t0_ := p.Mul(blsX)
-	t1_ := t0_.Mul(blsX)
-	t2_ := t0_.Add(t1_).AddAffine(p.ToAffine().Neg())
+	// tP = "t Prime"
+	tP0 := p.Mul(blsX)
+	tP1 := tP0.Mul(blsX)
+	tP2 := tP0.Add(tP1).AddAffine(p.ToAffine().Neg())
 
 	//t3 = psi((x+1) * P, ec)
 	x1 := new(big.Int).Add(blsX, bigOne)
-	t3_ := p.Mul(x1).ToAffine().Psi().ToProjective()
+	tP3 := p.Mul(x1).ToAffine().Psi().ToProjective()
 
 	//rv = t2 - t3 + psi2P
-	rv := t2_.AddAffine(t3_.ToAffine().Neg()).AddAffine(psi2P)
+	rv := tP2.AddAffine(tP3.ToAffine().Neg()).AddAffine(psi2P)
 
 	return rv
 }
@@ -901,21 +901,24 @@ func (g *G2Affine) Psi() *G2Affine {
 
 // TODO: Move to FQ12 ?
 
-// Fq12Pair
+// Fq12Pair ...
 // Not sure what to call this, it's a x/y pairing of FQ12 fields
 type Fq12Pair struct {
 	x *FQ12
 	y *FQ12
 }
 
+// NewFq12Pair ...
 func NewFq12Pair(x, y *FQ12) *Fq12Pair {
 	return &Fq12Pair{x, y}
 }
 
+// String ...
 func (f Fq12Pair) String() string {
 	return fmt.Sprintf("Fq12Pair(x=%s, y=%s)", f.x, f.y)
 }
 
+// PP ...
 func (f Fq12Pair) PP() string {
 	return fmt.Sprintf("Fq12Pair(\nx=%s, y=%s\n)", f.x.PP(), f.y.PP())
 }

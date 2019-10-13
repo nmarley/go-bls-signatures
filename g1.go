@@ -358,9 +358,8 @@ func (g *G1Projective) Add(other *G1Projective) *G1Projective {
 	if u1.Equal(u2) {
 		if !s1.Equal(s2) {
 			return NewG1Projective(FQOne, FQOne, FQZero)
-		} else {
-			return g.Double()
 		}
+		return g.Double()
 	}
 
 	// H = U2 - U1
@@ -368,14 +367,14 @@ func (g *G1Projective) Add(other *G1Projective) *G1Projective {
 	// R = S2 - S1
 	r := s2.Sub(s1)
 	//H_sq = H * H
-	h_sq := h.Square()
+	hSq := h.Square()
 	//H_cu = H * H_sq
-	h_cu := h_sq.Mul(h)
+	hCu := hSq.Mul(h)
 	// X3 = R^2 - H^3 - 2*U1*H^2
-	x3 := r.Square().Sub(h_cu).Sub(u1.Add(u1).Mul(h_sq))
+	x3 := r.Square().Sub(hCu).Sub(u1.Add(u1).Mul(hSq))
 
 	// Y3 = R*(U1*H^2 - X3) - S1*H^3
-	y3 := r.Mul(u1.Mul(h_sq).Sub(x3)).Sub(s1.Mul(h_cu))
+	y3 := r.Mul(u1.Mul(hSq).Sub(x3)).Sub(s1.Mul(hCu))
 
 	// Z3 = H*Z1*Z2
 	z3 := h.Mul(g.z).Mul(other.z)
@@ -544,8 +543,8 @@ func SWEncodeG1(t *FQ) *G1Affine {
 	return GetG1PointFromX(x3, parity)
 }
 
-// TODO: Replace this w/the real one
 // HashG1 converts a message to a point on the G2 curve.
+// TODO: Replace this w/the real one
 func HashG1(msg []byte, domain uint64) *G1Projective {
 	domainBytes := [8]byte{}
 	binary.BigEndian.PutUint64(domainBytes[:], domain)
