@@ -10,6 +10,10 @@ Note that when referring to this curve, the "BLS" is "Barreto-Lynn-Scott", for t
 
 This work is derived from an earlier version of [an existing project by Julian Meyer](https://github.com/phoreproject/bls) which is a port of the zkcrypto Rust implementation (that project does not implement the Chia spec).
 
+## TODO
+
+- [ ] Split cryptography from Chia BLS implementation
+
 ## Install
 
 ```sh
