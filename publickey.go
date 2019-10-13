@@ -88,9 +88,10 @@ func AggregatePublicKeys(publicKeys []*PublicKey, secure bool) *PublicKey {
 	// Sort public keys
 	sort.Sort(PkByBytes(publicKeys))
 
-	// TODO: potential optimization:
-	// consider splitting this so these don't have to be calculated for non-secure
-	computedTs := HashPKs(len(publicKeys), publicKeys)
+	var computedTs []*big.Int
+	if secure {
+		computedTs = HashPKs(len(publicKeys), publicKeys)
+	}
 
 	aggPk := NewG1Projective(FQOne, FQOne, FQZero)
 
