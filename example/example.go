@@ -4,7 +4,7 @@ import (
 	"fmt"
 	// "crypto/sha256"
 
-	"gitlab.com/nmarley/go-bls-signatures"
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 func main() {

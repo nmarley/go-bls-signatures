@@ -3,7 +3,7 @@ package bls_test
 import (
 	"testing"
 
-	"gitlab.com/nmarley/go-bls-signatures"
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 const Ten = 10

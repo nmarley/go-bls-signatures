@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/matryer/is"
-	"gitlab.com/nmarley/go-bls-signatures"
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 // generated series of BLS keypairs on Dash v0.13 node for test compatibility

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/matryer/is"
-	"gitlab.com/nmarley/go-bls-signatures"
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 // TODO: use strings, not bytes here (use serialize/deserialize methods)

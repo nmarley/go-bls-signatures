@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/matryer/is"
-	"gitlab.com/nmarley/go-bls-signatures"
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 // TODO: Add tests for all test vectors here:

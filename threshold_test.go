@@ -5,7 +5,7 @@ import (
 	//"fmt"
 	"testing"
 
-	"gitlab.com/nmarley/go-bls-signatures"
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gitlab.com/nmarley/go-bls-signatures"
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 func main() {

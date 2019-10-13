@@ -5,7 +5,7 @@ import (
 	"math/big"
 	"testing"
 
-	"gitlab.com/nmarley/go-bls-signatures"
+	bls "gitlab.com/nmarley/go-bls-signatures"
 )
 
 func makeFQ(c0Hex string) *bls.FQ {
