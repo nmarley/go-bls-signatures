@@ -3,16 +3,17 @@ SHELL = bash
 
 COVERAGE_FILE ?= coverage.txt
 
+.PHONY: default build cicheck test cover goimports lint vet help clean benchdebug
+
+default:  goimports lint vet build #test ## Run default target : all lints + test
+
 benchdebug:
 	go test -run=none -bench=Pairing -cpuprofile=cprof
+
 #BenchmarkMillerLoop-8            	     200	   6762679 ns/op
 #BenchmarkFinalExponentiation-8   	      50	  25503728 ns/op
 #BenchmarkPairingNew-8            	      20	  91929707 ns/op
 #BenchmarkPairingOld-8            	      50	  34889294 ns/op
-
-
-#.PHONY: default
-default:  goimports lint vet build #test ## Run default target : all lints + test
 
 build:  ## Build the package
 	go build
