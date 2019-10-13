@@ -143,6 +143,30 @@ func (k *ExtendedSecretKey) GetExtendedPublicKey() *ExtendedPublicKey {
 	return ExtendedPublicKeyFromBytes(buf[:])
 }
 
+// Serialize ...
+func (k *ExtendedSecretKey) Serialize() []byte {
+	buf := [ExtendedSecretKeySize]byte{}
+
+	binary.BigEndian.PutUint32(buf[0:4], k.Version)
+	buf[4] = k.Depth
+	binary.BigEndian.PutUint32(buf[5:9], k.ParentFingerprint)
+	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
+
+	// serialize chaincode
+	ccBuf := [32]byte{}
+	ccBytes := k.ChainCode.Bytes()
+	copy(ccBuf[32-len(ccBytes):], ccBytes)
+
+	// copy ChainCode bytes into buffer
+	copy(buf[13:45], ccBuf[:])
+
+	// serialize key and copy into buffer
+	skBytes := k.SecretKey.Serialize()
+	copy(buf[45:], skBytes)
+
+	return buf[:]
+}
+
 //// Parse public key and chain code from bytes
 //static ExtendedPublicKey FromBytes(const uint8_t* serialized);
 //
