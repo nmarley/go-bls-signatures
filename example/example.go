@@ -13,6 +13,13 @@ func main() {
 
 	xpub := xprv.GetExtendedPublicKey()
 	fmt.Printf("%x\n", xpub.Serialize())
+
+	xpub2 := xpub.PublicChild(1)
+	fmt.Printf("%x\n", xpub2.Serialize())
+
+	fmt.Printf("PublicKey: %x\n", xpub2.PublicKey.Serialize())
+	// fmt.Printf("ParentFingerprint: %08x\n", xpub2.ParentFingerprint)
+	fmt.Printf("ChainCode: %x\n", xpub2.ChainCode.Bytes())
 }
 
 var xprvSeed = []byte{0x01, 0x32, 0x06, 0xf4, 0x18, 0xc7, 0x01, 0x19}
