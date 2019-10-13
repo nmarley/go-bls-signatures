@@ -128,8 +128,6 @@ func (k *ExtendedSecretKey) GetExtendedPublicKey() *ExtendedPublicKey {
 	binary.BigEndian.PutUint32(buf[5:9], k.ParentFingerprint)
 	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
 
-	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
-
 	ccBuf := [32]byte{}
 	ccBytes := k.ChainCode.Bytes()
 	copy(ccBuf[32-len(ccBytes):], ccBytes)
