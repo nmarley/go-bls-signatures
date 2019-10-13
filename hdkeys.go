@@ -255,3 +255,27 @@ func (k *ExtendedPublicKey) PublicChild(i uint32) *ExtendedPublicKey {
 		PublicKey:         newPk,
 	}
 }
+
+// Serialize ...
+func (k *ExtendedPublicKey) Serialize() []byte {
+	buf := [ExtendedPublicKeySize]byte{}
+
+	binary.BigEndian.PutUint32(buf[0:4], k.Version)
+	buf[4] = k.Depth
+	binary.BigEndian.PutUint32(buf[5:9], k.ParentFingerprint)
+	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
+
+	// serialize chaincode
+	ccBuf := [32]byte{}
+	ccBytes := k.ChainCode.Bytes()
+	copy(ccBuf[32-len(ccBytes):], ccBytes)
+
+	// copy ChainCode bytes into buffer
+	copy(buf[13:45], ccBuf[:])
+
+	// serialize key and copy into buffer
+	pkBytes := k.PublicKey.Serialize()
+	copy(buf[45:], pkBytes)
+
+	return buf[:]
+}
