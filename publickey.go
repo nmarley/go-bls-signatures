@@ -81,8 +81,8 @@ func DeserializePublicKey(b []byte) (*PublicKey, error) {
 // keys with the pubKey hashes first.
 func AggregatePublicKeys(publicKeys []*PublicKey, secure bool) *PublicKey {
 	if len(publicKeys) == 0 {
-		// TODO: don't panic
-		panic("Number of public keys must be at least 1")
+		// panic("Number of public keys must be at least 1")
+		return nil
 	}
 
 	// Sort public keys
