@@ -56,8 +56,13 @@ func (k *SecretKey) Serialize() []byte {
 	return buf[0:SecretKeySize]
 }
 
-// DeserializeSecretKey deserializes a secret key from bytes.
+// DeserializeSecretKey calls SecretKeyFromBytes internally and is deprecated
 func DeserializeSecretKey(b []byte) *SecretKey {
+	return SecretKeyFromBytes(b)
+}
+
+// SecretKeyFromBytes constructs a secret key from a byte slice
+func SecretKeyFromBytes(b []byte) *SecretKey {
 	return &SecretKey{
 		NewFR(new(big.Int).SetBytes(b)),
 	}

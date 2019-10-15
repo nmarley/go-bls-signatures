@@ -45,8 +45,13 @@ func (s *Signature) Serialize() []byte {
 	return CompressG2(s.s.ToAffine())
 }
 
-// DeserializeSignature deserializes a signature from bytes.
+// DeserializeSignature calls SignatureFromBytes internally and is deprecated
 func DeserializeSignature(b []byte) (*Signature, error) {
+	return SignatureFromBytes(b)
+}
+
+// SignatureFromBytes constructs a signature from a byte slice
+func SignatureFromBytes(b []byte) (*Signature, error) {
 	if len(b) != SignatureSize {
 		return nil, fmt.Errorf("invalid signature bytes")
 	}

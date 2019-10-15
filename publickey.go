@@ -62,8 +62,13 @@ func (p *PublicKey) Less(other *PublicKey) bool {
 	return bytes.Compare(p.Serialize(), other.Serialize()) == -1
 }
 
-// DeserializePublicKey deserializes a public key from bytes.
+// DeserializePublicKey calls PublicKeyFromBytes internally and is deprecated
 func DeserializePublicKey(b []byte) (*PublicKey, error) {
+	return PublicKeyFromBytes(b)
+}
+
+// PublicKeyFromBytes constructs a public key from a byte slice
+func PublicKeyFromBytes(b []byte) (*PublicKey, error) {
 	if len(b) != PublicKeySize {
 		return nil, fmt.Errorf("invalid public key bytes")
 	}
