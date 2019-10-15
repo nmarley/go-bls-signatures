@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	// "crypto/sha256"
 
@@ -8,19 +9,6 @@ import (
 )
 
 func main() {
-	xprv := bls.ExtendedSecretKeyFromSeed(xprvSeed)
-	// fmt.Printf("%x\n", xprv.Serialize())
-
-	xpub := xprv.GetExtendedPublicKey()
-	fmt.Printf("%x\n", xpub.Serialize())
-
-	xpub2 := xpub.PublicChild(1)
-	fmt.Printf("%x\n", xpub2.Serialize())
-
-	fmt.Printf("PublicKey: %x\n", xpub2.PublicKey.Serialize())
-	// fmt.Printf("ParentFingerprint: %08x\n", xpub2.ParentFingerprint)
-	fmt.Printf("ChainCode: %x\n", xpub2.ChainCode.Bytes())
-
 	// pk1 := bls.PublicKeyFromBytes(pk1Bytes)
 	pk1, _ := bls.DeserializePublicKey(pk1Bytes)
 	fmt.Printf("pk1: %x\n", pk1.Serialize())
@@ -40,6 +28,35 @@ func main() {
 	// AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secure bool)
 	aggSk := bls.AggregateSecretKeys([]*bls.SecretKey{sk1, sk2}, []*bls.PublicKey{pk1, pk2}, true)
 	fmt.Printf("aggSk: %x\n", aggSk.Serialize())
+
+	aggSkIns := bls.AggregateSecretKeys([]*bls.SecretKey{sk1, sk2}, []*bls.PublicKey{}, false)
+	fmt.Printf("aggSkIns: %x\n", aggSkIns.Serialize())
+
+	sig1 := sk1.Sign(payload)
+	fmt.Printf("sig1: %x\n", sig1.Serialize())
+	if !bytes.Equal(sig1.Serialize(), sig1Bytes) {
+		fmt.Println("sig1 should equal sig1Bytes")
+	} else {
+		fmt.Println("sig1 Same, good")
+	}
+
+	sig2 := sk2.Sign(payload)
+	fmt.Printf("sig2: %x\n", sig2.Serialize())
+	if !bytes.Equal(sig2.Serialize(), sig2Bytes) {
+		fmt.Println("sig2 should equal sig2Bytes")
+	} else {
+		fmt.Println("sig2 Same, good")
+	}
+
+	// func DeserializeSignature(b []byte) (*Signature, error)
+
+	// func AggregateSignaturesSimple
+
+	aggSig := bls.AggregateSignatures([]*bls.Signature{sig1, sig2})
+	fmt.Printf("aggSig: %x\n", aggSig.Serialize())
+
+	aggSigIns := bls.AggregateSignaturesSimple([]*bls.Signature{sig1, sig2})
+	fmt.Printf("aggSigIns: %x\n", aggSigIns.Serialize())
 }
 
 var xprvSeed = []byte{0x01, 0x32, 0x06, 0xf4, 0x18, 0xc7, 0x01, 0x19}
