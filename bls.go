@@ -6,16 +6,6 @@ import (
 	"math/big"
 )
 
-// Debug ...
-var Debug = false
-
-// Sizes of g1/g2 elements
-// TODO: Probably move these somewhere else...
-const (
-	G1ElementSize = 48
-	G2ElementSize = 96
-)
-
 // By implements sort.Interface for []MapKey
 type By []MapKey
 
