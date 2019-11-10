@@ -1,9 +1,16 @@
-package bls
+package chiabls
 
 import (
 	"crypto/hmac"
 	"crypto/sha256"
 )
+
+// Hash256 function with 256 bit outputs.
+func Hash256(m []byte) []byte {
+	h := sha256.New()
+	h.Write(m)
+	return h.Sum(nil)
+}
 
 // Hmac256 returns a HMAC using SHA256.
 func Hmac256(m, key []byte) []byte {

@@ -1,11 +1,11 @@
-package bls_test
+package chiabls_test
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/matryer/is"
-	bls "gitlab.com/nmarley/go-bls-signatures"
+	bls "github.com/nmarley/go-bls-signatures"
 )
 
 // TODO: use strings, not bytes here (use serialize/deserialize methods)

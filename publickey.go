@@ -1,4 +1,4 @@
-package bls
+package chiabls
 
 import (
 	"bytes"
@@ -6,20 +6,22 @@ import (
 	"fmt"
 	"math/big"
 	"sort"
+
+	bls "github.com/nmarley/go-bls12-381"
 )
 
 // ...
 const (
-	PublicKeySize = G1ElementSize
+	PublicKeySize = bls.G1ElementSize
 )
 
 // PublicKey is a public key.
 type PublicKey struct {
-	p *G1Projective
+	p *bls.G1Projective
 }
 
 // NewPublicKey constructs a new PublicKey
-func NewPublicKey(p *G1Projective) *PublicKey {
+func NewPublicKey(p *bls.G1Projective) *PublicKey {
 	return &PublicKey{
 		p: p.Copy(),
 	}
@@ -43,7 +45,54 @@ func (p *PublicKey) Debug() string {
 
 // Serialize serializes a public key to a byte slice
 func (p *PublicKey) Serialize() []byte {
-	return CompressG1(p.p.ToAffine())
+	return publicKeyCompressPoint(p.p)
+}
+
+// publicKeyCompressPoint compresses the underlying curve point into a byte
+// slice.
+//
+// Per the Chia spec, set the leftmost bit iff negative y. The other two unused
+// bits are not used.
+func publicKeyCompressPoint(p *bls.G1Projective) []byte {
+	// Convert x-coord to byte slice
+	g1Aff := p.ToAffine()
+
+	// Create a byte array of exactly PublicKeySize bytes
+	buf := [PublicKeySize]byte{}
+
+	// Copy x-coord bytes into the byte array, but make sure and align them to
+	// the right of the array. Meaning, if the integer backing the x-coord is
+	// small, then there should be 0s at the front.
+	//
+	// Using an example with smaller numbers, let's say our x-coord is 7, but
+	// we have a 2-byte array to hold it:
+	//
+	// n := 7
+	// buf := [2]byte{}
+	// copy(buf[:], n)  // <-- BUG!! This results in an array like [2]byte{0x7, 0x0}
+	//                  //           What we *actually* want is:   [2]byte{0x0, 0x7}
+	//
+	// We want the starting index for copy destination to be the max array size
+	// minus the length of the buffer we are copying. In this case, 2-len(n):
+	//
+	// copy(buf[2-len(n):], n)
+	//
+	// This results in what we want:  [2]byte{0x0, 0x7}
+	//
+	xBytes := g1Aff.GetXCoord().Bytes()
+	copy(buf[bls.G1ElementSize-len(xBytes):], xBytes)
+
+	// Right shift the Q bits once to get Half Q
+	halfQ := new(big.Int).Rsh(bls.QFieldModulus, 1)
+
+	// If the y coordinate is the bigger one of the two, set the first
+	// bit to 1.
+	y := g1Aff.GetYCoord()
+	if y.Cmp(halfQ) == 1 {
+		buf[0] |= 0x80
+	}
+
+	return buf[0:bls.G1ElementSize]
 }
 
 // Fingerprint returns the the first 4 bytes of hash256(serialize(pubkey))
@@ -73,7 +122,7 @@ func PublicKeyFromBytes(b []byte) (*PublicKey, error) {
 		return nil, fmt.Errorf("invalid public key bytes")
 	}
 
-	a, err := DecompressG1(new(big.Int).SetBytes(b))
+	a, err := bls.DecompressG1(new(big.Int).SetBytes(b))
 	if err != nil {
 		return nil, err
 	}
@@ -95,10 +144,10 @@ func AggregatePublicKeys(publicKeys []*PublicKey, secure bool) *PublicKey {
 
 	var computedTs []*big.Int
 	if secure {
-		computedTs = HashPKs(len(publicKeys), publicKeys)
+		computedTs = HashPubKeys(len(publicKeys), publicKeys)
 	}
 
-	aggPk := NewG1Projective(FQOne, FQOne, FQZero)
+	aggPk := bls.NewG1Projective(bls.FQOne, bls.FQOne, bls.FQZero)
 
 	for i, pk := range publicKeys {
 		tempG1 := pk.p.Copy()

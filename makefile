@@ -24,8 +24,7 @@ cicheck:  ## Run basic code checks
 	go vet ./...
 
 test:  ## Run a basic test suite
-	#go test
-	go test -v
+	go test
 
 cover:  ## Run tests and generate test coverage file, output coverage results and HTML coverage file.
 	go test -coverprofile $(COVERAGE_FILE)

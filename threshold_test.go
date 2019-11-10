@@ -1,16 +1,17 @@
-package bls_test
+package chiabls_test
 
 import (
 	"bytes"
 	//"fmt"
 	"testing"
 
-	bls "gitlab.com/nmarley/go-bls-signatures"
+	chiabls "github.com/nmarley/go-bls-signatures"
+	bls "github.com/nmarley/go-bls12-381"
 )
 
 func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
-	type pkSlice []*bls.PublicKey
-	type skSlice []*bls.SecretKey
+	type pkSlice []*chiabls.PublicKey
+	type skSlice []*chiabls.SecretKey
 
 	// commitments := make([]pkSlice, threshold)
 	var commitments []pkSlice
@@ -23,7 +24,7 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 
 	// Step 1 : ThresholdCreate
 	for player := 0; player < numPlayers; player++ {
-		sk, commis, fragis, err := bls.ThresholdCreate(threshold, numPlayers)
+		sk, commis, fragis, err := chiabls.ThresholdCreate(threshold, numPlayers)
 		if err != nil {
 			panic(err)
 		}
@@ -37,7 +38,7 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 	// Step 2 : ThresholdVerifySecretFragment
 	for playerSource := 1; playerSource <= numPlayers; playerSource++ {
 		for playerTarget := 1; playerTarget <= numPlayers; playerTarget++ {
-			didItWork := bls.ThresholdVerifySecretFragment(
+			didItWork := chiabls.ThresholdVerifySecretFragment(
 				T,
 				playerTarget,
 				fragments[playerTarget-1][playerSource-1],
@@ -55,15 +56,15 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 	for i, cpoly := range commitments {
 		pksToAggregate[i] = cpoly[0]
 	}
-	masterPubKey := bls.AggregatePublicKeys(pksToAggregate, false)
+	masterPubKey := chiabls.AggregatePublicKeys(pksToAggregate, false)
 	//fmt.Printf("masterPubKey: %x\n", masterPubKey.Serialize())
 
-	secretShares := make([]*bls.SecretKey, len(fragments))
+	secretShares := make([]*chiabls.SecretKey, len(fragments))
 	for i, row := range fragments {
-		ss := bls.AggregateSecretKeys([]*bls.SecretKey(row), nil, false)
+		ss := chiabls.AggregateSecretKeys([]*chiabls.SecretKey(row), nil, false)
 		secretShares[i] = ss
 	}
-	masterSecretKey := bls.AggregateSecretKeys([]*bls.SecretKey(secrets), nil, false)
+	masterSecretKey := chiabls.AggregateSecretKeys([]*chiabls.SecretKey(secrets), nil, false)
 
 	msg := []byte("Test")
 	signatureActual := masterSecretKey.Sign(msg)
@@ -81,7 +82,7 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 
 		lenX := len(X)
 		listShares := make([]*bls.FR, lenX)
-		signatureShares := make([]*bls.Signature, lenX)
+		signatureShares := make([]*chiabls.Signature, lenX)
 
 		for i, x := range X {
 			listShares[i] = secretShares[x].GetValue()
@@ -89,22 +90,22 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 		}
 
 		// Check underlying secret key is correct
-		r := bls.ThresholdInterpolateAtZero(X1, listShares)
-		secretCand := bls.NewSecretKey(r)
+		r := chiabls.ThresholdInterpolateAtZero(X1, listShares)
+		secretCand := chiabls.NewSecretKey(r)
 		if bytes.Compare(secretCand.Serialize(), masterSecretKey.Serialize()) != 0 {
 			t.Error("candidate secret key does not match master secret key")
 		}
 
 		// Check signatures
-		signatureCand := bls.AggregateSignaturesSimple(signatureShares)
+		signatureCand := chiabls.AggregateSignaturesSimple(signatureShares)
 		if bytes.Compare(signatureCand.Serialize(), signatureActual.Serialize()) != 0 {
 			t.Error("candidate signature does not match actual signature")
 		}
 	})
 
 	// Check that the signature actually verifies the message
-	mh := bls.NewMessageHashFromBytes(bls.Hash256(msg))
-	aggInfo := bls.AggregationInfoFromMsgHash(masterPubKey, mh)
+	mh := chiabls.NewMessageHashFromBytes(chiabls.Hash256(msg))
+	aggInfo := chiabls.AggregationInfoFromMsgHash(masterPubKey, mh)
 	signatureActual.SetAggregationInfo(aggInfo)
 	if !signatureActual.Verify() {
 		t.Error("sig did not verify")
@@ -120,11 +121,11 @@ func ThresholdInstanceTest(threshold, numPlayers int, t *testing.T) {
 
 		lenX := len(X)
 		// Check signatures
-		signatureShares := make([]*bls.Signature, lenX)
+		signatureShares := make([]*chiabls.Signature, lenX)
 		for i, x := range X {
 			signatureShares[i] = secretShares[x].Sign(msg)
 		}
-		signatureCand := bls.ThresholdAggregateUnitSigs(signatureShares, X1)
+		signatureCand := chiabls.ThresholdAggregateUnitSigs(signatureShares, X1)
 
 		if bytes.Compare(signatureCand.Serialize(), signatureActual.Serialize()) != 0 {
 			t.Error("candidate signature does not match actual signature")

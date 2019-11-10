@@ -1,11 +1,11 @@
-package bls_test
+package chiabls_test
 
 import (
 	"fmt"
 	"math/big"
 	"testing"
 
-	bls "gitlab.com/nmarley/go-bls-signatures"
+	bls "github.com/nmarley/go-bls12-381"
 )
 
 func makeFQ(c0Hex string) *bls.FQ {

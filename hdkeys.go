@@ -1,8 +1,10 @@
-package bls
+package chiabls
 
 import (
 	"encoding/binary"
 	"math/big"
+
+	bls "github.com/nmarley/go-bls12-381"
 )
 
 // ExtendedSecretKey represents a BLS extended private key.
@@ -33,7 +35,7 @@ func ExtendedSecretKeyFromSeed(seed []byte) *ExtendedSecretKey {
 
 	// TODO: Comment me later
 	skInt := new(big.Int).SetBytes(iLeft)
-	skInt = new(big.Int).Mod(skInt, RFieldModulus)
+	skInt = new(big.Int).Mod(skInt, bls.RFieldModulus)
 
 	// it appears this is not needed b/c the byte slice is not used internally
 	//// TODO: Comment me later
@@ -100,8 +102,8 @@ func (k *ExtendedSecretKey) PrivateChild(i uint32) *ExtendedSecretKey {
 	iRight := Hmac256(append(hmacInput, []byte{1}...), cc[:])
 
 	skInt := new(big.Int).SetBytes(iLeft)
-	skInt.Add(skInt, k.SecretKey.f.n)
-	skInt.Mod(skInt, RFieldModulus)
+	skInt.Add(skInt, k.SecretKey.f.ToBig())
+	skInt.Mod(skInt, bls.RFieldModulus)
 	sk := DeserializeSecretKey(skInt.Bytes())
 
 	return &ExtendedSecretKey{
@@ -239,7 +241,7 @@ func (k *ExtendedPublicKey) PublicChild(i uint32) *ExtendedPublicKey {
 	iRight := Hmac256(append(hmacInput[:], []byte{1}...), cc[:])
 
 	skLeftInt := new(big.Int).SetBytes(iLeft)
-	skLeftInt.Mod(skLeftInt, RFieldModulus)
+	skLeftInt.Mod(skLeftInt, bls.RFieldModulus)
 
 	skLeft := DeserializeSecretKey(skLeftInt.Bytes())
 

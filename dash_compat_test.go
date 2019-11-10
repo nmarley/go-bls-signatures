@@ -1,4 +1,4 @@
-package bls_test
+package chiabls_test
 
 import (
 	"encoding/hex"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/matryer/is"
-	bls "gitlab.com/nmarley/go-bls-signatures"
+	bls "github.com/nmarley/go-bls-signatures"
 )
 
 // generated series of BLS keypairs on Dash v0.13 node for test compatibility

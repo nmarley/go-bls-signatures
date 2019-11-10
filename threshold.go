@@ -1,9 +1,11 @@
-package bls
+package chiabls
 
 import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
+
+	bls "github.com/nmarley/go-bls12-381"
 )
 
 // TODO: Threshold Namespace?
@@ -69,11 +71,8 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 		return nil, nil, nil, fmt.Errorf("threshold parameter must be between 1 and number of players")
 	}
 
-	// TODO: Can hard-code this as g1 generator point
-	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY))
-
 	// There are T polynomials / commitments
-	poly := make([]*FR, thresholdParameter)
+	poly := make([]*bls.FR, thresholdParameter)
 	commitments := make([]*PublicKey, thresholdParameter)
 
 	// There are N secret fragments
@@ -81,25 +80,24 @@ func ThresholdCreate(thresholdParameter, numPlayers int) (*SecretKey, []*PublicK
 
 	// Range over T, e.g. thresholdParameter
 	for i := 0; i < thresholdParameter; i++ {
-		frPtr, err := RandFR(rand.Reader)
+		frPtr, err := bls.RandFR(rand.Reader)
 		if err != nil {
 			return nil, nil, nil, fmt.Errorf("could not get RandFR: %v", err.Error())
 		}
 		poly[i] = frPtr
-		commitments[i] = NewPublicKey(g1.Mul(frPtr.ToBig()))
+		commitments[i] = NewPublicKey(bls.G1AffineOne.Mul(frPtr.ToBig()))
 	}
 
 	// Range over N, e.g. numPlayers
 	for x := 0; x < numPlayers; x++ {
 		// Create a new FR secret fragment
-		sf := NewFR(bigZero)
+		sf := bls.NewFR(bigZero)
 		for i, c := range poly {
 			// Add to the fragment
 			sf.AddAssign(
 				// Multiply c by x^i % n
 				c.Mul(
-					// NewFR not needed as Exp mods by the RFieldModulus already
-					&FR{n: new(big.Int).Exp(big.NewInt(int64(x+1)), big.NewInt(int64(i)), RFieldModulus)},
+					bls.NewFR(new(big.Int).Exp(big.NewInt(int64(x+1)), big.NewInt(int64(i)), bls.RFieldModulus)),
 				),
 			)
 		}
@@ -117,25 +115,22 @@ func ThresholdVerifySecretFragment(thresholdParameter, playerIndex int, secretFr
 		// TODO: Don't panic
 		// "T must be a positive integer"
 		panic("T must be a positive integer")
-		return false
+		//return false
 	} else if playerIndex <= 0 {
 		// TODO: Don't panic
 		// "Player index must be positive"
 		panic("Player index must be positive")
-		return false
+		//return false
 	}
 
-	// TODO: Can hard-code this as g1 generator point
-	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY))
-
-	lhs := g1.Mul(secretFragment.f.ToBig())
+	lhs := bls.G1AffineOne.Mul(secretFragment.f.ToBig())
 	rhs := commitments[0].p.Copy()
 
 	for i := 1; i < len(commitments); i++ {
 		factor := new(big.Int).Exp(
 			big.NewInt(int64(playerIndex)),
 			big.NewInt(int64(i)),
-			RFieldModulus,
+			bls.RFieldModulus,
 		)
 		rhs = rhs.Add(commitments[i].p.Mul(factor))
 	}
@@ -147,8 +142,8 @@ func ThresholdVerifySecretFragment(thresholdParameter, playerIndex int, secretFr
 //
 // The points (X[i], Y[i]) for i = 0...T-1 interpolate into P,
 // a degree T-1 polynomial.  Returns P(0).
-func ThresholdInterpolateAtZero(x []int, y []*FR) *FR {
-	ans := FRZero.Copy()
+func ThresholdInterpolateAtZero(x []int, y []*bls.FR) *bls.FR {
+	ans := bls.FRZero.Copy()
 
 	// TODO: Check for len(x) == len(y) ?
 
@@ -167,7 +162,7 @@ func ThresholdInterpolateAtZero(x []int, y []*FR) *FR {
 // If we have T points (players[i], P(players[i])), it interpolates to a degree
 // T-1 polynomial P.  The returned coefficients are such that P(0) = sum_i
 // res[i] * P(players[i]).
-func LagrangeCoeffsAtZero(x []int) []*FR {
+func LagrangeCoeffsAtZero(x []int) []*bls.FR {
 	lenX := len(x)
 
 	// Ensure each value in X is unique.
@@ -182,7 +177,7 @@ func LagrangeCoeffsAtZero(x []int) []*FR {
 		mapSeenX[val] = struct{}{}
 
 		// Also ensure value is less than RFieldModulus
-		if big.NewInt(int64(val)).Cmp(RFieldModulus) != -1 {
+		if big.NewInt(int64(val)).Cmp(bls.RFieldModulus) != -1 {
 			// TODO: Don't panic
 			panic("player index must be less then n (RFieldModulus)")
 		}
@@ -194,13 +189,13 @@ func LagrangeCoeffsAtZero(x []int) []*FR {
 		}
 	}
 
-	weight := func(j int) *FR {
-		ans := FROne.Copy()
+	weight := func(j int) *bls.FR {
+		ans := bls.FROne.Copy()
 		for i := 0; i < lenX; i++ {
 			if i != j {
 				bigJ := big.NewInt(int64(x[j]))
 				bigI := big.NewInt(int64(x[i]))
-				ans.MulAssign(NewFR(new(big.Int).Sub(bigJ, bigI)))
+				ans.MulAssign(bls.NewFR(new(big.Int).Sub(bigJ, bigI)))
 			}
 		}
 		return ans.Inverse()
@@ -209,12 +204,12 @@ func LagrangeCoeffsAtZero(x []int) []*FR {
 	// Using the second barycentric form,
 	// P(0) = (sum_j (y_j * w_j / x_j)) / (sum_j w_j/x_j)
 	// If desired, the weights can be precomputed.
-	ans := make([]*FR, lenX)
-	denom := FRZero.Copy()
+	ans := make([]*bls.FR, lenX)
+	denom := bls.FRZero.Copy()
 
 	for j := 0; j < lenX; j++ {
 		bigJ := big.NewInt(int64(x[j]))
-		jFR := NewFR(bigJ)
+		jFR := bls.NewFR(bigJ)
 		shift := weight(j).Mul(jFR.Neg().Inverse())
 		ans[j] = shift
 		denom.AddAssign(shift)
@@ -231,7 +226,7 @@ func LagrangeCoeffsAtZero(x []int) []*FR {
 // ThresholdAggregateUnitSigs ...
 func ThresholdAggregateUnitSigs(signatures []*Signature, players []int) *Signature {
 	lambs := LagrangeCoeffsAtZero(players)
-	agg := NewG2Projective(FQ2Zero, FQ2Zero, FQ2Zero)
+	agg := bls.NewG2Projective(bls.FQ2Zero, bls.FQ2Zero, bls.FQ2Zero)
 
 	for i, sig := range signatures {
 		agg = agg.Add(sig.s.Mul(lambs[i].ToBig()))

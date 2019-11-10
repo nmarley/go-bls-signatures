@@ -1,24 +1,26 @@
-package bls
+package chiabls
 
 import (
 	"fmt"
 	"math/big"
 	"sort"
+
+	bls "github.com/nmarley/go-bls12-381"
 )
 
 // ...
 const (
-	SignatureSize = G2ElementSize
+	SignatureSize = bls.G2ElementSize
 )
 
 // Signature is a message signature
 type Signature struct {
-	s  *G2Projective
+	s  *bls.G2Projective
 	ai *AggregationInfo
 }
 
 // NewSignature ...
-func NewSignature(p *G2Projective, ai *AggregationInfo) *Signature {
+func NewSignature(p *bls.G2Projective, ai *AggregationInfo) *Signature {
 	return &Signature{
 		s:  p,
 		ai: ai,
@@ -42,7 +44,7 @@ func (s *Signature) Debug() string {
 
 // Serialize serializes a signature to a byte slice
 func (s *Signature) Serialize() []byte {
-	return CompressG2(s.s.ToAffine())
+	return bls.CompressG2(s.s.ToAffine())
 }
 
 // DeserializeSignature calls SignatureFromBytes internally and is deprecated
@@ -55,7 +57,7 @@ func SignatureFromBytes(b []byte) (*Signature, error) {
 	if len(b) != SignatureSize {
 		return nil, fmt.Errorf("invalid signature bytes")
 	}
-	a, err := DecompressG2(new(big.Int).SetBytes(b))
+	a, err := bls.DecompressG2(new(big.Int).SetBytes(b))
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +92,6 @@ func (s *Signature) Verify() bool {
 	// usedPKs is to keep track and prevent duplicate hash/pubkeys
 	usedPKs := make(map[MapKey]struct{})
 
-	// NGM: I honestly think this loop doesn't make sense... let's wait and see.
 	// Look thru each messageHash from agginfo
 	for i, mh := range messageHashes {
 		// Convenience accessor for the public key
@@ -111,12 +112,12 @@ func (s *Signature) Verify() bool {
 		}
 	}
 
-	finalPublicKeys := make([]*G1Projective, len(hashToPublicKeys))
-	mappedHashes := make([]*G2Projective, len(hashToPublicKeys))
+	finalPublicKeys := make([]*bls.G1Projective, len(hashToPublicKeys))
+	mappedHashes := make([]*bls.G2Projective, len(hashToPublicKeys))
 
 	count := 0
 	for mh, keys := range hashToPublicKeys {
-		publicKeySum := NewG1Projective(FQOne, FQOne, FQZero)
+		publicKeySum := bls.NewG1Projective(bls.FQOne, bls.FQOne, bls.FQZero)
 		for _, k := range keys {
 			mk := NewMapKey(k, mh)
 			exponent := agginfo.Tree[mk]
@@ -124,32 +125,32 @@ func (s *Signature) Verify() bool {
 			publicKeySum = publicKeySum.Add(sum)
 		}
 		finalPublicKeys[count] = publicKeySum
-		mappedHashes[count] = HashG2PreHashed(mh[:])
+		mappedHashes[count] = bls.HashG2PreHashed(mh[:])
 		count++
 	}
 
-	fq := NewFQ(new(big.Int).Sub(RFieldModulus, bigOne))
-	g1 := NewG1Affine(NewFQ(g1GeneratorX), NewFQ(g1GeneratorY)).Mul(fq.n)
+	fq := bls.NewFQ(new(big.Int).Sub(bls.RFieldModulus, bigOne))
+	g1 := bls.G1AffineOne.Mul(fq.ToBig())
 
 	// Gather a list of p's and q's to send to AtePairingMulti
-	ps := make([]*G1Projective, len(finalPublicKeys)+1)
+	ps := make([]*bls.G1Projective, len(finalPublicKeys)+1)
 	copy(ps[1:], finalPublicKeys)
 	ps[0] = g1
 
-	qs := make([]*G2Projective, len(mappedHashes)+1)
+	qs := make([]*bls.G2Projective, len(mappedHashes)+1)
 	copy(qs[1:], mappedHashes)
 	qs[0] = s.s
 
-	res := AtePairingMulti(ps, qs)
+	res := bls.AtePairingMulti(ps, qs)
 
-	return FQ12One.Equal(res)
+	return bls.FQ12One.Equal(res)
 }
 
 // AggregateSignaturesSimple aggregate signatures by multiplying them together.
 // This is NOT secure against rogue public key attacks, so do not use this for
 // signatures on the same message.
 func AggregateSignaturesSimple(signatures []*Signature) *Signature {
-	aggSig := G2ProjectiveZero.Copy()
+	aggSig := bls.G2ProjectiveZero.Copy()
 
 	for _, sig := range signatures {
 		aggSig = aggSig.Add(sig.s)
@@ -270,11 +271,11 @@ func AggregateSignatures(signatures []*Signature) *Signature {
 		sortedPublicKeys[i] = pk
 	}
 
-	computedTs := HashPKs(len(collidingSigs), sortedPublicKeys)
+	computedTs := HashPubKeys(len(collidingSigs), sortedPublicKeys)
 
 	// Raise each sig to a power of each t,
 	// and multiply all together into agg_sig
-	aggSig := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+	aggSig := bls.NewG2Projective(bls.FQ2One, bls.FQ2One, bls.FQ2Zero)
 	for i, sig := range collidingSigs {
 		aggSig = aggSig.Add(sig.s.Mul(computedTs[i]))
 	}
@@ -310,7 +311,7 @@ func (s Signature) String() string {
 }
 
 // DebugGetPoint ...
-func (s *Signature) DebugGetPoint() *G2Projective {
+func (s *Signature) DebugGetPoint() *bls.G2Projective {
 	return s.s
 }
 
@@ -340,7 +341,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 	messageHashesToRemove := []*MessageHash{}
 	pubKeysToRemove := []*PublicKey{}
 
-	prod := NewG2Projective(FQ2One, FQ2One, FQ2Zero)
+	prod := bls.NewG2Projective(bls.FQ2One, bls.FQ2One, bls.FQ2Zero)
 
 	for _, sig := range signatures {
 		pks := sig.ai.PublicKeys
@@ -350,7 +351,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 			// TODO: Don't panic
 			panic("invalid aggregation info!")
 		}
-		quotient := NewFR(bigZero)
+		quotient := bls.NewFR(bigZero)
 		for i, pk := range pks {
 			mk := NewMapKey(pk, mhs[i])
 			divisor := sig.ai.Tree[mk]
@@ -362,11 +363,11 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 			}
 
 			if i == 0 {
-				quotient = NewFR(dividend).Div(NewFR(divisor))
+				quotient = bls.NewFR(dividend).Div(bls.NewFR(divisor))
 			} else {
 				// Makes sure the quotient is identical for each public key,
 				// which means message/pk pair is unique
-				newQuotient := NewFR(dividend).Div(NewFR(divisor))
+				newQuotient := bls.NewFR(dividend).Div(bls.NewFR(divisor))
 				if !quotient.Equal(newQuotient) {
 					// TODO: Don't panic
 					panic("Cannot divide by aggregate signature, msg/pk pairs are not unique")
@@ -376,7 +377,7 @@ func (s *Signature) DivideBy(signatures []*Signature) *Signature {
 			messageHashesToRemove = append(messageHashesToRemove, mhs[i])
 			pubKeysToRemove = append(pubKeysToRemove, pk)
 		}
-		prod = prod.Add(sig.s.Mul(quotient.Neg().n))
+		prod = prod.Add(sig.s.Mul(quotient.Neg().ToBig()))
 	}
 
 	// Create a new signature object to return

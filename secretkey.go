@@ -1,10 +1,12 @@
-package bls
+package chiabls
 
 import (
 	"bytes"
 	"io"
 	"math/big"
 	"sort"
+
+	bls "github.com/nmarley/go-bls12-381"
 )
 
 // ...
@@ -14,11 +16,11 @@ const (
 
 // SecretKey represents a BLS private key.
 type SecretKey struct {
-	f *FR
+	f *bls.FR
 }
 
 // NewSecretKey initializes a new BLS secret key from a *FR.
-func NewSecretKey(f *FR) *SecretKey {
+func NewSecretKey(f *bls.FR) *SecretKey {
 	return &SecretKey{
 		f: f,
 	}
@@ -31,14 +33,14 @@ func SecretKeyFromSeed(seed []byte) *SecretKey {
 
 	hashed := Hmac256(seed, hmacKey)
 	return &SecretKey{
-		NewFR(new(big.Int).SetBytes(hashed)),
+		bls.NewFR(new(big.Int).SetBytes(hashed)),
 	}
 }
 
 // PublicKey returns the public key.
 func (k *SecretKey) PublicKey() *PublicKey {
 	return &PublicKey{
-		p: G1AffineOne.Mul(k.f.n),
+		p: bls.G1AffineOne.Mul(k.f.ToBig()),
 	}
 }
 
@@ -51,7 +53,7 @@ func (k SecretKey) String() string {
 func (k *SecretKey) Serialize() []byte {
 	// Ensure we return 32 bytes with bits aligned to the right
 	buf := [SecretKeySize]byte{}
-	skBytes := k.f.n.Bytes()
+	skBytes := k.f.ToBig().Bytes()
 	copy(buf[SecretKeySize-len(skBytes):], skBytes)
 	return buf[0:SecretKeySize]
 }
@@ -64,17 +66,17 @@ func DeserializeSecretKey(b []byte) *SecretKey {
 // SecretKeyFromBytes constructs a secret key from a byte slice
 func SecretKeyFromBytes(b []byte) *SecretKey {
 	return &SecretKey{
-		NewFR(new(big.Int).SetBytes(b)),
+		bls.NewFR(new(big.Int).SetBytes(b)),
 	}
 }
 
 // Sign signs a message with a secret key.
 func (k *SecretKey) Sign(message []byte) *Signature {
-	h := HashG2(message)
+	h := bls.HashG2(message)
 	mh := NewMessageHashFromBytes(Hash256(message))
 	aggInfo := AggregationInfoFromMsgHash(k.PublicKey(), mh)
 
-	return NewSignature(h.Mul(k.f.n), aggInfo)
+	return NewSignature(h.Mul(k.f.ToBig()), aggInfo)
 }
 
 // SignWithCoefficent signs a message with lagrange coefficients.
@@ -82,10 +84,10 @@ func (k *SecretKey) Sign(message []byte) *Signature {
 // The T signatures signed this way (with the same parameters players and T)
 // can be multiplied together to create a final signature for that message.
 func (k *SecretKey) SignWithCoefficent(message []byte, playerIndex int, players []int) *Signature {
-	h := HashG2(message)
+	h := bls.HashG2(message)
 	i := getIndex(playerIndex, players)
 	lambs := LagrangeCoeffsAtZero(players)
-	return NewSignature(h.Mul(lambs[i].ToBig()).Mul(k.f.n), nil)
+	return NewSignature(h.Mul(lambs[i].ToBig()).Mul(k.f.ToBig()), nil)
 }
 
 func getIndex(elem int, iSlice []int) int {
@@ -97,9 +99,9 @@ func getIndex(elem int, iSlice []int) int {
 	return -1
 }
 
-// RandKey generates a random secret key
+// RandKey generates a random secret key.
 func RandKey(r io.Reader) (*SecretKey, error) {
-	k, err := RandFR(r)
+	k, err := bls.RandFR(r)
 	if err != nil {
 		return nil, err
 	}
@@ -107,10 +109,9 @@ func RandKey(r io.Reader) (*SecretKey, error) {
 	return s, nil
 }
 
-// SecretKeyFromBig returns a new key based on a big int in
-// FR.
+// SecretKeyFromBig returns a new key based on a big int in FR.
 func SecretKeyFromBig(i *big.Int) *SecretKey {
-	return &SecretKey{f: NewFR(i)}
+	return &SecretKey{f: bls.NewFR(i)}
 }
 
 // AggregateSecretKeys aggregates multiple secret keys into one. The secure
@@ -123,7 +124,7 @@ func AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secur
 			sumKeys.Add(sumKeys, sk.f.ToBig())
 		}
 		// not necessary b/c NewFR does this already, but might be a nice safety
-		sumKeys.Mod(sumKeys, RFieldModulus)
+		sumKeys.Mod(sumKeys, bls.RFieldModulus)
 	} else {
 		if len(publicKeys) == 0 {
 			// TODO: Don't panic
@@ -134,9 +135,6 @@ func AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secur
 			panic("invalid number of keys")
 		}
 
-		// TODO: finish this...
-
-		//priv_pub_keys = sorted(zip(public_keys, private_keys))
 		secPubKeys := make([]*KeyPair, len(publicKeys))
 		for i := 0; i < len(publicKeys); i++ {
 			secPubKeys[i] = &KeyPair{
@@ -147,11 +145,11 @@ func AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secur
 		// Sort keypairs by pub key
 		sort.Sort(ByKeyPair(secPubKeys))
 
-		computedTs := HashPKs(len(publicKeys), publicKeys)
+		computedTs := HashPubKeys(len(publicKeys), publicKeys)
 
 		for i, kp := range secPubKeys {
-			sumKeys.Add(sumKeys, new(big.Int).Mul(kp.secret.f.n, computedTs[i]))
-			sumKeys.Mod(sumKeys, RFieldModulus)
+			sumKeys.Add(sumKeys, new(big.Int).Mul(kp.secret.f.ToBig(), computedTs[i]))
+			sumKeys.Mod(sumKeys, bls.RFieldModulus)
 		}
 	}
 
@@ -159,7 +157,7 @@ func AggregateSecretKeys(secretKeys []*SecretKey, publicKeys []*PublicKey, secur
 }
 
 // GetValue returns a copy of the underlying *FR
-func (k *SecretKey) GetValue() *FR {
+func (k *SecretKey) GetValue() *bls.FR {
 	return k.f.Copy()
 }
 

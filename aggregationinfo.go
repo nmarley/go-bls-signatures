@@ -1,10 +1,12 @@
-package bls
+package chiabls
 
 import (
 	"bytes"
 	"fmt"
 	"math/big"
 	"sort"
+
+	bls "github.com/nmarley/go-bls12-381"
 )
 
 // AggregationInfo ... TODO
@@ -133,10 +135,11 @@ func AggregationInfoFromMsgHash(pk *PublicKey, mh *MessageHash) *AggregationInfo
 // TODO: Tighter rules around access to tree & re-shuffling of pubkeys / hashes
 // Tree should not ever have invalid info
 
-// AggregationTree ...
+// AggregationTree is a map with a publickey/messagehash combinations as keys
+// and exponents as values.
 type AggregationTree map[MapKey]*big.Int
 
-// Empty ...
+// Empty returns whether the AggregationTree has any entries.
 func (at *AggregationTree) Empty() bool {
 	return len(*at) == 0
 }
@@ -205,7 +208,7 @@ func (ai *AggregationInfo) Less(other *AggregationInfo) bool {
 	return lessThan
 }
 
-// MergeAggregationInfos ...
+// MergeAggregationInfos merges multiple AggregationInfo objects into one.
 func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 	messages := NewMessageSet()
 	collidingMessages := NewMessageSet()
@@ -252,10 +255,9 @@ func MergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 	return SimpleMergeAggregationInfos(nonCollidingInfos)
 }
 
-// SimpleMergeAggregationInfos ...
-//
-// Infos are just merged together with no addition of exponents, since they are
-// disjoint
+// SimpleMergeAggregationInfos merges multiple AggregationInfo objects into
+// one. Infos are just merged together with no addition of exponents, since
+// they are disjoint.
 func SimpleMergeAggregationInfos(aggInfos []*AggregationInfo) *AggregationInfo {
 	newTree := make(AggregationTree)
 	for _, ai := range aggInfos {
@@ -324,7 +326,7 @@ func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *Aggregation
 		publicKeys[i] = pk
 	}
 
-	computedTs := HashPKs(len(collidingInfos), publicKeys)
+	computedTs := HashPubKeys(len(collidingInfos), publicKeys)
 
 	// Group order, exponents can be reduced mod the order
 	// order := RFieldModulus
@@ -332,23 +334,14 @@ func SecureMergeAggregationInfos(collidingInfos []*AggregationInfo) *Aggregation
 	newTree := make(AggregationTree)
 	for i := 0; i < len(collidingInfos); i++ {
 		for k, v := range collidingInfos[i].Tree {
-
-			// TODO: REFACTOR. Esp. like the new(big.Int).Mul(v, computedTs[i])
-			// can be extracted for both conditions
-
-			newVal, found := newTree[k]
-			if !found {
-				// This message & pk have not been included yet
-				newExp := new(big.Int).Mul(v, computedTs[i])
-				newExp.Mod(newExp, RFieldModulus)
-				newTree[k] = newExp
-			} else {
+			exp := new(big.Int).Mul(v, computedTs[i])
+			val, found := newTree[k]
+			if found {
 				// This message and pk are already included, so multiply
-				addEnd := new(big.Int).Mul(v, computedTs[i])
-				addEnd.Add(addEnd, newVal)
-				addEnd.Mod(addEnd, RFieldModulus)
-				newTree[k] = addEnd
+				exp.Add(exp, val)
 			}
+			exp.Mod(exp, bls.RFieldModulus)
+			newTree[k] = exp
 		}
 	}
 
