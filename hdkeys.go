@@ -1,5 +1,7 @@
 package chiabls
 
+// TODO: split this into extended public and extended secret key classes.
+
 import (
 	"encoding/binary"
 	"math/big"
@@ -14,7 +16,7 @@ type ExtendedSecretKey struct {
 	ParentFingerprint uint32
 	ChildNumber       uint32
 	SecretKey         *SecretKey
-	ChainCode         *big.Int
+	ChainCode         ChainCode
 }
 
 // TODO ...
@@ -55,7 +57,7 @@ func ExtendedSecretKeyFromSeed(seed []byte) *ExtendedSecretKey {
 		Depth:             0,
 		ParentFingerprint: 0,
 		ChildNumber:       0,
-		ChainCode:         new(big.Int).SetBytes(iRight),
+		ChainCode:         ChainCodeFromBytes(iRight),
 		SecretKey:         sk,
 	}
 }
@@ -66,7 +68,7 @@ func (k *ExtendedSecretKey) GetPublicKey() *PublicKey {
 }
 
 // GetChainCode ...
-func (k *ExtendedSecretKey) GetChainCode() *big.Int {
+func (k *ExtendedSecretKey) GetChainCode() ChainCode {
 	return k.ChainCode
 }
 
@@ -94,12 +96,9 @@ func (k *ExtendedSecretKey) PrivateChild(i uint32) *ExtendedSecretKey {
 	binary.BigEndian.PutUint32(b[:], i)
 	hmacInput = append(hmacInput, b[:]...)
 
-	cc := [32]byte{}
-	ccBytes := k.ChainCode.Bytes()
-	copy(cc[32-len(ccBytes):], ccBytes)
-
-	iLeft := Hmac256(append(hmacInput, []byte{0}...), cc[:])
-	iRight := Hmac256(append(hmacInput, []byte{1}...), cc[:])
+	ccBytes := k.ChainCode.Serialize()
+	iLeft := Hmac256(append(hmacInput, []byte{0}...), ccBytes)
+	iRight := Hmac256(append(hmacInput, []byte{1}...), ccBytes)
 
 	skInt := new(big.Int).SetBytes(iLeft)
 	skInt.Add(skInt, k.SecretKey.f.ToBig())
@@ -111,7 +110,7 @@ func (k *ExtendedSecretKey) PrivateChild(i uint32) *ExtendedSecretKey {
 		Depth:             k.Depth + 1,
 		ParentFingerprint: k.GetPublicKey().Fingerprint(),
 		ChildNumber:       i,
-		ChainCode:         new(big.Int).SetBytes(iRight),
+		ChainCode:         ChainCodeFromBytes(iRight),
 		SecretKey:         sk,
 	}
 }
@@ -130,12 +129,9 @@ func (k *ExtendedSecretKey) GetExtendedPublicKey() *ExtendedPublicKey {
 	binary.BigEndian.PutUint32(buf[5:9], k.ParentFingerprint)
 	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
 
-	ccBuf := [32]byte{}
-	ccBytes := k.ChainCode.Bytes()
-	copy(ccBuf[32-len(ccBytes):], ccBytes)
-
-	// copy ChainCode bytes into buffer
-	copy(buf[13:45], ccBuf[:])
+	// copy chain code into buffer
+	ccBytes := k.ChainCode.Serialize()
+	copy(buf[13:45], ccBytes)
 
 	pkBytes := k.SecretKey.PublicKey().Serialize()
 	copy(buf[45:], pkBytes)
@@ -152,13 +148,9 @@ func (k *ExtendedSecretKey) Serialize() []byte {
 	binary.BigEndian.PutUint32(buf[5:9], k.ParentFingerprint)
 	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
 
-	// serialize chaincode
-	ccBuf := [32]byte{}
-	ccBytes := k.ChainCode.Bytes()
-	copy(ccBuf[32-len(ccBytes):], ccBytes)
-
-	// copy ChainCode bytes into buffer
-	copy(buf[13:45], ccBuf[:])
+	// copy chain code into buffer
+	ccBytes := k.ChainCode.Serialize()
+	copy(buf[13:45], ccBytes)
 
 	// serialize key and copy into buffer
 	skBytes := k.SecretKey.Serialize()
@@ -188,7 +180,7 @@ type ExtendedPublicKey struct {
 	Depth             uint8
 	ParentFingerprint uint32
 	ChildNumber       uint32
-	ChainCode         *big.Int
+	ChainCode         ChainCode
 	PublicKey         *PublicKey
 }
 
@@ -198,9 +190,8 @@ func ExtendedPublicKeyFromBytes(b []byte) *ExtendedPublicKey {
 	depth := uint8(b[4])
 	parentFingerprint := binary.BigEndian.Uint32(b[5:9])
 	childNumber := binary.BigEndian.Uint32(b[9:13])
-	chainCode := new(big.Int).SetBytes(b[13:45])
-	// TODO: check error?
-	publicKey, _ := DeserializePublicKey(b[45:])
+	chainCode := ChainCodeFromBytes(b[13:45])
+	publicKey, _ := PublicKeyFromBytes(b[45:])
 
 	return &ExtendedPublicKey{
 		Version:           version,
@@ -233,12 +224,10 @@ func (k *ExtendedPublicKey) PublicChild(i uint32) *ExtendedPublicKey {
 	binary.BigEndian.PutUint32(hmacInput[PublicKeySize:], i)
 
 	// Chain code is used as hmac key
-	cc := [32]byte{}
-	ccBytes := k.ChainCode.Bytes()
-	copy(cc[32-len(ccBytes):], ccBytes)
+	ccBytes := k.ChainCode.Serialize()
 
-	iLeft := Hmac256(append(hmacInput[:], []byte{0}...), cc[:])
-	iRight := Hmac256(append(hmacInput[:], []byte{1}...), cc[:])
+	iLeft := Hmac256(append(hmacInput[:], []byte{0}...), ccBytes)
+	iRight := Hmac256(append(hmacInput[:], []byte{1}...), ccBytes)
 
 	skLeftInt := new(big.Int).SetBytes(iLeft)
 	skLeftInt.Mod(skLeftInt, bls.RFieldModulus)
@@ -253,7 +242,7 @@ func (k *ExtendedPublicKey) PublicChild(i uint32) *ExtendedPublicKey {
 		Depth:             k.Depth + 1,
 		ParentFingerprint: k.PublicKey.Fingerprint(),
 		ChildNumber:       i,
-		ChainCode:         new(big.Int).SetBytes(iRight),
+		ChainCode:         ChainCodeFromBytes(iRight),
 		PublicKey:         newPk,
 	}
 }
@@ -267,13 +256,9 @@ func (k *ExtendedPublicKey) Serialize() []byte {
 	binary.BigEndian.PutUint32(buf[5:9], k.ParentFingerprint)
 	binary.BigEndian.PutUint32(buf[9:13], k.ChildNumber)
 
-	// serialize chaincode
-	ccBuf := [32]byte{}
-	ccBytes := k.ChainCode.Bytes()
-	copy(ccBuf[32-len(ccBytes):], ccBytes)
-
-	// copy ChainCode bytes into buffer
-	copy(buf[13:45], ccBuf[:])
+	// copy chain code into buffer
+	ccBytes := k.ChainCode.Serialize()
+	copy(buf[13:45], ccBytes)
 
 	// serialize key and copy into buffer
 	pkBytes := k.PublicKey.Serialize()

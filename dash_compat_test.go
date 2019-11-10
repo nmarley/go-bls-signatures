@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/matryer/is"
-	bls "github.com/nmarley/go-bls-signatures"
+	chiabls "github.com/nmarley/go-bls-signatures"
 )
 
 // generated series of BLS keypairs on Dash v0.13 node for test compatibility
@@ -429,7 +429,7 @@ func TestDashCoreBLSCompatibility(t *testing.T) {
 			skBytes, err := hex.DecodeString(tt.secretKeyHex)
 			is.NoErr(err)
 
-			sk := bls.DeserializeSecretKey(skBytes)
+			sk := chiabls.DeserializeSecretKey(skBytes)
 
 			pkExpected, err := hex.DecodeString(tt.publicKeyHex)
 			is.NoErr(err)
